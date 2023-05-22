@@ -1,0 +1,16 @@
+.head-nav {
+  height: 100px;
+}
+
+.head-list {
+  display: flex;
+  justify-content: end;
+  padding: 0;
+
+  li {
+    list-style-type: none;
+    margin: 0 5px;
+  }
+}
+
+
