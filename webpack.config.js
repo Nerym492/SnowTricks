@@ -12,21 +12,18 @@ Encore
   .cleanupOutputBeforeBuild()
   .enableSourceMaps(!Encore.isProduction())
   .enableVersioning(Encore.isProduction())
+  .copyFiles({
+    from: './assets/images',
+    to: 'images/[path][name].[ext]',
+  })
+  .copyFiles({
+    from: './assets/fonts',
+    to: 'fonts/[path][name].[ext]',
+  });
 
 const webpackConfig = Encore.getWebpackConfig();
 
 module.exports = {
-  module: {
-    rules: [
-      {
-        test: /\.(png|jpe?g|gif)$/i,
-        type: 'asset/resource',
-        generator: {
-          filename: 'images/[name][ext]',
-        },
-      },
-    ],
-  },
   plugins: [
     new StylelintPlugin({
       configFile: '.stylelintrc.json',
