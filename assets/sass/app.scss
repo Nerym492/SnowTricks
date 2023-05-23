@@ -1,5 +1,6 @@
-@import url('fonts/fonts.scss');
-@import url('layouts/header.scss');
+@import "fonts";
+@import "layouts/navbar";
+@import "layouts/header";
 
 body {
   margin: 0;
