@@ -1,4 +1,37 @@
 .masthead {
-  background: url("../../images/header/snowboarding-wallpaper.jpg");
+  background: url('../../images/header/snowboarding-wallpaper.jpg');
   background-size: cover;
+  height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: norwester, serif;
+
+  h1 {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+}
+
+.split-title {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animated-text {
+  animation: fade-in 1.5s ease-in-out;
 }

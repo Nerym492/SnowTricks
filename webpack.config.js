@@ -1,5 +1,5 @@
 const Encore = require('@symfony/webpack-encore');
-const StylelintPlugin = require('stylelint-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 Encore
   .enableSingleRuntimeChunk()
@@ -12,29 +12,17 @@ Encore
   .cleanupOutputBeforeBuild()
   .enableSourceMaps(!Encore.isProduction())
   .enableVersioning(Encore.isProduction())
-  .copyFiles({
-    from: './assets/images',
-    to: 'images/[path][name].[ext]',
-  })
-  .copyFiles({
-    from: './assets/fonts',
-    to: 'fonts/[path][name].[ext]',
-  });
+  .addPlugin(new CopyWebpackPlugin({
+    patterns: [
+      {
+        from: './assets/images',
+        to: 'images/[path][name][ext]',
+        globOptions: {
+          ignore: ['**/header/**'] // Ignorer les fichiers dans le sous-dossier "header"
+        }
+      },
+    ]
+  }))
 
-const webpackConfig = Encore.getWebpackConfig();
-
-module.exports = {
-  plugins: [
-    new StylelintPlugin({
-      configFile: '.stylelintrc.json',
-      files: '**/*.css', // Chemin vers les fichiers CSS générés par Sass
-    }),
-  ],
-  ...webpackConfig,
-};
-
-
-
-
-
+module.exports = Encore.getWebpackConfig();
 
