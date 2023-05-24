@@ -34,12 +34,16 @@ class Utilisateur
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photo_profil = null;
 
-    #[ORM\OneToMany(mappedBy: 'utilisateur_id', targetEntity: Commentaire::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: Commentaire::class, orphanRemoval: true)]
     private Collection $commentaires;
+
+    #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: Trick::class, orphanRemoval: true)]
+    private Collection $tricks;
 
     public function __construct()
     {
         $this->commentaires = new ArrayCollection();
+        $this->tricks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -143,6 +147,36 @@ class Utilisateur
             // set the owning side to null (unless already changed)
             if ($commentaire->getUtilisateurId() === $this) {
                 $commentaire->setUtilisateurId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Trick>
+     */
+    public function getTricks(): Collection
+    {
+        return $this->tricks;
+    }
+
+    public function addTrick(Trick $trick): self
+    {
+        if (!$this->tricks->contains($trick)) {
+            $this->tricks->add($trick);
+            $trick->setUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTrick(Trick $trick): self
+    {
+        if ($this->tricks->removeElement($trick)) {
+            // set the owning side to null (unless already changed)
+            if ($trick->getUtilisateur() === $this) {
+                $trick->setUtilisateur(null);
             }
         }
 

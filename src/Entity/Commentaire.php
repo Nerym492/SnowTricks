@@ -22,7 +22,7 @@ class Commentaire
 
     #[ORM\ManyToOne(inversedBy: 'commentaires')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Utilisateur $utilisateur_id = null;
+    private ?Utilisateur $utilisateur = null;
 
     public function getId(): ?int
     {
@@ -55,12 +55,12 @@ class Commentaire
 
     public function getUtilisateurId(): ?Utilisateur
     {
-        return $this->utilisateur_id;
+        return $this->utilisateur;
     }
 
-    public function setUtilisateurId(?Utilisateur $utilisateur_id): self
+    public function setUtilisateurId(?Utilisateur $utilisateur): self
     {
-        $this->utilisateur_id = $utilisateur_id;
+        $this->utilisateur = $utilisateur;
 
         return $this;
     }

@@ -17,11 +17,11 @@ class ImagesTrick
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $url = null;
+    private ?string $chemin = null;
 
     #[ORM\ManyToOne(inversedBy: 'imagesTricks')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Trick $trick_id = null;
+    private ?Trick $trick = null;
 
     public function getId(): ?int
     {
@@ -40,26 +40,26 @@ class ImagesTrick
         return $this;
     }
 
-    public function getUrl(): ?string
+    public function getChemin(): ?string
     {
-        return $this->url;
+        return $this->chemin;
     }
 
-    public function setUrl(string $url): self
+    public function setChemin(string $chemin): self
     {
-        $this->url = $url;
+        $this->chemin = $chemin;
 
         return $this;
     }
 
     public function getTrickId(): ?Trick
     {
-        return $this->trick_id;
+        return $this->trick;
     }
 
-    public function setTrickId(?Trick $trick_id): self
+    public function setTrickId(?Trick $trick): self
     {
-        $this->trick_id = $trick_id;
+        $this->trick = $trick;
 
         return $this;
     }

@@ -24,13 +24,17 @@ class Trick
 
     #[ORM\ManyToOne(inversedBy: 'tricks')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?GroupeTrick $groupe_trick_id = null;
+    private ?GroupeTrick $groupe_trick = null;
 
-    #[ORM\OneToMany(mappedBy: 'trick_id', targetEntity: ImagesTrick::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: ImagesTrick::class, orphanRemoval: true)]
     private Collection $imagesTricks;
 
-    #[ORM\OneToMany(mappedBy: 'trick_id', targetEntity: VideosTrick::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: VideosTrick::class, orphanRemoval: true)]
     private Collection $videosTricks;
+
+    #[ORM\ManyToOne(inversedBy: 'tricks')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Utilisateur $utilisateur = null;
 
     public function __construct()
     {
@@ -69,12 +73,12 @@ class Trick
 
     public function getGroupeTrickId(): ?GroupeTrick
     {
-        return $this->groupe_trick_id;
+        return $this->$groupe_trick;
     }
 
-    public function setGroupeTrickId(?GroupeTrick $groupe_trick_id): self
+    public function setGroupeTrickId(?GroupeTrick $groupe_trick): self
     {
-        $this->groupe_trick_id = $groupe_trick_id;
+        $this->$groupe_trick = $groupe_trick;
 
         return $this;
     }
@@ -135,6 +139,18 @@ class Trick
                 $videosTrick->setTrickId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUtilisateur(): ?Utilisateur
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(?Utilisateur $utilisateur): self
+    {
+        $this->utilisateur = $utilisateur;
 
         return $this;
     }
