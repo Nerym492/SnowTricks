@@ -53,12 +53,12 @@ class Commentaire
         return $this;
     }
 
-    public function getUtilisateurId(): ?Utilisateur
+    public function getUtilisateur(): ?Utilisateur
     {
         return $this->utilisateur;
     }
 
-    public function setUtilisateurId(?Utilisateur $utilisateur): self
+    public function setUtilisateur(?Utilisateur $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
 

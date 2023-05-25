@@ -52,12 +52,12 @@ class VideosTrick
         return $this;
     }
 
-    public function getTrickId(): ?Trick
+    public function getTrick(): ?Trick
     {
         return $this->trick;
     }
 
-    public function setTrickId(?Trick $trick): self
+    public function setTrick(?Trick $trick): self
     {
         $this->trick = $trick;
 

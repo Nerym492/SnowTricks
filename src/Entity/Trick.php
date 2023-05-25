@@ -71,14 +71,14 @@ class Trick
         return $this;
     }
 
-    public function getGroupeTrickId(): ?GroupeTrick
+    public function getGroupeTrick(): ?GroupeTrick
     {
-        return $this->$groupe_trick;
+        return $this->groupe_trick;
     }
 
-    public function setGroupeTrickId(?GroupeTrick $groupe_trick): self
+    public function setGroupeTrick(?GroupeTrick $groupe_trick): self
     {
-        $this->$groupe_trick = $groupe_trick;
+        $this->groupe_trick = $groupe_trick;
 
         return $this;
     }
@@ -95,7 +95,7 @@ class Trick
     {
         if (!$this->imagesTricks->contains($imagesTrick)) {
             $this->imagesTricks->add($imagesTrick);
-            $imagesTrick->setTrickId($this);
+            $imagesTrick->setTrick($this);
         }
 
         return $this;
@@ -105,8 +105,8 @@ class Trick
     {
         if ($this->imagesTricks->removeElement($imagesTrick)) {
             // set the owning side to null (unless already changed)
-            if ($imagesTrick->getTrickId() === $this) {
-                $imagesTrick->setTrickId(null);
+            if ($imagesTrick->getTrick() === $this) {
+                $imagesTrick->setTrick(null);
             }
         }
 
@@ -125,7 +125,7 @@ class Trick
     {
         if (!$this->videosTricks->contains($videosTrick)) {
             $this->videosTricks->add($videosTrick);
-            $videosTrick->setTrickId($this);
+            $videosTrick->setTrick($this);
         }
 
         return $this;
@@ -135,8 +135,8 @@ class Trick
     {
         if ($this->videosTricks->removeElement($videosTrick)) {
             // set the owning side to null (unless already changed)
-            if ($videosTrick->getTrickId() === $this) {
-                $videosTrick->setTrickId(null);
+            if ($videosTrick->getTrick() === $this) {
+                $videosTrick->setTrick(null);
             }
         }
 

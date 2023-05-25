@@ -55,7 +55,7 @@ class GroupeTrick
     {
         if (!$this->tricks->contains($trick)) {
             $this->tricks->add($trick);
-            $trick->setGroupeTrickId($this);
+            $trick->setGroupeTrick($this);
         }
 
         return $this;
@@ -65,8 +65,8 @@ class GroupeTrick
     {
         if ($this->tricks->removeElement($trick)) {
             // set the owning side to null (unless already changed)
-            if ($trick->getGroupeTrickId() === $this) {
-                $trick->setGroupeTrickId(null);
+            if ($trick->getGroupeTrick() === $this) {
+                $trick->setGroupeTrick(null);
             }
         }
 
