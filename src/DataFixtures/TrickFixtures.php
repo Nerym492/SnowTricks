@@ -22,6 +22,7 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager)
     {
         $grabsGroup = $manager->getRepository(GroupeTrick::class)->findOneBy(['nom' => 'Grabs']);
+        $flipsGroup = $manager->getRepository(GroupeTrick::class)->findOneBy(['nom' => 'Flips']);
         $utilisateur1 = $manager->getRepository(Utilisateur::class)->findOneBy(['nom' => 'Testuser1234']);
 
         $grabsTrick1 = new Trick();
@@ -35,11 +36,20 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
         $grabsTrick2 = new Trick();
         $grabsTrick2->setGroupeTrick($grabsGroup);
         $grabsTrick2->setNom('Stalefish');
-        $grabsTrick2->setDescription('Passe la main derrière ton genou arrière et attrape le carre de ta planche entre les fixations, côté talon, avec ta main arrière.');
+        $grabsTrick2->setDescription('Passe la main derrière ton genou arrière et attrape le carre de ta '.
+            'planche entre les fixations, côté talon, avec ta main arrière.');
         $grabsTrick2->setUtilisateur($utilisateur1);
+
+        $backflipTrick3 = new Trick();
+        $backflipTrick3->setGroupeTrick($flipsGroup);
+        $backflipTrick3->setNom('Backflip');
+        $backflipTrick3->setDescription('Un Backflip fait tourner la planche perpendiculairement à la neige, '.
+            "tu fais donc un Flip directement en arrière, en stabilisant la planche lors de l'atterrissage.");
+        $backflipTrick3->setUtilisateur($utilisateur1);
 
         $manager->persist($grabsTrick1);
         $manager->persist($grabsTrick2);
+        $manager->persist($backflipTrick3);
 
         $manager->flush();
     }

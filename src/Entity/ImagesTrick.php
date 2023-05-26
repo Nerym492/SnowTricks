@@ -17,7 +17,7 @@ class ImagesTrick
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $chemin = null;
+    private ?string $nomFichier = null;
 
     #[ORM\ManyToOne(inversedBy: 'imagesTricks')]
     #[ORM\JoinColumn(nullable: false)]
@@ -40,14 +40,14 @@ class ImagesTrick
         return $this;
     }
 
-    public function getChemin(): ?string
+    public function getNomFichier(): ?string
     {
-        return $this->chemin;
+        return $this->nomFichier;
     }
 
-    public function setChemin(string $chemin): self
+    public function setNomFichier(string $nomFichier): self
     {
-        $this->chemin = $chemin;
+        $this->nomFichier = $nomFichier;
 
         return $this;
     }
