@@ -2,6 +2,23 @@
   display: grid;
   grid-template-columns: repeat(5, 400px);
   grid-column-gap: 20px;
+  grid-row-gap: 30px;
   justify-content: center;
   margin: 40px 0;
+  
+  @media (max-width: 2185px) {
+    grid-template-columns: repeat(4, 400px);
+  }
+
+  @media (max-width: 1770px) {
+    grid-template-columns: repeat(3, 400px);
+  }
+
+  @media (max-width: 1330px) {
+    grid-template-columns: repeat(2, 500px);
+  }
+
+  @media (max-width: 1085px) {
+    grid-template-columns: 500px;
+  }
 }
