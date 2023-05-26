@@ -3,6 +3,10 @@
 @import "layouts/header";
 @import "layouts/tricks-list";
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   font-family: norwester, serif;

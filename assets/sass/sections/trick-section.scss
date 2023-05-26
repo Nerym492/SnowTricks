@@ -5,7 +5,7 @@
   grid-row-gap: 30px;
   justify-content: center;
   margin: 40px 0;
-  
+
   @media (max-width: 2185px) {
     grid-template-columns: repeat(4, 400px);
   }
@@ -20,5 +20,9 @@
 
   @media (max-width: 1085px) {
     grid-template-columns: 500px;
+  }
+  
+  @media (max-width: 555px) {
+    grid-template-columns: 330px;
   }
 }
