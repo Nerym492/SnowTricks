@@ -1,0 +1,32 @@
+@import '../sections/trick-section';
+
+.trick-preview {
+  border-radius: 15px;
+  box-shadow: -3px -3px 18px 4px rgba(0,0,0,0.29);
+  overflow: hidden;
+
+  figure {
+    border-bottom: #777 solid 1px;
+    width: 100%;
+    height: 225px;
+    margin-block: 0;
+    margin-inline: 0;
+    overflow: hidden;
+  }
+
+  img {
+    transform-origin: center;
+    transition: scale 0.4s ease-in-out;
+    border-radius: 15px 15px 0 0;
+    max-width: 100%;
+  }
+
+  img:hover {
+    scale: 1.1;
+    border-radius: 15px 15px 0 0;
+  }
+
+  .trick-description {
+    margin-left: 15px;
+  }
+}

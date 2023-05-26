@@ -1,0 +1,7 @@
+.tricks-section {
+  display: grid;
+  grid-template-columns: repeat(5, 400px);
+  grid-column-gap: 20px;
+  justify-content: center;
+  margin: 40px 0;
+}
