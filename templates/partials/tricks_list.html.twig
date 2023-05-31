@@ -2,20 +2,14 @@
     {% for trick in tricks %}
         <div class="trick-preview">
             <figure>
-                <img src="{{ path('get_trick_image',{'groupName': trick.nom_groupe, 'trickName': trick.data.nom,'imageName': trick.nomFichier}) }}"
-                     alt=""/>
+                <img src="{{ path(
+                    'get_trick_image',
+                    {'groupName': trick.nom_groupe, 'trickName': trick.data.nom,'imageName': trick.nomFichier}
+                ) }}" alt=""/>
             </figure>
             <div class="trick-description">
                 <h2>{{ trick.data.nom }}</h2>
             </div>
         </div>
     {% endfor %}
-    <div class="trick-preview">
-        <figure>
-            <img src="https://picsum.photos/id/103/800/450" alt=""/>
-        </figure>
-        <div class="trick-description">
-            <h2>Trick 3</h2>
-        </div>
-    </div>
 </section>
