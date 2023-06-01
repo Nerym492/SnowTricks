@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Trick;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 /**
  * @extends ServiceEntityRepository<Trick>
@@ -16,9 +17,12 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class TrickRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private ParameterBagInterface $parameterBag;
+
+    public function __construct(ManagerRegistry $registry, ParameterBagInterface $parameterBag)
     {
         parent::__construct($registry, Trick::class);
+        $this->parameterBag = $parameterBag;
     }
 
     public function save(Trick $entity, bool $flush = false): void
@@ -39,29 +43,51 @@ class TrickRepository extends ServiceEntityRepository
         }
     }
 
-    public function findAllTricksBy(array $orderBy): array
+    public function findAllTricksBy(array $orderBy, int $tricksReloaded = 0): array
     {
+        $tricksListLoadLimit = $this->parameterBag->get('tricks_list_load_limit');
+        $nbTricksToLoad = $tricksListLoadLimit;
+        $nbTricksToAdd = 0;
+
+        if (0 < $tricksReloaded) {
+            $tricksCountQuery = $this->createQueryBuilder('t');
+            $tricksCountQuery->select('COUNT(t) AS nbTricks');
+            $tricksCountResult = $tricksCountQuery->getQuery()->getResult();
+            $tricksCount = $tricksCountResult[0]['nbTricks'];
+            $nbTricksToAdd = ($tricksCount - $tricksReloaded);
+        }
+
+        if (0 < $nbTricksToAdd) {
+            $nbTricksToLoad = $tricksReloaded + $tricksListLoadLimit;
+        } elseif (0 === $nbTricksToAdd && 0 < $tricksReloaded) {
+            $nbTricksToLoad = $tricksReloaded;
+        }
+
         $tricksQuery = $this->createQueryBuilder('t');
-        $imageSubQuery = $this->createQueryBuilder('it2');
 
-        $imageSubQuery->select('it2_sub.id')
-            ->from('\App\Entity\ImagesTrick', 'it2_sub')
-            ->where('it2_sub.trick = t')
-            ->orderBy('it2_sub.id', 'DESC')
-            ->setMaxResults(1);
-
-        $tricksQuery->select(['t AS data', 'g.nom AS nom_groupe', 'it.nomFichier'])
-                    ->leftJoin('t.groupe_trick', 'g')
-                    ->leftJoin('t.imagesTricks', 'it')
-                    ->andWhere($tricksQuery->expr()->in(
-                        'it.id', $imageSubQuery->getDQL()
-                    ));
+        $tricksQuery->select('t AS data', 'g.nom AS nom_groupe', 'it.description', 'it.nomFichier')
+            ->leftJoin('t.groupe_trick', 'g')
+            ->leftJoin('t.imagesTricks', 'it')
+            ->andWhere('it.id = (
+                SELECT MAX(it2.id)
+                FROM App\Entity\ImagesTrick it2
+                WHERE it2.trick = t
+            )')
+            ->setMaxResults($nbTricksToLoad);
 
         foreach ($orderBy as $field => $direction) {
             $tricksQuery->addOrderBy('t.'.$field, $direction);
         }
 
         return $tricksQuery->getQuery()->getResult();
+    }
+
+    public function countTricks(): int
+    {
+        $tricksCount = $this->createQueryBuilder('t');
+        $tricksCount->select('COUNT(t) AS nbTricks');
+
+        return $tricksCount->getQuery()->getResult()[0]['nbTricks'];
     }
 
 //    /**

@@ -5,7 +5,7 @@ Encore
   .enableSingleRuntimeChunk()
   .setOutputPath('public/build/')
   .setPublicPath('/build')
-  .addEntry('app', './assets/js/app.js')
+  .addEntry('home', './assets/js/pages/home.js')
   .addStyleEntry('styles', './assets/sass/app.scss')
   .enableSassLoader()
   .enablePostCssLoader()
