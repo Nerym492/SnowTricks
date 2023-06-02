@@ -11,6 +11,21 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TrickController extends AbstractController
 {
+    private EntityManagerInterface $manager;
+
+    public function __construct(EntityManagerInterface $manager)
+    {
+        $this->manager = $manager;
+    }
+
+    #[Route('/tricks/details/{trickId}')]
+    public function getTrickDetails(string $trickId): Response
+    {
+        $trick = $this->manager->getRepository(Trick::class)->findOneBy(['id' => $trickId]);
+
+        return $this->render('trick.html.twig', ['trick' => $trick]);
+    }
+
     #[Route('/trickImage/{groupName}/{trickName}/{imageName}', name: 'get_trick_image')]
     public function getTrickImage($groupName, $trickName, $imageName): Response
     {
@@ -23,9 +38,9 @@ class TrickController extends AbstractController
     }
 
     #[Route('/tricks/loadMore/{tricksReloaded}', name: 'load_more_tricks')]
-    public function loadMoreTricks(EntityManagerInterface $manager, int $tricksReloaded): Response
+    public function loadMoreTricks(int $tricksReloaded): Response
     {
-        $trickRepository = $manager->getRepository(Trick::class);
+        $trickRepository = $this->manager->getRepository(Trick::class);
         $hiddeLoadButton = false;
         $tricks = $trickRepository->findAllTricksBy(['nom' => 'ASC'], $tricksReloaded);
         $nbTricks = $trickRepository->countTricks();
