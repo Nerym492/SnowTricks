@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\GroupeTrick;
+use App\Entity\ImagesTrick;
 use App\Entity\Trick;
 use App\Utils\ImageUtils;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,8 +24,16 @@ class TrickController extends AbstractController
     public function getTrickDetails(string $trickId): Response
     {
         $trick = $this->manager->getRepository(Trick::class)->findOneBy(['id' => $trickId]);
+        $groupeTrick = $this->manager->getRepository(GroupeTrick::class)->findOneBy([
+            'id' => $trick->getGroupeTrick()->getId(),
+        ]);
+        $imageTrick = $this->manager->getRepository(ImagesTrick::class)->findOneByTrick($trickId);
 
-        return $this->render('trick.html.twig', ['trick' => $trick]);
+        return $this->render('partials/trick.html.twig', [
+            'trick' => $trick,
+            'nomGroupeTrick' => $groupeTrick->getNom(),
+            'imageTrick' => $imageTrick,
+        ]);
     }
 
     #[Route('/trickImage/{groupName}/{trickName}/{imageName}', name: 'get_trick_image')]
