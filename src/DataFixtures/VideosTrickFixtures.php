@@ -6,10 +6,18 @@ use App\Entity\Trick;
 use App\Entity\VideosTrick;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 
 class VideosTrickFixtures extends Fixture implements DependentFixtureInterface
 {
+    private EntityManagerInterface $manager;
+
+    public function __construct(EntityManagerInterface $manager)
+    {
+        $this->manager = $manager;
+    }
+
     public function getDependencies(): array
     {
         return [
@@ -21,12 +29,27 @@ class VideosTrickFixtures extends Fixture implements DependentFixtureInterface
     {
         $trickIndyGrab = $manager->getRepository(Trick::class)->findOneBy(['nom' => 'Indy']);
 
-        $videoIndyGrab1 = new VideosTrick();
-        $videoIndyGrab1->setTrick($trickIndyGrab);
-        $videoIndyGrab1->setDescription('Tuto Indy Grab');
-        $videoIndyGrab1->setUrl('https://www.youtube.com/watch?v=6yA3XqjTh_w&ab_channel=SnowboardProCamp');
+        $this->addTrickVideo(
+            $trickIndyGrab,
+            'Tuto Indy Grab',
+            'https://www.youtube.com/watch?v=6yA3XqjTh_w&ab_channel=SnowboardProCamp'
+        );
 
-        $manager->persist($videoIndyGrab1);
+        $this->addTrickVideo(
+            $trickIndyGrab,
+            'Indy Grab with style !',
+            'https://www.youtube.com/watch?v=G_MEz7oJzro'
+        );
+
         $manager->flush();
+    }
+
+    private function addTrickVideo(Trick $trick, string $description, string $link): void
+    {
+        $trickVideo = new VideosTrick();
+        $trickVideo->setTrick($trick);
+        $trickVideo->setDescription($description);
+        $trickVideo->setUrl($link);
+        $this->manager->persist($trickVideo);
     }
 }
