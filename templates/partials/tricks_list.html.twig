@@ -1,13 +1,15 @@
 <div id="trick-list">
     <section class="tricks-section" id="trick-section-home">
         {% for trick in tricks %}
-            <div class="trick-preview">
-                <figure>
-                    <img src="{{ path(
-                        'get_trick_image',
-                        {'groupName': trick.nom_groupe, 'trickName': trick.data.nom,'imageName': trick.nomFichier}
-                    ) }}" alt=""/>
-                </figure>
+            <div class="trick-preview" id="trick-{{ trick.data.id }}">
+                <a href="/tricks/details/{{ trick.data.id }}">
+                    <figure class="image-trick-list">
+                        <img src="{{ path(
+                            'get_trick_image',
+                            {'groupName': trick.nom_groupe, 'trickName': trick.data.nom,'imageName': trick.nomFichier}
+                        ) }}" alt=""/>
+                    </figure>
+                </a>
                 <div class="trick-description">
                     <h2>{{ trick.data.nom }}</h2>
                 </div>
@@ -19,7 +21,6 @@
             <button class="btn-arrow--black" id="btn-load-more-tricks">Load more</button>
         </div>
     {% endif %}
-    <div id="end-trick-section"></div>
 </div>
 
 

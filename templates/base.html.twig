@@ -13,8 +13,12 @@
         <script src="https://kit.fontawesome.com/d3a0bd80a1.js" crossorigin="anonymous"></script>
     </head>
     <body>
-        {% include 'partials/navbar.html.twig' %}
-        {% include 'partials/header.html.twig' %}
-        {% block body %}{% endblock %}
+        <div id="page-container">
+            {% include 'partials/navbar.html.twig' %}
+            {% block header %}
+                {% include 'partials/header.html.twig' %}
+            {% endblock %}
+            {% block content %}{% endblock %}
+        </div>
     </body>
 </html>

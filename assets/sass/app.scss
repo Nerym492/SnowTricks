@@ -2,6 +2,7 @@
 @import "layouts/navbar";
 @import "layouts/header";
 @import "layouts/tricks-list";
+@import "layouts/trick-details";
 @import "components/buttons";
 
 html {
@@ -18,4 +19,25 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.background-page {
+  opacity: 0.2;
+  z-index: 0;
+}
+
+.foreground-page {
+  background: #FFF;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%) translateY(-50%);
+  width: 70%;
+  height: 70%;
+  border: #333 solid 2px;
+  border-radius: 10px;
+}
+
+.disable-scroll {
+  overflow: hidden;
 }
