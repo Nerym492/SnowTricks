@@ -1,0 +1,17 @@
+.head-trick-details{
+  height: 40%;
+  display: flex;
+  justify-content: center;
+  color: #FFF;
+
+  img {
+    z-index: 0;
+    aspect-ratio: 16/9;
+    max-height: 500px;
+  }
+
+  h1 {
+    position: absolute;
+    z-index: 1;
+  }
+}
