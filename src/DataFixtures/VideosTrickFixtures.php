@@ -32,13 +32,13 @@ class VideosTrickFixtures extends Fixture implements DependentFixtureInterface
         $this->addTrickVideo(
             $trickIndyGrab,
             'Tuto Indy Grab',
-            'https://www.youtube.com/watch?v=6yA3XqjTh_w&ab_channel=SnowboardProCamp'
+            'https://www.youtube.com/embed/6yA3XqjTh_w'
         );
 
         $this->addTrickVideo(
             $trickIndyGrab,
             'Indy Grab with style !',
-            'https://www.youtube.com/watch?v=G_MEz7oJzro'
+            'https://www.youtube.com/embed/G_MEz7oJzro'
         );
 
         $manager->flush();
