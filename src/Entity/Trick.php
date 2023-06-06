@@ -36,6 +36,12 @@ class Trick
     #[ORM\JoinColumn(nullable: false)]
     private ?Utilisateur $utilisateur = null;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $date_creation = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $date_modification = null;
+
     public function __construct()
     {
         $this->imagesTricks = new ArrayCollection();
@@ -151,6 +157,30 @@ class Trick
     public function setUtilisateur(?Utilisateur $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    public function getDateCreation(): ?\DateTimeInterface
+    {
+        return $this->date_creation;
+    }
+
+    public function setDateCreation(\DateTimeInterface $date_creation): self
+    {
+        $this->date_creation = $date_creation;
+
+        return $this;
+    }
+
+    public function getDateModification(): ?\DateTimeInterface
+    {
+        return $this->date_modification;
+    }
+
+    public function setDateModification(?\DateTimeInterface $date_modification): self
+    {
+        $this->date_modification = $date_modification;
 
         return $this;
     }

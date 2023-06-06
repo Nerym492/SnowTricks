@@ -87,6 +87,7 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
         $trick->setNom($nom);
         $trick->setDescription($description);
         $trick->setUtilisateur($utilisateur);
+        $trick->setDateCreation(new \DateTime());
 
         $this->manager->persist($trick);
     }
