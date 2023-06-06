@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\GroupeTrick;
 use App\Entity\ImagesTrick;
 use App\Entity\Trick;
+use App\Entity\VideosTrick;
 use App\Utils\ImageUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,12 +28,19 @@ class TrickController extends AbstractController
         $groupeTrick = $this->manager->getRepository(GroupeTrick::class)->findOneBy([
             'id' => $trick->getGroupeTrick()->getId(),
         ]);
-        $imageTrick = $this->manager->getRepository(ImagesTrick::class)->findOneByTrick($trickId);
+        $imagesTrickRepo = $this->manager->getRepository(ImagesTrick::class);
+        $headerImage = $imagesTrickRepo->findOneByTrick($trickId);
+        // All trick images except the one already in the header.
+        $trickImages = $imagesTrickRepo->findAllExceptFirst($trickId);
+
+        $trickVideos = $this->manager->getRepository(VideosTrick::class)->findAll();
 
         return $this->render('partials/trick.html.twig', [
             'trick' => $trick,
             'nomGroupeTrick' => $groupeTrick->getNom(),
-            'imageTrick' => $imageTrick,
+            'headerImage' => $headerImage,
+            'trickImages' => $trickImages,
+            'trickVideos' => $trickVideos,
         ]);
     }
 

@@ -4,6 +4,27 @@
     {% include 'partials/header_trick.html.twig' %}
 {% endblock %}
 
-{% block content %}
+{% block javascripts %}
+    <script src="https://www.youtube.com/iframe_api"></script>
+{% endblock %}
 
+{% block content %}
+    <div class="tricks-section">
+        {% for trickImage in trickImages %}
+            <img class="image-trick-details" src="{{ path(
+                'get_trick_image',
+                {'groupName': nomGroupeTrick, 'trickName': trick.nom,'imageName': trickImage.nomFichier}
+            ) }}" alt="image {{ trick.description }}">
+        {% endfor %}
+        {% for trickVideo in trickVideos %}
+            <iframe class="trick-video" src="{{ trickVideo.url }}" frameborder="0"
+                    allowfullscreen></iframe>
+        {% endfor %}
+        <div class="trick-description">
+            <h2>Description</h2>
+            <p>
+                {{ trick.description }}
+            </p>
+        </div>
+    </div>
 {% endblock %}

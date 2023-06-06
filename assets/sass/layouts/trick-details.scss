@@ -6,7 +6,6 @@
 
   img {
     z-index: 0;
-    aspect-ratio: 16/9;
     max-height: 500px;
   }
 
@@ -15,3 +14,23 @@
     z-index: 1;
   }
 }
+
+.trick-video {
+  width: 100%;
+  aspect-ratio: 16/9;
+}
+
+.image-trick-details {
+  width: 100%;
+  aspect-ratio: 16/9;
+}
+
+.trick-description {
+  grid-column: 1 / -1;
+
+  h2 {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+}
+
