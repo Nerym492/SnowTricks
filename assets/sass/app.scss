@@ -1,7 +1,21 @@
 @import "fonts";
 @import "layouts/navbar";
 @import "layouts/header";
+@import "layouts/tricks-list";
+@import "components/buttons";
+
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   margin: 0;
+  font-family: norwester, serif;
+  color: #333;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

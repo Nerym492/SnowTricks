@@ -1,0 +1,29 @@
+.tricks-section {
+  display: grid;
+  grid-template-columns: repeat(5, 400px);
+  grid-column-gap: 20px;
+  grid-row-gap: 30px;
+  justify-content: center;
+  margin: 40px 0;
+
+  @media (max-width: 2185px) {
+    grid-template-columns: repeat(5, 350px);
+  }
+
+  @media (max-width: 1880px) {
+    grid-template-columns: repeat(4, 350px);
+  }
+
+  @media (max-width: 1520px) {
+    grid-template-columns: repeat(3, 350px);
+  }
+
+  @media (max-width: 1140px) {
+    grid-template-columns: repeat(2, 400px);
+  }
+  
+  @media (max-width: 870px) {
+    grid-template-columns: 1fr;
+    margin: 40px 20px;
+  }
+}

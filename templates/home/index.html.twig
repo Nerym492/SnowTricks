@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Welcome on Snowtricks !{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('home') }}
+{% endblock %}
+
+{% block body %}
+    {% include 'partials/tricks_list.html.twig' with {'hiddeLoadButton': false} %}
+{% endblock %}
