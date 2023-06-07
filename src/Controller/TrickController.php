@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Commentaire;
 use App\Entity\GroupeTrick;
 use App\Entity\ImagesTrick;
 use App\Entity\Trick;
@@ -35,12 +36,15 @@ class TrickController extends AbstractController
 
         $trickVideos = $this->manager->getRepository(VideosTrick::class)->findAll();
 
+        $comments = $this->manager->getRepository(Commentaire::class)->findAllOrdered(['date_creation' => 'DESC']);
+
         return $this->render('partials/trick.html.twig', [
             'trick' => $trick,
             'nomGroupeTrick' => $groupeTrick->getNom(),
             'headerImage' => $headerImage,
             'trickImages' => $trickImages,
             'trickVideos' => $trickVideos,
+            'comments' => $comments,
         ]);
     }
 

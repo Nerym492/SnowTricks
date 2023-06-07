@@ -4,6 +4,7 @@
 @import "layouts/tricks-list";
 @import "layouts/trick-details";
 @import "components/buttons";
+@import "components/icons";
 
 html {
   scroll-behavior: smooth;
@@ -39,4 +40,8 @@ body {
 
 .disable-scroll {
   overflow: hidden;
+}
+
+.small {
+  font-size: 0.875em;
 }

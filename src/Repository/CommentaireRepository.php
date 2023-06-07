@@ -39,6 +39,19 @@ class CommentaireRepository extends ServiceEntityRepository
         }
     }
 
+    public function findAllOrdered(array $orderBy): array
+    {
+        $commentQuery = $this->createQueryBuilder('c');
+        $commentQuery->select('c AS data', 'u.nom AS nomUtilisateur');
+        $commentQuery->leftJoin('c.utilisateur', 'u');
+
+        foreach ($orderBy as $fieldName => $direction) {
+            $commentQuery->addOrderBy('c.'.$fieldName, $direction);
+        }
+
+        return $commentQuery->getQuery()->getResult();
+    }
+
 //    /**
 //     * @return Commentaire[] Returns an array of Commentaire objects
 //     */

@@ -25,7 +25,7 @@
   aspect-ratio: 16/9;
 }
 
-.trick-description {
+.trick-detail-description {
   grid-column: 1 / -1;
 
   h2 {
@@ -34,3 +34,61 @@
   }
 }
 
+.trick-informations {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+
+  &-item {
+    margin-right: 20px;
+    background: #AAA;
+    padding: 5px;
+    border-radius: 5px;
+  }
+
+  &-item:last-child {
+    margin-right: 0;
+  }
+}
+
+.comment-form {
+  display: grid;
+  grid-template-columns: 500px;
+  justify-content: center;
+  row-gap: 15px;
+}
+
+.comment-section {
+  margin-top: 40px;
+
+  h2 {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+}
+
+.comment-list {
+  display: grid;
+  justify-content: center;
+  grid-template-columns: 500px;
+}
+
+.comment {
+  display: flex;
+  margin-bottom: 20px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &-user-info {
+    margin-top: 0;
+    margin-bottom: 0.25rem;
+  }
+
+  &-text {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+
+}
