@@ -41,3 +41,13 @@
 .div-load-more {
   width: 100%;
 }
+
+.btn-comment {
+  max-width: 150px;
+  height: 30px;
+  justify-self: end;
+
+  &::after {
+    top: -6px;
+  }
+}

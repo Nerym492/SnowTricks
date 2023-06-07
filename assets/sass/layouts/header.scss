@@ -1,11 +1,10 @@
 .masthead {
-  background: url('../../images/header/snowboarding-wallpaper.jpg');
   background-size: cover;
   height: 90vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: norwester, serif;
+  font-family: Montserrat, serif;
 
   h1 {
     display: flex;
@@ -18,6 +17,7 @@
     display: block;
     width: 100%;
     text-align: center;
+    text-transform: uppercase;
   }
 
   .header-arrow {

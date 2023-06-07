@@ -54,13 +54,32 @@ class ImagesTrickRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?ImagesTrick
-//    {
-//        return $this->createQueryBuilder('i')
-//            ->andWhere('i.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findOneByTrick($trickId): ?ImagesTrick
+    {
+        return $this->createQueryBuilder('i')
+            ->andWhere('i.trick = :val')
+            ->setParameter('val', $trickId)
+            ->orderBy('i.id', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    public function findAllExceptFirst($trickId): array
+    {
+        $nbImagesQuery = $this->createQueryBuilder('i')
+            ->select('COUNT(i) AS nbImages')
+            ->getQuery()
+            ->getResult();
+
+        return $this->createQueryBuilder('i')
+            ->andWhere('i.trick = :val')
+            ->setParameter('val', $trickId)
+            ->orderBy('i.id', 'ASC')
+            ->setFirstResult(1)
+            ->setMaxResults($nbImagesQuery[0]['nbImages'])
+            ->getQuery()
+            ->getResult();
+    }
 }

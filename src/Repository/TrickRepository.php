@@ -69,7 +69,7 @@ class TrickRepository extends ServiceEntityRepository
             ->leftJoin('t.groupe_trick', 'g')
             ->leftJoin('t.imagesTricks', 'it')
             ->andWhere('it.id = (
-                SELECT MAX(it2.id)
+                SELECT MIN(it2.id)
                 FROM App\Entity\ImagesTrick it2
                 WHERE it2.trick = t
             )')
