@@ -29,12 +29,12 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager)
     {
-        $grabsGroup = $manager->getRepository(GroupTrick::class)->findOneBy(['nom' => 'Grabs']);
-        $flipsGroup = $manager->getRepository(GroupTrick::class)->findOneBy(['nom' => 'Flips']);
-        $spinsGroup = $manager->getRepository(GroupTrick::class)->findOneBy(['nom' => 'Spins']);
-        $railsGroup = $manager->getRepository(GroupTrick::class)->findOneBy(['nom' => 'Rails']);
-        $butterGroup = $manager->getRepository(GroupTrick::class)->findOneBy(['nom' => 'Butter']);
-        $utilisateur1 = $manager->getRepository(User::class)->findOneBy(['nom' => 'Testuser1234']);
+        $grabsGroup = $manager->getRepository(GroupTrick::class)->findOneBy(['name' => 'Grabs']);
+        $flipsGroup = $manager->getRepository(GroupTrick::class)->findOneBy(['name' => 'Flips']);
+        $spinsGroup = $manager->getRepository(GroupTrick::class)->findOneBy(['name' => 'Spins']);
+        $railsGroup = $manager->getRepository(GroupTrick::class)->findOneBy(['name' => 'Rails']);
+        $butterGroup = $manager->getRepository(GroupTrick::class)->findOneBy(['name' => 'Butter']);
+        $utilisateur1 = $manager->getRepository(User::class)->findOneBy(['name' => 'Testuser1234']);
 
         $this->addTrick($grabsGroup, 'Indy', 'Attrape le carre des orteils de ta planche, entre les '.
             'fixations, avec ta main arrière.', $utilisateur1);
@@ -80,13 +80,13 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
         $manager->flush();
     }
 
-    private function addTrick(GroupTrick $groupeTrick, string $nom, string $description, User $utilisateur)
+    private function addTrick(GroupTrick $groupTrick, string $name, string $description, User $user)
     {
         $trick = new Trick();
-        $trick->setGroupTrick($groupeTrick);
-        $trick->setName($nom);
+        $trick->setGroupTrick($groupTrick);
+        $trick->setName($name);
         $trick->setDescription($description);
-        $trick->setUser($utilisateur);
+        $trick->setUser($user);
         $trick->setCreationDate(new \DateTime());
 
         $this->manager->persist($trick);

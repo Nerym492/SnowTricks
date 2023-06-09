@@ -47,7 +47,7 @@ class ImagesTrickFixtures extends Fixture implements DependentFixtureInterface
         ];
 
         foreach ($tricks as $trickNom => $trickImage) {
-            $trickData = $manager->getRepository(Trick::class)->findOneBy(['nom' => $trickNom]);
+            $trickData = $manager->getRepository(Trick::class)->findOneBy(['name' => $trickNom]);
             if ('array' === gettype($trickImage)) {
                 foreach ($trickImage as $image) {
                     $this->addTrickImage($trickNom, $trickData, $image);
