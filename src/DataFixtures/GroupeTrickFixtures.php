@@ -3,42 +3,36 @@
 namespace App\DataFixtures;
 
 use App\Entity\GroupTrick;
-use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectManager;
 
 class GroupeTrickFixtures extends Fixture
 {
+    private EntityManagerInterface $manager;
+
+    public function __construct(EntityManagerInterface $manager)
+    {
+        $this->manager = $manager;
+    }
+
     public function load(ObjectManager $manager): void
     {
-        $groupeTrick1 = new GroupTrick();
-        $groupeTrick1->setName('Butter');
-
-        $groupeTrick2 = new GroupTrick();
-        $groupeTrick2->setName('Grabs');
-
-        $groupeTrick3 = new GroupTrick();
-        $groupeTrick3->setName('Spins');
-
-        $groupeTrick4 = new GroupTrick();
-        $groupeTrick4->setName('Flips');
-
-        $groupeTrick5 = new GroupTrick();
-        $groupeTrick5->setName('Corks');
-
-        $groupeTrick6 = new GroupTrick();
-        $groupeTrick6->setName('Rails');
-
-        $groupeTrick7 = new GroupTrick();
-        $groupeTrick7->setName('Boxes');
-
-        $manager->persist($groupeTrick1);
-        $manager->persist($groupeTrick2);
-        $manager->persist($groupeTrick3);
-        $manager->persist($groupeTrick4);
-        $manager->persist($groupeTrick5);
-        $manager->persist($groupeTrick6);
-        $manager->persist($groupeTrick7);
+        $this->addGroup('Butter');
+        $this->addGroup('Grabs');
+        $this->addGroup('Spins');
+        $this->addGroup('Flips');
+        $this->addGroup('Corks');
+        $this->addGroup('Rails');
+        $this->addGroup('Boxes');
 
         $manager->flush();
+    }
+
+    private function addGroup(string $name): void
+    {
+        $groupTrick = new GroupTrick();
+        $groupTrick->setName($name);
+        $this->manager->persist($groupTrick);
     }
 }
