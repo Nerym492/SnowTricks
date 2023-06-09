@@ -10,15 +10,13 @@ class UserFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $utilisateur1 = new User();
-        $utilisateur1->setNom('Testuser1234');
-        $utilisateur1->setMail('florianpohu49@gmail.com');
-        $utilisateur1->setMotDePasse('Test1234*');
-        $utilisateur1->setLienConfirmation('');
-        $utilisateur1->setMailValide(1);
-        $utilisateur1->setPhotoProfil('');
+        $user = new User();
+        $user->setPseudo('Testuser1234');
+        $user->setMail('florianpohu49@gmail.com');
+        // generated with security:hash-password Test1234*
+        $user->setPassword('$2y$13$kNkGx.MPdLzt1R7QCI/1YuMW5XDgoc8f2h7H6WeL4SlI1yKdnfSUC');
 
-        $manager->persist($utilisateur1);
+        $manager->persist($user);
         $manager->flush();
     }
 }
