@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Commentaire;
-use App\Entity\GroupeTrick;
+use App\Entity\Comment;
+use App\Entity\GroupTrick;
 use App\Entity\ImagesTrick;
 use App\Entity\Trick;
 use App\Entity\VideosTrick;
@@ -26,7 +26,7 @@ class TrickController extends AbstractController
     public function getTrickDetails(string $trickId): Response
     {
         $trick = $this->manager->getRepository(Trick::class)->findOneBy(['id' => $trickId]);
-        $groupeTrick = $this->manager->getRepository(GroupeTrick::class)->findOneBy([
+        $groupeTrick = $this->manager->getRepository(GroupTrick::class)->findOneBy([
             'id' => $trick->getGroupeTrick()->getId(),
         ]);
         $imagesTrickRepo = $this->manager->getRepository(ImagesTrick::class);
@@ -36,7 +36,7 @@ class TrickController extends AbstractController
 
         $trickVideos = $this->manager->getRepository(VideosTrick::class)->findAll();
 
-        $comments = $this->manager->getRepository(Commentaire::class)->findAllOrdered(['date_creation' => 'DESC']);
+        $comments = $this->manager->getRepository(Comment::class)->findAllOrdered(['date_creation' => 'DESC']);
 
         return $this->render('partials/trick.html.twig', [
             'trick' => $trick,

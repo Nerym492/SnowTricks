@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\GroupeTrickRepository;
+use App\Repository\GroupTrickRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: GroupeTrickRepository::class)]
-class GroupeTrick
+#[ORM\Entity(repositoryClass: GroupTrickRepository::class)]
+class GroupTrick
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -16,7 +16,7 @@ class GroupeTrick
     private ?int $id = null;
 
     #[ORM\Column(length: 40)]
-    private ?string $nom = null;
+    private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'groupe_trick', targetEntity: Trick::class, orphanRemoval: true)]
     private Collection $tricks;
@@ -31,14 +31,14 @@ class GroupeTrick
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getName(): ?string
     {
-        return $this->nom;
+        return $this->name;
     }
 
-    public function setNom(string $nom): self
+    public function setName(string $name): self
     {
-        $this->nom = $nom;
+        $this->name = $name;
 
         return $this;
     }
@@ -55,7 +55,7 @@ class GroupeTrick
     {
         if (!$this->tricks->contains($trick)) {
             $this->tricks->add($trick);
-            $trick->setGroupeTrick($this);
+            $trick->setGroupTrick($this);
         }
 
         return $this;
@@ -65,8 +65,8 @@ class GroupeTrick
     {
         if ($this->tricks->removeElement($trick)) {
             // set the owning side to null (unless already changed)
-            if ($trick->getGroupeTrick() === $this) {
-                $trick->setGroupeTrick(null);
+            if ($trick->getGroupTrick() === $this) {
+                $trick->setGroupTrick(null);
             }
         }
 

@@ -2,9 +2,9 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\GroupeTrick;
+use App\Entity\GroupTrick;
 use App\Entity\Trick;
-use App\Entity\Utilisateur;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,19 +22,19 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies(): array
     {
         return [
-            UtilisateurFixtures::class,
+            UserFixtures::class,
             GroupeTrickFixtures::class,
         ];
     }
 
     public function load(ObjectManager $manager)
     {
-        $grabsGroup = $manager->getRepository(GroupeTrick::class)->findOneBy(['nom' => 'Grabs']);
-        $flipsGroup = $manager->getRepository(GroupeTrick::class)->findOneBy(['nom' => 'Flips']);
-        $spinsGroup = $manager->getRepository(GroupeTrick::class)->findOneBy(['nom' => 'Spins']);
-        $railsGroup = $manager->getRepository(GroupeTrick::class)->findOneBy(['nom' => 'Rails']);
-        $butterGroup = $manager->getRepository(GroupeTrick::class)->findOneBy(['nom' => 'Butter']);
-        $utilisateur1 = $manager->getRepository(Utilisateur::class)->findOneBy(['nom' => 'Testuser1234']);
+        $grabsGroup = $manager->getRepository(GroupTrick::class)->findOneBy(['nom' => 'Grabs']);
+        $flipsGroup = $manager->getRepository(GroupTrick::class)->findOneBy(['nom' => 'Flips']);
+        $spinsGroup = $manager->getRepository(GroupTrick::class)->findOneBy(['nom' => 'Spins']);
+        $railsGroup = $manager->getRepository(GroupTrick::class)->findOneBy(['nom' => 'Rails']);
+        $butterGroup = $manager->getRepository(GroupTrick::class)->findOneBy(['nom' => 'Butter']);
+        $utilisateur1 = $manager->getRepository(User::class)->findOneBy(['nom' => 'Testuser1234']);
 
         $this->addTrick($grabsGroup, 'Indy', 'Attrape le carre des orteils de ta planche, entre les '.
             'fixations, avec ta main arrière.', $utilisateur1);
@@ -80,14 +80,14 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
         $manager->flush();
     }
 
-    private function addTrick(GroupeTrick $groupeTrick, string $nom, string $description, Utilisateur $utilisateur)
+    private function addTrick(GroupTrick $groupeTrick, string $nom, string $description, User $utilisateur)
     {
         $trick = new Trick();
-        $trick->setGroupeTrick($groupeTrick);
-        $trick->setNom($nom);
+        $trick->setGroupTrick($groupeTrick);
+        $trick->setName($nom);
         $trick->setDescription($description);
-        $trick->setUtilisateur($utilisateur);
-        $trick->setDateCreation(new \DateTime());
+        $trick->setUser($utilisateur);
+        $trick->setCreationDate(new \DateTime());
 
         $this->manager->persist($trick);
     }

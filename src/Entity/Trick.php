@@ -17,14 +17,14 @@ class Trick
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    private ?string $nom = null;
+    private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'tricks')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?GroupeTrick $groupe_trick = null;
+    private ?GroupTrick $group_trick = null;
 
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: ImagesTrick::class, orphanRemoval: true)]
     private Collection $imagesTricks;
@@ -34,13 +34,13 @@ class Trick
 
     #[ORM\ManyToOne(inversedBy: 'tricks')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Utilisateur $utilisateur = null;
+    private ?User $user = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $date_creation = null;
+    private ?\DateTimeInterface $creation_date = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $date_modification = null;
+    private ?\DateTimeInterface $modification_date = null;
 
     public function __construct()
     {
@@ -53,14 +53,14 @@ class Trick
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getName(): ?string
     {
-        return $this->nom;
+        return $this->name;
     }
 
-    public function setNom(string $nom): self
+    public function setName(string $name): self
     {
-        $this->nom = $nom;
+        $this->name = $name;
 
         return $this;
     }
@@ -77,14 +77,14 @@ class Trick
         return $this;
     }
 
-    public function getGroupeTrick(): ?GroupeTrick
+    public function getGroupTrick(): ?GroupTrick
     {
-        return $this->groupe_trick;
+        return $this->group_trick;
     }
 
-    public function setGroupeTrick(?GroupeTrick $groupe_trick): self
+    public function setGroupTrick(?GroupTrick $group_trick): self
     {
-        $this->groupe_trick = $groupe_trick;
+        $this->group_trick = $group_trick;
 
         return $this;
     }
@@ -149,38 +149,38 @@ class Trick
         return $this;
     }
 
-    public function getUtilisateur(): ?Utilisateur
+    public function getUser(): ?User
     {
-        return $this->utilisateur;
+        return $this->user;
     }
 
-    public function setUtilisateur(?Utilisateur $utilisateur): self
+    public function setUser(?User $user): self
     {
-        $this->utilisateur = $utilisateur;
+        $this->user = $user;
 
         return $this;
     }
 
-    public function getDateCreation(): ?\DateTimeInterface
+    public function getCreationDate(): ?\DateTimeInterface
     {
-        return $this->date_creation;
+        return $this->creation_date;
     }
 
-    public function setDateCreation(\DateTimeInterface $date_creation): self
+    public function setCreationDate(\DateTimeInterface $creation_date): self
     {
-        $this->date_creation = $date_creation;
+        $this->creation_date = $creation_date;
 
         return $this;
     }
 
-    public function getDateModification(): ?\DateTimeInterface
+    public function getModificationDate(): ?\DateTimeInterface
     {
-        return $this->date_modification;
+        return $this->modification_date;
     }
 
-    public function setDateModification(?\DateTimeInterface $date_modification): self
+    public function setModificationDate(?\DateTimeInterface $modification_date): self
     {
-        $this->date_modification = $date_modification;
+        $this->modification_date = $modification_date;
 
         return $this;
     }

@@ -66,7 +66,7 @@ class ImagesTrickFixtures extends Fixture implements DependentFixtureInterface
         $trickImg = new ImagesTrick();
         $trickImg->setDescription($description);
         $trickImg->setTrick($trick);
-        $trickImg->setNomFichier($nomFichier);
+        $trickImg->setFileName($nomFichier);
 
         $this->manager->persist($trickImg);
     }
