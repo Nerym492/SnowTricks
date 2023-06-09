@@ -6,6 +6,7 @@
     "require": {
         "php": ">=8.1",
         "ext-ctype": "*",
+        "ext-fileinfo": "*",
         "ext-iconv": "*",
         "doctrine/annotations": "^2.0",
         "doctrine/doctrine-bundle": "^2.9",
@@ -42,9 +43,9 @@
         "symfony/web-link": "6.3.*",
         "symfony/webpack-encore-bundle": "^1.16",
         "symfony/yaml": "6.3.*",
+        "symfonycasts/verify-email-bundle": "^1.13",
         "twig/extra-bundle": "^2.12|^3.0",
-        "twig/twig": "^2.12|^3.0",
-        "ext-fileinfo": "*"
+        "twig/twig": "^2.12|^3.0"
     },
     "require-dev": {
         "escapestudios/symfony2-coding-standard": "3.x-dev",
