@@ -19,7 +19,7 @@ class CommentFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager)
     {
-        $user = $manager->getRepository(User::class)->findOneBy(['name' => 'Testuser1234']);
+        $user = $manager->getRepository(User::class)->findOneBy(['pseudo' => 'Testuser1234']);
         $comment = new Comment();
         $comment->setUser($user);
         $comment->setContent('Mon tout premier commentaire sur ce site !!!');
