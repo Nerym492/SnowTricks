@@ -23,7 +23,7 @@ class CommentFixtures extends Fixture implements DependentFixtureInterface
         $comment = new Comment();
         $comment->setUser($user);
         $comment->setContent('Mon tout premier commentaire sur ce site !!!');
-        $comment->setDateCreation(new \DateTime());
+        $comment->setCreationDate(new \DateTime());
 
         $manager->persist($comment);
         $manager->flush();

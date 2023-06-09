@@ -18,7 +18,7 @@ class Comment
     private ?string $content = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $date_creation = null;
+    private ?\DateTimeInterface $creation_date = null;
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
@@ -41,14 +41,14 @@ class Comment
         return $this;
     }
 
-    public function getDateCreation(): ?\DateTimeInterface
+    public function getCreationDate(): ?\DateTimeInterface
     {
-        return $this->date_creation;
+        return $this->creation_date;
     }
 
-    public function setDateCreation(\DateTimeInterface $date_creation): self
+    public function setCreationDate(\DateTimeInterface $creation_date): self
     {
-        $this->date_creation = $date_creation;
+        $this->creation_date = $creation_date;
 
         return $this;
     }

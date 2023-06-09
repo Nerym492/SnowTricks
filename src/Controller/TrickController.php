@@ -27,7 +27,7 @@ class TrickController extends AbstractController
     {
         $trick = $this->manager->getRepository(Trick::class)->findOneBy(['id' => $trickId]);
         $groupeTrick = $this->manager->getRepository(GroupTrick::class)->findOneBy([
-            'id' => $trick->getGroupeTrick()->getId(),
+            'id' => $trick->getGroupTrick()->getId(),
         ]);
         $imagesTrickRepo = $this->manager->getRepository(ImagesTrick::class);
         $headerImage = $imagesTrickRepo->findOneByTrick($trickId);
@@ -40,7 +40,7 @@ class TrickController extends AbstractController
 
         return $this->render('partials/trick.html.twig', [
             'trick' => $trick,
-            'nomGroupeTrick' => $groupeTrick->getName(),
+            'groupTrickName' => $groupeTrick->getName(),
             'headerImage' => $headerImage,
             'trickImages' => $trickImages,
             'trickVideos' => $trickVideos,

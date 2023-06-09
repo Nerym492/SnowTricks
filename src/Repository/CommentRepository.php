@@ -42,8 +42,8 @@ class CommentRepository extends ServiceEntityRepository
     public function findAllOrdered(array $orderBy): array
     {
         $commentQuery = $this->createQueryBuilder('c');
-        $commentQuery->select('c AS data', 'u.nom AS nomUtilisateur');
-        $commentQuery->leftJoin('c.utilisateur', 'u');
+        $commentQuery->select('c AS data', 'u.pseudo AS userPseudo');
+        $commentQuery->leftJoin('c.user', 'u');
 
         foreach ($orderBy as $fieldName => $direction) {
             $commentQuery->addOrderBy('c.'.$fieldName, $direction);

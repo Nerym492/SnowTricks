@@ -6,12 +6,12 @@
                     <figure class="image-trick-list">
                         <img src="{{ path(
                             'get_trick_image',
-                            {'groupName': trick.group_name, 'trickName': trick.data.nom,'imageName': trick.fileName}
+                            {'groupName': trick.group_name, 'trickName': trick.data.name,'imageName': trick.fileName}
                         ) }}" alt=""/>
                     </figure>
                 </a>
                 <div class="trick-description">
-                    <h2>{{ trick.data.nom }}</h2>
+                    <h2>{{ trick.data.name }}</h2>
                 </div>
             </div>
         {% endfor %}
