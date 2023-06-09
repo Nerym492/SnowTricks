@@ -1,0 +1,19 @@
+.register-form {
+  display: grid;
+  grid-template-columns: 500px;
+  justify-content: center;
+
+  label {
+    grid-column: 1;
+  }
+
+  input {
+    grid-column: 2;
+  }
+
+  &-row {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+  }
+}
+

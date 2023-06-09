@@ -3,6 +3,7 @@
 @import "layouts/header";
 @import "layouts/tricks-list";
 @import "layouts/trick-details";
+@import "layouts/forms";
 @import "components/buttons";
 @import "components/icons";
 
@@ -13,6 +14,10 @@ html {
 body {
   margin: 0;
   font-family: Montserrat, serif;
+}
+
+h1, h2 {
+  text-align: center;
 }
 
 .center {
