@@ -17,7 +17,7 @@ class ImagesTrick
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $nomFichier = null;
+    private ?string $fileName = null;
 
     #[ORM\ManyToOne(inversedBy: 'imagesTricks')]
     #[ORM\JoinColumn(nullable: false)]
@@ -40,14 +40,14 @@ class ImagesTrick
         return $this;
     }
 
-    public function getNomFichier(): ?string
+    public function getFileName(): ?string
     {
-        return $this->nomFichier;
+        return $this->fileName;
     }
 
-    public function setNomFichier(string $nomFichier): self
+    public function setFileName(string $fileName): self
     {
-        $this->nomFichier = $nomFichier;
+        $this->fileName = $fileName;
 
         return $this;
     }

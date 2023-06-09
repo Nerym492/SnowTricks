@@ -1,7 +1,7 @@
 <header class="head-trick-details">
     <img src="{{ path(
         'get_trick_image',
-        {'groupName': nomGroupeTrick, 'trickName': trick.nom,'imageName': headerImage.nomFichier}
-    ) }}" alt="image {{ trick.nom }}">
-    <h1>{{ trick.nom }}</h1>
+        {'groupName': groupTrickName, 'trickName': trick.name,'imageName': headerImage.fileName}
+    ) }}" alt="image {{ trick.name }}">
+    <h1>{{ trick.name }}</h1>
 </header>

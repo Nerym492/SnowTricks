@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\Commentaire;
+use App\Entity\Comment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Commentaire>
+ * @extends ServiceEntityRepository<Comment>
  *
- * @method Commentaire|null find($id, $lockMode = null, $lockVersion = null)
- * @method Commentaire|null findOneBy(array $criteria, array $orderBy = null)
- * @method Commentaire[]    findAll()
- * @method Commentaire[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Comment|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Comment|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Comment[]    findAll()
+ * @method Comment[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CommentaireRepository extends ServiceEntityRepository
+class CommentRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Commentaire::class);
+        parent::__construct($registry, Comment::class);
     }
 
-    public function save(Commentaire $entity, bool $flush = false): void
+    public function save(Comment $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class CommentaireRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Commentaire $entity, bool $flush = false): void
+    public function remove(Comment $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -42,8 +42,8 @@ class CommentaireRepository extends ServiceEntityRepository
     public function findAllOrdered(array $orderBy): array
     {
         $commentQuery = $this->createQueryBuilder('c');
-        $commentQuery->select('c AS data', 'u.nom AS nomUtilisateur');
-        $commentQuery->leftJoin('c.utilisateur', 'u');
+        $commentQuery->select('c AS data', 'u.pseudo AS userPseudo');
+        $commentQuery->leftJoin('c.user', 'u');
 
         foreach ($orderBy as $fieldName => $direction) {
             $commentQuery->addOrderBy('c.'.$fieldName, $direction);

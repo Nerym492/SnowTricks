@@ -14,7 +14,7 @@ class HomeController extends AbstractController
     #[Route('/', name: 'app_base')]
     public function showHome(EntityManagerInterface $manager): Response
     {
-        $tricks = $manager->getRepository(Trick::class)->findAllTricksBy(['nom' => 'ASC']);
+        $tricks = $manager->getRepository(Trick::class)->findAllTricksBy(['name' => 'ASC']);
 
         return $this->render('home/index.html.twig', [
             'tricks' => $tricks,

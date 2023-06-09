@@ -13,7 +13,7 @@
         {% for trickImage in trickImages %}
             <img class="image-trick-details" src="{{ path(
                 'get_trick_image',
-                {'groupName': nomGroupeTrick, 'trickName': trick.nom,'imageName': trickImage.nomFichier}
+                {'groupName': groupTrickName, 'trickName': trick.name,'imageName': trickImage.fileName}
             ) }}" alt="image {{ trick.description }}">
         {% endfor %}
         {% for trickVideo in trickVideos %}
@@ -26,11 +26,11 @@
                 {{ trick.description }}
             </p>
             <div class="trick-informations">
-                <div class="trick-informations-item">Groupe : {{ nomGroupeTrick }}</div>
-                <div class="trick-informations-item">Créé le : {{ trick.dateCreation|date("M j, Y \\a\\t H:i") }}</div>
-                {% if trick.dateModification is not empty %}
+                <div class="trick-informations-item">Groupe : {{ groupTrickName }}</div>
+                <div class="trick-informations-item">Créé le : {{ trick.creationDate|date("M j, Y \\a\\t H:i") }}</div>
+                {% if trick.modificationDate is not empty %}
                     <div class="trick-informations-item">Modifié le
-                        : {{ trick.dateModification|date("M j, Y \\a\\t H:i") }}</div>
+                        : {{ trick.modificationDate|date("M j, Y \\a\\t H:i") }}</div>
                 {% endif %}
             </div>
         </div>
@@ -49,9 +49,9 @@
                     <i class="fa-solid fa-circle-user icon-user"></i>
                     <div>
                         <p class="comment-user-info">
-                            {{ comment.nomUtilisateur }}
+                            {{ comment.userPseudo }}
                             <span class="small">
-                            - {{ comment.data.dateCreation|date("d/m/Y \\à H:i") }}
+                            - {{ comment.data.creationDate|date("d/m/Y \\à H:i") }}
                         </span>
                         </p>
                         <p class="comment-text">

@@ -27,7 +27,7 @@ class VideosTrickFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager)
     {
-        $trickIndyGrab = $manager->getRepository(Trick::class)->findOneBy(['nom' => 'Indy']);
+        $trickIndyGrab = $manager->getRepository(Trick::class)->findOneBy(['name' => 'Indy']);
 
         $this->addTrickVideo(
             $trickIndyGrab,

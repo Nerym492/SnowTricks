@@ -47,7 +47,7 @@ class ImagesTrickFixtures extends Fixture implements DependentFixtureInterface
         ];
 
         foreach ($tricks as $trickNom => $trickImage) {
-            $trickData = $manager->getRepository(Trick::class)->findOneBy(['nom' => $trickNom]);
+            $trickData = $manager->getRepository(Trick::class)->findOneBy(['name' => $trickNom]);
             if ('array' === gettype($trickImage)) {
                 foreach ($trickImage as $image) {
                     $this->addTrickImage($trickNom, $trickData, $image);
@@ -61,12 +61,12 @@ class ImagesTrickFixtures extends Fixture implements DependentFixtureInterface
         $manager->flush();
     }
 
-    private function addTrickImage(string $description, Trick $trick, string $nomFichier): void
+    private function addTrickImage(string $description, Trick $trick, string $fileName): void
     {
         $trickImg = new ImagesTrick();
         $trickImg->setDescription($description);
         $trickImg->setTrick($trick);
-        $trickImg->setNomFichier($nomFichier);
+        $trickImg->setFileName($fileName);
 
         $this->manager->persist($trickImg);
     }

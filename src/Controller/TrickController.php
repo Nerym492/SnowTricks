@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Commentaire;
-use App\Entity\GroupeTrick;
+use App\Entity\Comment;
+use App\Entity\GroupTrick;
 use App\Entity\ImagesTrick;
 use App\Entity\Trick;
 use App\Entity\VideosTrick;
@@ -26,8 +26,8 @@ class TrickController extends AbstractController
     public function getTrickDetails(string $trickId): Response
     {
         $trick = $this->manager->getRepository(Trick::class)->findOneBy(['id' => $trickId]);
-        $groupeTrick = $this->manager->getRepository(GroupeTrick::class)->findOneBy([
-            'id' => $trick->getGroupeTrick()->getId(),
+        $groupeTrick = $this->manager->getRepository(GroupTrick::class)->findOneBy([
+            'id' => $trick->getGroupTrick()->getId(),
         ]);
         $imagesTrickRepo = $this->manager->getRepository(ImagesTrick::class);
         $headerImage = $imagesTrickRepo->findOneByTrick($trickId);
@@ -36,11 +36,11 @@ class TrickController extends AbstractController
 
         $trickVideos = $this->manager->getRepository(VideosTrick::class)->findAll();
 
-        $comments = $this->manager->getRepository(Commentaire::class)->findAllOrdered(['date_creation' => 'DESC']);
+        $comments = $this->manager->getRepository(Comment::class)->findAllOrdered(['creation_date' => 'DESC']);
 
         return $this->render('partials/trick.html.twig', [
             'trick' => $trick,
-            'nomGroupeTrick' => $groupeTrick->getNom(),
+            'groupTrickName' => $groupeTrick->getName(),
             'headerImage' => $headerImage,
             'trickImages' => $trickImages,
             'trickVideos' => $trickVideos,
@@ -64,7 +64,7 @@ class TrickController extends AbstractController
     {
         $trickRepository = $this->manager->getRepository(Trick::class);
         $hiddeLoadButton = false;
-        $tricks = $trickRepository->findAllTricksBy(['nom' => 'ASC'], $tricksReloaded);
+        $tricks = $trickRepository->findAllTricksBy(['name' => 'ASC'], $tricksReloaded);
         $nbTricks = $trickRepository->countTricks();
 
         if ($nbTricks === count($tricks)) {

@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\GroupeTrick;
+use App\Entity\GroupTrick;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<GroupeTrick>
+ * @extends ServiceEntityRepository<GroupTrick>
  *
- * @method GroupeTrick|null find($id, $lockMode = null, $lockVersion = null)
- * @method GroupeTrick|null findOneBy(array $criteria, array $orderBy = null)
- * @method GroupeTrick[]    findAll()
- * @method GroupeTrick[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method GroupTrick|null find($id, $lockMode = null, $lockVersion = null)
+ * @method GroupTrick|null findOneBy(array $criteria, array $orderBy = null)
+ * @method GroupTrick[]    findAll()
+ * @method GroupTrick[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class GroupeTrickRepository extends ServiceEntityRepository
+class GroupTrickRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, GroupeTrick::class);
+        parent::__construct($registry, GroupTrick::class);
     }
 
-    public function save(GroupeTrick $entity, bool $flush = false): void
+    public function save(GroupTrick $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class GroupeTrickRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(GroupeTrick $entity, bool $flush = false): void
+    public function remove(GroupTrick $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
