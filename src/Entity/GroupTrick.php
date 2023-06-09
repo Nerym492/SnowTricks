@@ -18,7 +18,7 @@ class GroupTrick
     #[ORM\Column(length: 40)]
     private ?string $name = null;
 
-    #[ORM\OneToMany(mappedBy: 'groupe_trick', targetEntity: Trick::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'group_trick', targetEntity: Trick::class, orphanRemoval: true)]
     private Collection $tricks;
 
     public function __construct()

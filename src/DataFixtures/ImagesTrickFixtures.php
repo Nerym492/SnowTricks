@@ -61,12 +61,12 @@ class ImagesTrickFixtures extends Fixture implements DependentFixtureInterface
         $manager->flush();
     }
 
-    private function addTrickImage(string $description, Trick $trick, string $nomFichier): void
+    private function addTrickImage(string $description, Trick $trick, string $fileName): void
     {
         $trickImg = new ImagesTrick();
         $trickImg->setDescription($description);
         $trickImg->setTrick($trick);
-        $trickImg->setFileName($nomFichier);
+        $trickImg->setFileName($fileName);
 
         $this->manager->persist($trickImg);
     }

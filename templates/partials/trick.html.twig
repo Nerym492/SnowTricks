@@ -13,7 +13,7 @@
         {% for trickImage in trickImages %}
             <img class="image-trick-details" src="{{ path(
                 'get_trick_image',
-                {'groupName': nomGroupeTrick, 'trickName': trick.nom,'imageName': trickImage.nomFichier}
+                {'groupName': nomGroupeTrick, 'trickName': trick.nom,'imageName': trickImage.fileName}
             ) }}" alt="image {{ trick.description }}">
         {% endfor %}
         {% for trickVideo in trickVideos %}

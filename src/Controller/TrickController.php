@@ -36,11 +36,11 @@ class TrickController extends AbstractController
 
         $trickVideos = $this->manager->getRepository(VideosTrick::class)->findAll();
 
-        $comments = $this->manager->getRepository(Comment::class)->findAllOrdered(['date_creation' => 'DESC']);
+        $comments = $this->manager->getRepository(Comment::class)->findAllOrdered(['creation_date' => 'DESC']);
 
         return $this->render('partials/trick.html.twig', [
             'trick' => $trick,
-            'nomGroupeTrick' => $groupeTrick->getNom(),
+            'nomGroupeTrick' => $groupeTrick->getName(),
             'headerImage' => $headerImage,
             'trickImages' => $trickImages,
             'trickVideos' => $trickVideos,
@@ -64,7 +64,7 @@ class TrickController extends AbstractController
     {
         $trickRepository = $this->manager->getRepository(Trick::class);
         $hiddeLoadButton = false;
-        $tricks = $trickRepository->findAllTricksBy(['nom' => 'ASC'], $tricksReloaded);
+        $tricks = $trickRepository->findAllTricksBy(['name' => 'ASC'], $tricksReloaded);
         $nbTricks = $trickRepository->countTricks();
 
         if ($nbTricks === count($tricks)) {
