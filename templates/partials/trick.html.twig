@@ -10,6 +10,7 @@
 {% block content %}
     <div class="trick-container">
         {% include 'partials/header_trick.html.twig' with {headerImage: headerImage.fileName} %}
+        {% if trickImages is not empty %}
         <h2>Images</h2>
         <div class="medias-container">
             {% for trickImage in trickImages %}
@@ -19,6 +20,8 @@
                 ) }}" alt="image {{ trick.description }}">
             {% endfor %}
         </div>
+        {% endif %}
+        {% if trickVideos is not empty %}
         <h2>Videos</h2>
         <div class="medias-container">
             {% for trickVideo in trickVideos %}
@@ -26,6 +29,7 @@
                         allowfullscreen></iframe>
             {% endfor %}
         </div>
+        {% endif %}
         <div class="trick-detail-description">
             <h2>Description</h2>
             <p>

@@ -23,6 +23,9 @@ class ImagesTrick
     #[ORM\JoinColumn(nullable: false)]
     private ?Trick $trick = null;
 
+    #[ORM\Column]
+    private ?bool $isInTheHeader = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -60,6 +63,18 @@ class ImagesTrick
     public function setTrick(?Trick $trick): self
     {
         $this->trick = $trick;
+
+        return $this;
+    }
+
+    public function isIsInTheHeader(): ?bool
+    {
+        return $this->isInTheHeader;
+    }
+
+    public function setIsInTheHeader(bool $isInTheHeader): static
+    {
+        $this->isInTheHeader = $isInTheHeader;
 
         return $this;
     }

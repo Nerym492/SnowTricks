@@ -14,7 +14,7 @@ class ImageUtils
 
         $fileExtension = pathinfo($imagePath, PATHINFO_EXTENSION);
 
-        // Vérifie si le fichier existe et si l'extension est autorisée.
+        // Checks if the file exists and if the extension is authorized.
         if (!in_array($fileExtension, $allowedTypes)) {
             throw new FileException('Invalid file type');
         }

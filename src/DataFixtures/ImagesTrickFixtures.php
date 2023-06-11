@@ -49,24 +49,28 @@ class ImagesTrickFixtures extends Fixture implements DependentFixtureInterface
         foreach ($tricks as $trickNom => $trickImage) {
             $trickData = $manager->getRepository(Trick::class)->findOneBy(['name' => $trickNom]);
             if ('array' === gettype($trickImage)) {
+                $i = 0;
                 foreach ($trickImage as $image) {
-                    $this->addTrickImage($trickNom, $trickData, $image);
+                    ++$i;
+                    // Only the first image is in the header by default.
+                    1 === $i ? $isInTheheader = true : $isInTheheader = false;
+                    $this->addTrickImage($trickNom, $trickData, $image, $isInTheheader);
                 }
             } else {
-                $this->addTrickImage($trickNom, $trickData, $trickImage);
+                $this->addTrickImage($trickNom, $trickData, $trickImage, true);
             }
-
         }
 
         $manager->flush();
     }
 
-    private function addTrickImage(string $description, Trick $trick, string $fileName): void
+    private function addTrickImage(string $description, Trick $trick, string $fileName, bool $isInTheheader): void
     {
         $trickImg = new ImagesTrick();
         $trickImg->setDescription($description);
         $trickImg->setTrick($trick);
         $trickImg->setFileName($fileName);
+        $trickImg->setIsInTheHeader($isInTheheader);
 
         $this->manager->persist($trickImg);
     }

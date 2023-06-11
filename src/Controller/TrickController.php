@@ -30,9 +30,9 @@ class TrickController extends AbstractController
             'id' => $trick->getGroupTrick()->getId(),
         ]);
         $imagesTrickRepo = $this->manager->getRepository(ImagesTrick::class);
-        $headerImage = $imagesTrickRepo->findOneByTrick($trickId);
+        $headerImage = $imagesTrickRepo->findOneBy(['trick' => $trickId, 'isInTheHeader' => 1]);
         // All trick images except the one already in the header.
-        $trickImages = $imagesTrickRepo->findAllExceptFirst($trickId);
+        $trickImages = $imagesTrickRepo->findBy(['trick' => $trickId, 'isInTheHeader' => 0]);
 
         $trickVideos = $this->manager->getRepository(VideosTrick::class)->findAll();
 
