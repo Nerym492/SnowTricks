@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
 
 {% block header %}
-    {% include 'partials/header_trick.html.twig' with {headerImage: headerImage.fileName} %}
 {% endblock %}
 
 {% block javascripts %}
@@ -9,17 +8,24 @@
 {% endblock %}
 
 {% block content %}
-    <section class="tricks-section">
-        {% for trickImage in trickImages %}
-            <img class="image-trick-details" src="{{ path(
-                'get_trick_image',
-                {'groupName': groupTrickName, 'trickName': trick.name,'imageName': trickImage.fileName}
-            ) }}" alt="image {{ trick.description }}">
-        {% endfor %}
-        {% for trickVideo in trickVideos %}
-            <iframe class="trick-video" src="{{ trickVideo.url }}" frameborder="0"
-                    allowfullscreen></iframe>
-        {% endfor %}
+    <div class="trick-container">
+        {% include 'partials/header_trick.html.twig' with {headerImage: headerImage.fileName} %}
+        <h2>Images</h2>
+        <div class="medias-container">
+            {% for trickImage in trickImages %}
+                <img class="image-trick-details" src="{{ path(
+                    'get_trick_image',
+                    {'groupName': groupTrickName, 'trickName': trick.name,'imageName': trickImage.fileName}
+                ) }}" alt="image {{ trick.description }}">
+            {% endfor %}
+        </div>
+        <h2>Videos</h2>
+        <div class="medias-container">
+            {% for trickVideo in trickVideos %}
+                <iframe class="trick-video" src="{{ trickVideo.url }}" frameborder="0"
+                        allowfullscreen></iframe>
+            {% endfor %}
+        </div>
         <div class="trick-detail-description">
             <h2>Description</h2>
             <p>
@@ -34,46 +40,47 @@
                 {% endif %}
             </div>
         </div>
-    </section>
-    <section id="comment-section" class="comment-section">
-        <h2>Commentaires</h2>
-        <form class="comment-form" action="">
+        <section id="comment-section" class="comment-section">
+            <h2>Commentaires</h2>
+            <form class="comment-form" action="">
             <textarea aria-label="commentaire" name="myTextarea" placeholder="Votre commentaire" cols="55" rows="5"
                       minlength="10"
                       maxlength="500" required></textarea>
-            <button type="submit" class="btn-arrow--black btn-comment">Valider</button>
-        </form>
-        <div class="comment-list">
-            {% for comment in comments %}
+                <button type="submit" class="btn-arrow--black btn-comment">Valider</button>
+            </form>
+            <div class="comment-list">
+                {% for comment in comments %}
+                    <div class="comment">
+                        <i class="fa-solid fa-circle-user icon-user"></i>
+                        <div>
+                            <p class="comment-user-info">
+                                {{ comment.userPseudo }}
+                                <span class="small">
+                            - {{ comment.data.creationDate|date("d/m/Y \\à H:i") }}
+                        </span>
+                            </p>
+                            <p class="comment-text">
+                                Ceci est un exemple de commentaire
+                            </p>
+                        </div>
+                    </div>
+                {% endfor %}
                 <div class="comment">
                     <i class="fa-solid fa-circle-user icon-user"></i>
-                    <div>
+                    <div class="comment-text-group">
                         <p class="comment-user-info">
-                            {{ comment.userPseudo }}
+                            Pseudo 1
                             <span class="small">
-                            - {{ comment.data.creationDate|date("d/m/Y \\à H:i") }}
+                            - 7 juin 2023 à 14:36
                         </span>
                         </p>
                         <p class="comment-text">
-                            Ceci est un exemple de commentaire
+                            Un autre commentaire
                         </p>
                     </div>
                 </div>
-            {% endfor %}
-            <div class="comment">
-                <i class="fa-solid fa-circle-user icon-user"></i>
-                <div class="comment-text-group">
-                    <p class="comment-user-info">
-                        Pseudo 1
-                        <span class="small">
-                            - 7 juin 2023 à 14:36
-                        </span>
-                    </p>
-                    <p class="comment-text">
-                        Un autre commentaire
-                    </p>
-                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </div>
+
 {% endblock %}

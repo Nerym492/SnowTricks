@@ -1,8 +1,16 @@
 .trick-container {
-  width: 928px;
+  width: 1136px;
   margin: 0 auto;
   border-radius: 10px;
   overflow: hidden;
+}
+
+.medias-container {
+  display: grid;
+  justify-content: center;
+  grid-template-columns: repeat(3, 352px);
+  grid-column-gap: 20px;
+  padding: 0 20px;
 }
 
 
@@ -36,6 +44,7 @@
 
 .trick-detail-description {
   grid-column: 1 / -1;
+  padding: 0 20px;
 
   h2 {
     text-align: center;
