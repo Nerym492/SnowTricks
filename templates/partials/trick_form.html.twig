@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+    <div class="trick-container">
+        {% include 'partials/header_trick.html.twig' with {headerImage: headerImage} %}
+    </div>
+{% endblock %}

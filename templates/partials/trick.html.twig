@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block header %}
-    {% include 'partials/header_trick.html.twig' %}
+    {% include 'partials/header_trick.html.twig' with {headerImage: headerImage.fileName} %}
 {% endblock %}
 
 {% block javascripts %}

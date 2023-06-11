@@ -41,10 +41,29 @@ class TrickController extends AbstractController
         return $this->render('partials/trick.html.twig', [
             'trick' => $trick,
             'groupTrickName' => $groupeTrick->getName(),
+            'headerImageExist' => true,
             'headerImage' => $headerImage,
             'trickImages' => $trickImages,
             'trickVideos' => $trickVideos,
             'comments' => $comments,
+        ]);
+    }
+
+    #[Route('/trick/modify/{groupTrickName}/{trickId}/{imageName}')]
+    public function showTrickForm(int $trickId, string $groupTrickName, string $imageName): Response
+    {
+        $headerImageExist = false;
+        $trick = $this->manager->getRepository(Trick::class)->findOneBy(['id' => $trickId]);
+
+        if ('' !== $imageName) {
+            $headerImageExist = true;
+        }
+
+        return $this->render('partials/trick_form.html.twig', [
+            'trick' => $trick,
+            'groupTrickName' => $groupTrickName,
+            'headerImageExist' => $headerImageExist,
+            'headerImage' => $imageName,
         ]);
     }
 

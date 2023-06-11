@@ -1,7 +1,11 @@
 <header class="head-trick-details">
-    <img src="{{ path(
-        'get_trick_image',
-        {'groupName': groupTrickName, 'trickName': trick.name,'imageName': headerImage.fileName}
-    ) }}" alt="image {{ trick.name }}">
+    {% if headerImageExist is not empty %}
+        <img src="{{ path(
+            'get_trick_image',
+            {'groupName': groupTrickName, 'trickName': trick.name,'imageName': headerImage}
+        ) }}" alt="image {{ trick.name }}">
+    {% else %}
+        <img src="public/build/images/image-placeholder.jpg" alt="Image placeholder">
+    {% endif %}
     <h1>{{ trick.name }}</h1>
 </header>

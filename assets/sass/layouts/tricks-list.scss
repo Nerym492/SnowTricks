@@ -5,6 +5,10 @@
   box-shadow: -3px -3px 18px 4px rgba(0,0,0,0.29);
   overflow: hidden;
 
+  h2 {
+    text-align: start;
+  }
+
   figure {
     border-bottom: #777 solid 1px;
     width: 100%;
@@ -27,6 +31,18 @@
   }
 
   .trick-description {
-    margin-left: 15px;
+    margin: 0 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .trick-description a{
+    text-decoration: none;
+    color: #000;
+  }
+
+  .trick-description i:last-child {
+    margin-left: 10px;
   }
 }

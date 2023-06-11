@@ -12,6 +12,14 @@
                 </a>
                 <div class="trick-description">
                     <h2>{{ trick.data.name }}</h2>
+                    {% if app.user %}
+                        <div class="trick-preview-actions">
+                            <a href="/trick/modify/{{ trick.group_name }}/{{ trick.data.id }}/{{ trick.fileName }}">
+                                <i class="fa-solid fa-pencil fa-lg"></i>
+                            </a>
+                            <i class="fa-regular fa-trash-can fa-lg"></i>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}

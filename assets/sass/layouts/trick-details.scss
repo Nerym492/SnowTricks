@@ -1,3 +1,11 @@
+.trick-container {
+  width: 928px;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+
 .head-trick-details{
   height: 40%;
   display: flex;
@@ -6,7 +14,8 @@
 
   img {
     z-index: 0;
-    max-height: 500px;
+    width: 100%;
+    aspect-ratio: 16/9;
   }
 
   h1 {
