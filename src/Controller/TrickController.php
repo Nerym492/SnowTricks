@@ -29,12 +29,7 @@ class TrickController extends AbstractController
         $groupeTrick = $this->manager->getRepository(GroupTrick::class)->findOneBy([
             'id' => $trick->getGroupTrick()->getId(),
         ]);
-        $imagesTrickRepo = $this->manager->getRepository(ImagesTrick::class);
-        $headerImage = $imagesTrickRepo->findOneBy(['trick' => $trickId, 'isInTheHeader' => 1]);
-        // All trick images except the one already in the header.
-        $trickImages = $imagesTrickRepo->findBy(['trick' => $trickId, 'isInTheHeader' => 0]);
-
-        $trickVideos = $this->manager->getRepository(VideosTrick::class)->findAll();
+        $trickMedias = $this->getAllTrickMedias($trickId);
 
         $comments = $this->manager->getRepository(Comment::class)->findAllOrdered(['creation_date' => 'DESC']);
 
@@ -42,28 +37,35 @@ class TrickController extends AbstractController
             'trick' => $trick,
             'groupTrickName' => $groupeTrick->getName(),
             'headerImageExist' => true,
-            'headerImage' => $headerImage,
-            'trickImages' => $trickImages,
-            'trickVideos' => $trickVideos,
+            'headerImage' => $trickMedias['headerImage'],
+            'trickImages' => $trickMedias['images'],
+            'trickVideos' => $trickMedias['videos'],
             'comments' => $comments,
         ]);
     }
 
-    #[Route('/trick/modify/{groupTrickName}/{trickId}/{imageName}')]
-    public function showTrickForm(int $trickId, string $groupTrickName, string $imageName): Response
+    #[Route('/trick/modify/{trickId}')]
+    public function showTrickForm(int $trickId): Response
     {
         $headerImageExist = false;
         $trick = $this->manager->getRepository(Trick::class)->findOneBy(['id' => $trickId]);
+        $groupeTrick = $this->manager->getRepository(GroupTrick::class)->findOneBy([
+            'id' => $trick->getGroupTrick()->getId(),
+        ]);
 
-        if ('' !== $imageName) {
+        $trickMedias = $this->getAllTrickMedias($trickId);
+
+        if ('' !== $trickMedias['headerImage']) {
             $headerImageExist = true;
         }
 
         return $this->render('partials/trick_form.html.twig', [
             'trick' => $trick,
-            'groupTrickName' => $groupTrickName,
+            'groupTrickName' => $groupeTrick->getName(),
             'headerImageExist' => $headerImageExist,
-            'headerImage' => $imageName,
+            'headerImage' => $trickMedias['headerImage'],
+            'trickImages' => $trickMedias['images'],
+            'trickVideos' => $trickMedias['videos'],
         ]);
     }
 
@@ -94,5 +96,21 @@ class TrickController extends AbstractController
             'tricks' => $tricks,
             'hiddeLoadButton' => $hiddeLoadButton,
         ]);
+    }
+
+    private function getAllTrickMedias(int $trickId): array
+    {
+        $imagesTrickRepo = $this->manager->getRepository(ImagesTrick::class);
+        $headerImage = $imagesTrickRepo->findOneBy(['trick' => $trickId, 'isInTheHeader' => 1]);
+        // All trick images except the one already in the header.
+        $trickImages = $imagesTrickRepo->findBy(['trick' => $trickId, 'isInTheHeader' => 0]);
+
+        $trickVideos = $this->manager->getRepository(VideosTrick::class)->findAll();
+
+        return [
+            'headerImage' => $headerImage,
+            'images' => $trickImages,
+            'videos' => $trickVideos,
+        ];
     }
 }

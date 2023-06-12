@@ -4,6 +4,6 @@
 
 {% block content %}
     <div class="trick-container">
-        {% include 'partials/header_trick.html.twig' with {headerImage: headerImage} %}
+        {% include 'partials/header_trick.html.twig' with {headerImage: headerImage.fileName} %}
     </div>
 {% endblock %}
