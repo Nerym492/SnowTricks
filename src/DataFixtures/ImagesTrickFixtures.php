@@ -54,20 +54,19 @@ class ImagesTrickFixtures extends Fixture implements DependentFixtureInterface
                     ++$i;
                     // Only the first image is in the header by default.
                     1 === $i ? $isInTheheader = true : $isInTheheader = false;
-                    $this->addTrickImage($trickNom, $trickData, $image, $isInTheheader);
+                    $this->addTrickImage($trickData, $image, $isInTheheader);
                 }
             } else {
-                $this->addTrickImage($trickNom, $trickData, $trickImage, true);
+                $this->addTrickImage($trickData, $trickImage, true);
             }
         }
 
         $manager->flush();
     }
 
-    private function addTrickImage(string $description, Trick $trick, string $fileName, bool $isInTheheader): void
+    private function addTrickImage(Trick $trick, string $fileName, bool $isInTheheader): void
     {
         $trickImg = new ImagesTrick();
-        $trickImg->setDescription($description);
         $trickImg->setTrick($trick);
         $trickImg->setFileName($fileName);
         $trickImg->setIsInTheHeader($isInTheheader);

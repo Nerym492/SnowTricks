@@ -65,7 +65,7 @@ class TrickRepository extends ServiceEntityRepository
 
         $tricksQuery = $this->createQueryBuilder('t');
 
-        $tricksQuery->select('t AS data', 'g.name AS group_name', 'it.description', 'it.fileName')
+        $tricksQuery->select('t AS data', 'g.name AS group_name', 'it.fileName')
             ->leftJoin('t.group_trick', 'g')
             ->leftJoin('t.imagesTricks', 'it')
             ->andWhere('it.id = (
