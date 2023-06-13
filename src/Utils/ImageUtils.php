@@ -10,7 +10,7 @@ class ImageUtils
 {
     public function serveProtectedImage(string $imagePath): Response
     {
-        $allowedTypes = ['jpg', 'jpeg', 'webp', 'png', 'gif'];
+        $allowedTypes = ['jpg', 'jpeg', 'webp', 'png'];
 
         $fileExtension = pathinfo($imagePath, PATHINFO_EXTENSION);
 

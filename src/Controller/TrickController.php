@@ -7,9 +7,11 @@ use App\Entity\GroupTrick;
 use App\Entity\ImagesTrick;
 use App\Entity\Trick;
 use App\Entity\VideosTrick;
+use App\Form\TrickFormType;
 use App\Utils\ImageUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -45,7 +47,7 @@ class TrickController extends AbstractController
     }
 
     #[Route('/trick/modify/{trickId}')]
-    public function showTrickForm(int $trickId): Response
+    public function showTrickForm(Request $request, int $trickId): Response
     {
         $headerImageExist = false;
         $trick = $this->manager->getRepository(Trick::class)->findOneBy(['id' => $trickId]);
@@ -59,6 +61,16 @@ class TrickController extends AbstractController
             $headerImageExist = true;
         }
 
+        $form = $this->createForm(TrickFormType::class, $trick);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->manager->persist($trick);
+            $this->manager->flush();
+
+            return $this->redirectToRoute('app_home');
+        }
+
         return $this->render('partials/trick_form.html.twig', [
             'trick' => $trick,
             'groupTrickName' => $groupeTrick->getName(),
@@ -66,6 +78,7 @@ class TrickController extends AbstractController
             'headerImage' => $trickMedias['headerImage'],
             'trickImages' => $trickMedias['images'],
             'trickVideos' => $trickMedias['videos'],
+            'trickForm' => $form->createView(),
         ]);
     }
 

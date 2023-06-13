@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
@@ -9,7 +9,7 @@
             {{ encore_entry_link_tags('styles') }}
         {% endblock %}
 
-        {% block javascripts %}{% endblock %}
+        {% block scripts_head %}{% endblock %}
         <script src="https://kit.fontawesome.com/d3a0bd80a1.js" crossorigin="anonymous"></script>
     </head>
     <body>
@@ -20,5 +20,6 @@
             {% endblock %}
             {% block content %}{% endblock %}
         </div>
+        {% block scripts_end_body %}{% endblock %}
     </body>
 </html>
