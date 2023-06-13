@@ -1,4 +1,4 @@
-import JustValidate from "just-validate";
+import JustValidate from '../modules/just-validate';
 
 const fileInputs = document.querySelectorAll('.trick-form-file');
 const imagePlaceholder = "<img class=\"image-trick-details\" src=\"/build/images/image-placeholder.webp\" alt=\"\">";
