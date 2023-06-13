@@ -14,7 +14,7 @@
         <div class="medias-container" id="images-list"
              data-prototype="{{ form_widget(trickForm.imagesTricks.vars.prototype)|e('html_attr') }}">
             {% for image in trickForm.imagesTricks %}
-                <div class="trick-image-item">
+                <div id="trick_form_imagesTricks_{{ loop.index-1 }}" class="trick-image-item">
                     <div class="trick-image-preview">
                         <img class="image-trick-details" src="{{ path(
                             'get_trick_image',
