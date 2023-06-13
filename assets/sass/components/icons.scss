@@ -3,3 +3,14 @@
   margin-right: 15px;
   align-self: center;
 }
+
+.icon-add-image {
+  cursor: pointer;
+  font-size: 2em;
+  color: #65B5CD;
+  transition: color 300ms ease-in-out;
+
+  &:hover {
+    color: #367a93;
+  }
+}

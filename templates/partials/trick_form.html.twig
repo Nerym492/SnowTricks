@@ -8,9 +8,11 @@
 {% block content %}
     <div class="trick-container">
         {% include 'partials/header_trick.html.twig' with {headerImage: headerImage.fileName} %}
-        {{ form_start(trickForm, {'attr': {'class': 'register-form'}}) }}
+
+        {{ form_start(trickForm, {'attr': {'class': 'form', 'id': 'trick_form'}}) }}
         <h2>Images</h2>
-        <div class="medias-container">
+        <div class="medias-container" id="images-list"
+             data-prototype="{{ form_widget(trickForm.imagesTricks.vars.prototype)|e('html_attr') }}">
             {% for image in trickForm.imagesTricks %}
                 <div class="trick-image-item">
                     <div class="trick-image-preview">
@@ -19,10 +21,17 @@
                             {'groupName': groupTrickName, 'trickName': trick.name,'imageName': image.vars.value.fileName}
                         ) }}" alt="image {{ trick.name }}">
                     </div>
-                    {{ form_widget(image.fileName) }}
-                    {{ form_widget(image.file) }}
+                    {{ form_row(image.fileName) }}
+                    {{ form_row(image.file) }}
                 </div>
             {% endfor %}
+            <div class="trick-image-item" id="add-image-form-button">
+                <div class="image-trick-details center">
+                    <a role="button" class="link-add-image">
+                        <i class="fa-solid fa-circle-plus icon-add-image"></i>
+                    </a>
+                </div>
+            </div>
         </div>
         <h2>Videos</h2>
         {{ form_end(trickForm) }}
