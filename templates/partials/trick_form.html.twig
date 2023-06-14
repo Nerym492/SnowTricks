@@ -24,8 +24,8 @@
                     {{ form_row(image.fileName) }}
                     <div class="image-file-actions">
                         {{ form_widget(image.file) }}
-                        <a role="button" class="delete-image-link">
-                            <i class="fa-solid fa-trash icon-delete-image"></i>
+                        <a role="button" class="delete-image-btn" id="delete-img-btn-{{ loop.index-1 }}">
+                            <i class="fa-solid fa-trash icon-delete-img"></i>
                         </a>
                     </div>
                 </div>
@@ -33,7 +33,7 @@
             <div class="trick-image-item" id="add-image-form-button">
                 <div class="image-trick-details center">
                     <a role="button">
-                        <i class="fa-solid fa-circle-plus icon-add-image"></i>
+                        <i class="fa-solid fa-circle-plus icon-add-img"></i>
                     </a>
                 </div>
             </div>

@@ -11,7 +11,7 @@ const trickValidator = new JustValidate('#trick_form', {
   validateBeforeSubmitting: true,
 });
 
-function addInputChangeListener (fileInput, preview) {
+function addInputChangeListener(fileInput, preview) {
   fileInput.addEventListener('change', function (event) {
     const files = event.target.files;
     if (fileInput.classList.contains('just-validate-error-field')) {
@@ -19,6 +19,12 @@ function addInputChangeListener (fileInput, preview) {
     } else {
       displayImagePreview(files, preview);
     }
+  })
+}
+
+function addDeleteListener(deleteButton) {
+  deleteButton.addEventListener('click', function () {
+    deleteButton.closest('.trick-image-item').remove()
   })
 }
 
@@ -83,6 +89,10 @@ function addImageForm(imagePlaceholder) {
   let newPreview = document.createElement('div');
   newPreview.classList.add('trick-image-preview');
   newPreview.innerHTML = imagePlaceholder;
+  // New delete button HTML
+  let deleteButtonHtml = '<a role="button" class="delete-image-btn" id="delete-img-btn-'+index+'">\n' +
+    '<i class=\"fa-solid fa-trash icon-delete-img\"></i>\n' +
+    '</a>'
 
   // Retrieves new form id.
   let newFormId = tempDiv.firstChild.id;
@@ -92,6 +102,11 @@ function addImageForm(imagePlaceholder) {
   imagesCollection.insertBefore(tempDiv.firstChild, addImageFormButton);
 
   const newFileInput = document.getElementById(newFormId).lastElementChild.firstChild;
+  // Insert the new delete button
+  newFileInput.parentElement.insertAdjacentHTML('beforeend', deleteButtonHtml)
+  // Select delete button after insertion
+  let deleteButton = document.getElementById("delete-img-btn-"+index)
+  addDeleteListener(deleteButton)
   addInputFileValidation(newFileInput);
   addInputChangeListener(newFileInput, newPreview);
 }
@@ -102,9 +117,12 @@ addImageFormButton.addEventListener('click', function () {
 
 
 fileInputs.forEach(fileInput => {
-  const preview = fileInput.closest('.trick-image-item').querySelector('.trick-image-preview');
+  // Retrieving the parent group with the image, preview and buttons
+  const imageItem = fileInput.closest('.trick-image-item');
+  const preview = imageItem.querySelector('.trick-image-preview');
   addInputFileValidation(fileInput);
   // Preview image as it changes.
   addInputChangeListener(fileInput, preview);
+  addDeleteListener(imageItem.querySelector('.delete-image-btn'));
 });
 
