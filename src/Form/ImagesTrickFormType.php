@@ -15,17 +15,20 @@ class ImagesTrickFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('fileName', null, [
+            ->add('fileName', HiddenType::class, [
                 'label' => false,
                 'required' => false,
             ])
             ->add('file', FileType::class, [
                 'label' => false,
                 'mapped' => false,
-                'required' => false,
+                'required' => true,
                 'attr' => ['class' => 'trick-form-file'],
+                'row_attr' => ['class' => 'image-file-actions'],
                 'constraints' => [
                     new File([
+                        'maxSize' => '600k',
+                        'maxSizeMessage' => 'The file is too large. Maximum size allowed is {{ limit }}.',
                         'mimeTypes' => [
                             'image/webp',
                             'image/jpeg',
