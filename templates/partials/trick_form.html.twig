@@ -9,7 +9,7 @@
     <div class="trick-container">
         {% include 'partials/header_trick.html.twig' with {headerImage: headerImage.fileName} %}
 
-        {{ form_start(trickForm, {'attr': {'class': 'form', 'id': 'trick_form'}}) }}
+        {{ form_start(trickForm, {'attr': {'class': 'trick-form', 'id': 'trick_form'}}) }}
         <h2>Images</h2>
         <div class="medias-container" id="images-list"
              data-prototype="{{ form_widget(trickForm.imagesTricks.vars.prototype)|e('html_attr') }}">
@@ -22,12 +22,17 @@
                         ) }}" alt="image {{ trick.name }}">
                     </div>
                     {{ form_row(image.fileName) }}
-                    {{ form_row(image.file) }}
+                    <div class="image-file-actions">
+                        {{ form_widget(image.file) }}
+                        <a role="button" class="delete-image-link">
+                            <i class="fa-solid fa-trash icon-delete-image"></i>
+                        </a>
+                    </div>
                 </div>
             {% endfor %}
             <div class="trick-image-item" id="add-image-form-button">
                 <div class="image-trick-details center">
-                    <a role="button" class="link-add-image">
+                    <a role="button">
                         <i class="fa-solid fa-circle-plus icon-add-image"></i>
                     </a>
                 </div>
