@@ -24,8 +24,8 @@ class TrickController extends AbstractController
         $this->manager = $manager;
     }
 
-    #[Route('/tricks/details/{trickId}')]
-    public function getTrickDetails(string $trickId): Response
+    #[Route('/tricks/details/{trickId}', name: 'trick_details')]
+    public function getTrickDetails(int $trickId): Response
     {
         $trick = $this->manager->getRepository(Trick::class)->findOneBy(['id' => $trickId]);
         $groupeTrick = $this->manager->getRepository(GroupTrick::class)->findOneBy([
@@ -46,7 +46,7 @@ class TrickController extends AbstractController
         ]);
     }
 
-    #[Route('/trick/modify/{trickId}')]
+    #[Route('/trick/modify/{trickId}', name: 'trick_modification')]
     public function showTrickForm(Request $request, int $trickId): Response
     {
         $headerImageExist = false;
@@ -56,6 +56,7 @@ class TrickController extends AbstractController
         ]);
 
         $trickMedias = $this->getAllTrickMedias($trickId);
+        $trickImages = $trickMedias['images'];
 
         if ('' !== $trickMedias['headerImage']) {
             $headerImageExist = true;
@@ -65,10 +66,11 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->manager->persist($trick);
-            $this->manager->flush();
-
-            return $this->redirectToRoute('app_home');
+            foreach ($trickImages as $image) {
+                if (false === $trick->getImagesTricks()->contains($image)) {
+                    echo "L'image ".$image->getId().' a été supprimée !';
+                }
+            }
         }
 
         return $this->render('partials/trick_form.html.twig', [
