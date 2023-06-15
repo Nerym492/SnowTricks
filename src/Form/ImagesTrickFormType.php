@@ -15,14 +15,15 @@ class ImagesTrickFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('fileName', HiddenType::class, [
+            ->add('fileName', null, [
                 'label' => false,
                 'required' => false,
+                'row_attr' => ['class' => 'hidden'],
             ])
             ->add('file', FileType::class, [
                 'label' => false,
                 'mapped' => false,
-                'required' => true,
+                'required' => false,
                 'attr' => ['class' => 'trick-form-file'],
                 'row_attr' => ['class' => 'image-file-actions'],
                 'constraints' => [

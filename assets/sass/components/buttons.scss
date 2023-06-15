@@ -1,9 +1,8 @@
-.btn-arrow--black {
+.btn-arrow--white {
   min-width: 130px;
   height: 40px;
   color: #FFF;
   padding: 5px 10px;
-  font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
@@ -52,5 +51,14 @@
 
   &::after {
     top: -6px;
+  }
+}
+
+.btn-submit {
+  @include standard-btn(none, $steel-blue, $steel-blue, 150px);
+  justify-self: center;
+
+  &:hover {
+    @include btn-slide-effect(#FFF, $steel-blue, 150px);
   }
 }

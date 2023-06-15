@@ -9,17 +9,21 @@
     <div class="trick-container">
         {% include 'partials/header_trick.html.twig' with {headerImage: headerImage.fileName} %}
 
-        {{ form_start(trickForm, {'attr': {'class': 'trick-form', 'id': 'trick_form'}}) }}
+        {{ form_start(trickForm, {'attr': {'class': 'form', 'id': 'trick_form'}}) }}
         <h2>Images</h2>
         <div class="medias-container" id="images-list"
              data-prototype="{{ form_widget(trickForm.imagesTricks.vars.prototype)|e('html_attr') }}">
             {% for image in trickForm.imagesTricks %}
                 <div id="trick_form_imagesTricks_{{ loop.index-1 }}" class="trick-image-item">
                     <div class="trick-image-preview">
-                        <img class="image-trick-details" src="{{ path(
-                            'get_trick_image',
-                            {'groupName': groupTrickName, 'trickName': trick.name,'imageName': image.vars.value.fileName}
-                        ) }}" alt="image {{ trick.name }}">
+                        {% if image.vars.value.fileName is empty %}
+                            <img class="image-trick-details" src="/build/images/image-placeholder.webp" alt="">
+                        {% else %}
+                            <img class="image-trick-details" src="{{ path(
+                                'get_trick_image',
+                                {'groupName': groupTrickName, 'trickName': trick.name,'imageName': image.vars.value.fileName}
+                            ) }}" alt="image {{ trick.name }}">
+                        {% endif %}
                     </div>
                     {{ form_row(image.fileName) }}
                     <div class="image-file-actions">
@@ -38,7 +42,19 @@
                 </div>
             </div>
         </div>
-        <h2>Videos</h2>
+        <div class="form-floating">
+            {{ form_widget(trickForm.name) }}
+            {{ form_label(trickForm.name) }}
+        </div>
+        <div class="form-floating">
+            {{ form_widget(trickForm.description) }}
+            {{ form_label(trickForm.description) }}
+        </div>
+        <div class="form-floating">
+            {{ form_widget(trickForm.group_trick) }}
+            {{ form_label(trickForm.group_trick) }}
+        </div>
+        <button type="submit" class="btn-submit">Save</button>
         {{ form_end(trickForm) }}
     </div>
 {% endblock %}

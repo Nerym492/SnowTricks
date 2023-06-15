@@ -1,15 +1,8 @@
-import JustValidate from '../modules/just-validate';
-
 const fileInputs = document.querySelectorAll('.trick-form-file');
-const imagePlaceholder = "<img class=\"image-trick-details\" src=\"/build/images/image-placeholder.webp\" alt=\"\">";
+const imagePlaceholder = '<img class="image-trick-details" src="/build/images/image-placeholder.webp" alt="">';
 let imagesCollection = document.getElementById('images-list');
 let index = imagesCollection.children.length - 1;
 let addImageFormButton = document.getElementById('add-image-form-button');
-
-
-const trickValidator = new JustValidate('#trick_form', {
-  validateBeforeSubmitting: true,
-});
 
 function addInputChangeListener(fileInput, preview) {
   fileInput.addEventListener('change', function (event) {
@@ -29,28 +22,7 @@ function addDeleteListener(deleteButton) {
 }
 
 function addInputFileValidation(input) {
-  trickValidator.addField("#" + input.id, [
-    {
-      rule: 'minFilesCount',
-      value: 0,
-    },
-    {
-      rule: 'maxFilesCount',
-      value: 1,
-    },
-    {
-      rule: 'files',
-      value: {
-        files: {
-          types: ['image/png', 'image/webp', 'image/jpeg'],
-          extensions: ['png', 'jpeg', 'jpg', 'webp'],
-          maxSize: 600000,
-          minSize: 5000,
-        },
-      },
-      errorMessage: 'The file must be an image (png, jpeg, jpg, webp). Maximum size 600kb'
-    },
-  ]);
+
 }
 
 function displayImagePreview(files, preview) {
@@ -107,7 +79,7 @@ function addImageForm(imagePlaceholder) {
   // Select delete button after insertion
   let deleteButton = document.getElementById("delete-img-btn-"+index)
   addDeleteListener(deleteButton)
-  addInputFileValidation(newFileInput);
+  //addInputFileValidation(newFileInput);
   addInputChangeListener(newFileInput, newPreview);
 }
 
@@ -117,12 +89,11 @@ addImageFormButton.addEventListener('click', function () {
 
 
 fileInputs.forEach(fileInput => {
-  // Retrieving the parent group with the image, preview and buttons
+  //Retrieving the parent group with the image, preview and buttons
   const imageItem = fileInput.closest('.trick-image-item');
   const preview = imageItem.querySelector('.trick-image-preview');
-  addInputFileValidation(fileInput);
-  // Preview image as it changes.
+  //addInputFileValidation(fileInput);
+  //Preview image as it changes.
   addInputChangeListener(fileInput, preview);
   addDeleteListener(imageItem.querySelector('.delete-image-btn'));
 });
-

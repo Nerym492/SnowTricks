@@ -15,18 +15,31 @@ class TrickFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
+            ->add('name', null, [
+                'attr' => [
+                    'placeholder' => 'Name',
+                    'class' => 'form-control',
+                ],
+            ])
             ->add('imagesTricks', CollectionType::class, [
                 'entry_type' => ImagesTrickFormType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
             ])
-            ->add('description')
+            ->add('description', null, [
+                'attr' => [
+                    'placeholder' => 'Description',
+                    'class' => 'form-control trick-description',
+                ],
+            ])
             ->add('group_trick', EntityType::class, [
                 'class' => GroupTrick::class,
                 'choice_label' => 'name',
                 'placeholder' => 'Select a trick group',
+                'attr' => [
+                    'class' => 'form-select',
+                ],
                 'required' => true,
             ])
         ;
