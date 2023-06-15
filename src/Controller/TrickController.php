@@ -4,11 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\GroupTrick;
-use App\Entity\ImagesTrick;
 use App\Entity\Trick;
-use App\Entity\VideosTrick;
 use App\Form\TrickFormType;
-use App\Utils\ImageUtils;
+use App\Service\MediaService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,10 +16,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class TrickController extends AbstractController
 {
     private EntityManagerInterface $manager;
+    private MediaService $mediaService;
 
-    public function __construct(EntityManagerInterface $manager)
+    public function __construct(EntityManagerInterface $manager, MediaService $mediaService)
     {
         $this->manager = $manager;
+        $this->mediaService = $mediaService;
     }
 
     #[Route('/tricks/details/{trickId}', name: 'trick_details')]
@@ -31,7 +31,7 @@ class TrickController extends AbstractController
         $groupeTrick = $this->manager->getRepository(GroupTrick::class)->findOneBy([
             'id' => $trick->getGroupTrick()->getId(),
         ]);
-        $trickMedias = $this->getAllTrickMedias($trickId);
+        $trickMedias = $this->mediaService->getAllTrickMedias($trickId);
 
         $comments = $this->manager->getRepository(Comment::class)->findAllOrdered(['creation_date' => 'DESC']);
 
@@ -55,7 +55,7 @@ class TrickController extends AbstractController
             'id' => $trick->getGroupTrick()->getId(),
         ]);
 
-        $trickMedias = $this->getAllTrickMedias($trickId);
+        $trickMedias = $this->mediaService->getAllTrickMedias($trickId);
         $trickImages = $trickMedias['images'];
 
         if ('' !== $trickMedias['headerImage']) {
@@ -63,14 +63,35 @@ class TrickController extends AbstractController
         }
 
         $form = $this->createForm(TrickFormType::class, $trick);
+        // dump($form, $request->files);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            foreach ($trickImages as $image) {
-                if (false === $trick->getImagesTricks()->contains($image)) {
-                    echo "L'image ".$image->getId().' a été supprimée !';
+            // Doctrine array - collection of ImagesTricks
+            $imagesData = $form->get('imagesTricks')->getData();
+            $fileBag = $request->files;
+            //            if (null !== $fileBag->get('trick_form')) {
+            //                $newImagesFiles = $fileBag->get('trick_form')['imagesTricks'];
+            //            } else {
+            //                $newImagesFiles = [];
+            //            }
+
+            // Data from files inputs.
+            $newImagesFiles = $fileBag->get('trick_form')['imagesTricks'];
+            // dump($newImagesFiles, $imagesData, $fileBag);
+            // dump($imagesData[1], $newImagesFiles);
+            foreach ($newImagesFiles as $newImageFileKey => $newImageFile) {
+                $oldImageId = $imagesData[$newImageFileKey]->getId();
+                // New image to be added to the database
+                if (null !== $newImageFile['file'] && null === $oldImageId) {
+
+                    $imageFileName = $newImageFile['file']->getClientOriginalName();
+                    // dump($oldImageId, $imageFileName);
                 }
             }
+
+            // return $this->redirectToRoute('trick_modification', ['trickId' => $trickId]);
         }
 
         return $this->render('partials/trick_form.html.twig', [
@@ -90,9 +111,7 @@ class TrickController extends AbstractController
         $imagePath = '../assets/uploads/Trick/'.$groupName.'/'.str_replace(' ', '_', $trickName).
             '/'.$imageName;
 
-        $imageUtils = new ImageUtils();
-
-        return $imageUtils->serveProtectedImage($imagePath);
+        return $this->mediaService->serveProtectedImage($imagePath);
     }
 
     #[Route('/tricks/loadMore/{tricksReloaded}', name: 'load_more_tricks')]
@@ -113,19 +132,5 @@ class TrickController extends AbstractController
         ]);
     }
 
-    private function getAllTrickMedias(int $trickId): array
-    {
-        $imagesTrickRepo = $this->manager->getRepository(ImagesTrick::class);
-        $headerImage = $imagesTrickRepo->findOneBy(['trick' => $trickId, 'isInTheHeader' => 1]);
-        // All trick images except the one already in the header.
-        $trickImages = $imagesTrickRepo->findBy(['trick' => $trickId, 'isInTheHeader' => 0]);
 
-        $trickVideos = $this->manager->getRepository(VideosTrick::class)->findAll();
-
-        return [
-            'headerImage' => $headerImage,
-            'images' => $trickImages,
-            'videos' => $trickVideos,
-        ];
-    }
 }
