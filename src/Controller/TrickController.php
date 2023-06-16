@@ -8,6 +8,7 @@ use App\Entity\Trick;
 use App\Form\TrickFormType;
 use App\Service\MediaService;
 use App\Utils\PathUtils;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -55,39 +56,40 @@ class TrickController extends AbstractController
         ]);
 
         $trickMedias = $this->mediaService->getAllTrickMedias($trickId);
+        // All images except the header
         $trickImages = $trickMedias['images'];
 
         if ('' !== $trickMedias['headerImage']) {
             $headerImageExist = true;
         }
 
+        // Collection of ImagesTricks before form submission
+        $imagesCollection = new ArrayCollection();
+        $imagesCollection->add($trickMedias['headerImage']);
+        foreach ($trickImages as $trickImage) {
+            $imagesCollection->add($trickImage);
+        }
+
         $form = $this->createForm(TrickFormType::class, $trick);
-        // dump($form, $request->files);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Doctrine array - collection of ImagesTricks
+            // Collection of ImagesTricks after form submission
             $imagesData = $form->get('imagesTricks')->getData();
+
             $fileBag = $request->files;
-            //            if (null !== $fileBag->get('trick_form')) {
-            //                $newImagesFiles = $fileBag->get('trick_form')['imagesTricks'];
-            //            } else {
-            //                $newImagesFiles = [];
-            //            }
 
             // UploadedFile collection
             $newImagesFiles = $fileBag->get('trick_form')['imagesTricks'];
-            // dump($newImagesFiles, $imagesData, $fileBag);
-            // dump($imagesData[1], $newImagesFiles);
+
             foreach ($newImagesFiles as $newImageFileKey => $newImageFile) {
-                $oldImageId = $imagesData[$newImageFileKey]->getId();
                 $newFileName = '';
                 // New image added in the form
                 if (null !== $newImageFile['file']) {
                     $newFileName = $this->mediaService->uploadTrickImage(
                         $newImageFile['file'],
-                        $imagesData[$newImageFileKey]->getTrick()
+                        $trick->getName()
                     );
                 }
 
@@ -97,6 +99,19 @@ class TrickController extends AbstractController
                     $imagesData[$newImageFileKey]->setIsInTheHeader(false);
                 }
             }
+            // Deleting images files that no longer exist in the trick
+            foreach ($imagesCollection as $image) {
+                $imageDeleted = false;
+                if (null === $image->getTrick()) {
+                    $imageDeleted = $this->mediaService->deleteTrickImage($trick->getName(), $image->getFileName());
+                }
+                // Image file suppression failed
+                if (false === $imageDeleted && null === $image->getTrick()) {
+                    // Cancels deletion of image from database
+                    $image->setTrick($trick);
+                }
+            }
+            dump($form->getData());
             // Persist the Trick
             $this->manager->persist($form->getData());
             $this->manager->flush();

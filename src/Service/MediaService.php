@@ -8,6 +8,8 @@ use App\Entity\VideosTrick;
 use App\Utils\PathUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -88,8 +90,20 @@ class MediaService
         return $newFileName;
     }
 
-    public function deleteTrickImage(Trick $trick)
+    public function deleteTrickImage(string $trickName, string $fileName): bool
     {
+        $filePath = PathUtils::buildTrickPath($this->parameterBag, $this->entityManager, $trickName).'/'.$fileName;
+        $fileSystem = new Filesystem();
+        if ($fileSystem->exists($filePath)) {
+            try {
+                $fileSystem->remove($filePath);
+            } catch (IOException) {
+                $flashBag = $this->requestStack->getSession()->getFlashBag()->clear();
+                $flashBag->add('error', 'Unable to remove file '.$fileName);
+                return false;
+            }
+        }
 
+        return true;
     }
 }

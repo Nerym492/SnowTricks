@@ -26,10 +26,10 @@ class Trick
     #[ORM\JoinColumn(nullable: false)]
     private ?GroupTrick $group_trick = null;
 
-    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: ImagesTrick::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: ImagesTrick::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $imagesTricks;
 
-    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: VideosTrick::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: VideosTrick::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $videosTricks;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
