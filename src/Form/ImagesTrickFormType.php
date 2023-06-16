@@ -18,13 +18,13 @@ class ImagesTrickFormType extends AbstractType
             ->add('fileName', null, [
                 'label' => false,
                 'required' => false,
-                'row_attr' => ['class' => 'hidden'],
+                'row_attr' => ['class' => 'hidden', 'aria-label' => 'File name'],
             ])
             ->add('file', FileType::class, [
                 'label' => false,
                 'mapped' => false,
                 'required' => false,
-                'attr' => ['class' => 'trick-form-file'],
+                'attr' => ['class' => 'trick-form-file', 'aria-label' => 'File selection input'],
                 'row_attr' => ['class' => 'image-file-actions'],
                 'constraints' => [
                     new File([
