@@ -3,19 +3,24 @@
 namespace App\Service;
 
 use App\Entity\ImagesTrick;
+use App\Entity\Trick;
 use App\Entity\VideosTrick;
+use App\Utils\PathUtils;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class MediaService
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->entityManager = $entityManager;
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private ParameterBagInterface $parameterBag,
+        private RequestStack $requestStack,
+    ) {
     }
 
     public function getAllTrickMedias(int $trickId): array
@@ -56,5 +61,35 @@ class MediaService
         }
 
         throw new NotFoundHttpException('Image not found');
+    }
+
+    public function uploadTrickImage(UploadedFile $file, string $trickName): string
+    {
+        $trickPath = PathUtils::buildTrickPath($this->parameterBag, $this->entityManager, $trickName);
+        $trickPathExists = file_exists($trickPath);
+        $newFileName = uniqid().'-'.$trickName.'.'.$file->guessExtension();
+
+        if (!$trickPathExists) {
+            $trickPathExists = mkdir($trickPath, 0777, true);
+        }
+
+        if ($trickPathExists) {
+            try {
+                $file->move($trickPath, $newFileName);
+            } catch (FileException) {
+                // Clear last flash message
+                $flashBag = $this->requestStack->getSession()->getFlashBag()->clear();
+                // Add new flash message
+                $flashBag->add('error', 'Unable to add file '.$file->getClientOriginalName());
+                $newFileName = '';
+            }
+        }
+
+        return $newFileName;
+    }
+
+    public function deleteTrickImage(Trick $trick)
+    {
+
     }
 }
