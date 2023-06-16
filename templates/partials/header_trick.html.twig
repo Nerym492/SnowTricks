@@ -2,7 +2,7 @@
     {% if headerImageExist is not empty %}
         <img src="{{ path(
             'get_trick_image',
-            {'groupName': groupTrickName, 'trickName': trick.name,'imageName': headerImage}
+            {'trickName': trick.name,'imageName': headerImage}
         ) }}" alt="image {{ trick.name }}">
     {% else %}
         <img src="public/build/images/image-placeholder.jpg" alt="Image placeholder">

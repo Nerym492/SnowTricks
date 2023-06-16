@@ -16,7 +16,7 @@
             {% for trickImage in trickImages %}
                 <img class="image-trick-details" src="{{ path(
                     'get_trick_image',
-                    {'groupName': groupTrickName, 'trickName': trick.name,'imageName': trickImage.fileName}
+                    {'trickName': trick.name,'imageName': trickImage.fileName}
                 ) }}" alt="image {{ trick.name }}">
             {% endfor %}
         </div>

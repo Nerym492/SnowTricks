@@ -21,8 +21,8 @@
                         {% else %}
                             <img class="image-trick-details" src="{{ path(
                                 'get_trick_image',
-                                {'groupName': groupTrickName, 'trickName': trick.name,'imageName': image.vars.value.fileName}
-                            ) }}" alt="image {{ trick.name }}">
+                                {'trickName': trick.name,'imageName': image.vars.value.fileName}
+                            ) }}" alt="Image {{ loop.index }}">
                         {% endif %}
                     </div>
                     {{ form_row(image.fileName) }}

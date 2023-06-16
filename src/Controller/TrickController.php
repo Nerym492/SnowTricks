@@ -7,21 +7,20 @@ use App\Entity\GroupTrick;
 use App\Entity\Trick;
 use App\Form\TrickFormType;
 use App\Service\MediaService;
+use App\Utils\PathUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class TrickController extends AbstractController
 {
-    private EntityManagerInterface $manager;
-    private MediaService $mediaService;
-
-    public function __construct(EntityManagerInterface $manager, MediaService $mediaService)
-    {
-        $this->manager = $manager;
-        $this->mediaService = $mediaService;
+    public function __construct(
+        private EntityManagerInterface $manager,
+        private MediaService $mediaService,
+    ) {
     }
 
     #[Route('/tricks/details/{trickId}', name: 'trick_details')]
@@ -77,21 +76,32 @@ class TrickController extends AbstractController
             //                $newImagesFiles = [];
             //            }
 
-            // Data from files inputs.
+            // UploadedFile collection
             $newImagesFiles = $fileBag->get('trick_form')['imagesTricks'];
             // dump($newImagesFiles, $imagesData, $fileBag);
             // dump($imagesData[1], $newImagesFiles);
             foreach ($newImagesFiles as $newImageFileKey => $newImageFile) {
                 $oldImageId = $imagesData[$newImageFileKey]->getId();
-                // New image to be added to the database
-                if (null !== $newImageFile['file'] && null === $oldImageId) {
+                $newFileName = '';
+                // New image added in the form
+                if (null !== $newImageFile['file']) {
+                    $newFileName = $this->mediaService->uploadTrickImage(
+                        $newImageFile['file'],
+                        $imagesData[$newImageFileKey]->getTrick()
+                    );
+                }
 
-                    $imageFileName = $newImageFile['file']->getClientOriginalName();
-                    // dump($oldImageId, $imageFileName);
+                // The new image has been uploaded successfully
+                if ('' !== $newFileName) {
+                    $imagesData[$newImageFileKey]->setFileName($newFileName);
+                    $imagesData[$newImageFileKey]->setIsInTheHeader(false);
                 }
             }
+            // Persist the Trick
+            $this->manager->persist($form->getData());
+            $this->manager->flush();
 
-            // return $this->redirectToRoute('trick_modification', ['trickId' => $trickId]);
+            return $this->redirectToRoute('trick_modification', ['trickId' => $trickId]);
         }
 
         return $this->render('partials/trick_form.html.twig', [
@@ -105,11 +115,10 @@ class TrickController extends AbstractController
         ]);
     }
 
-    #[Route('/trickImage/{groupName}/{trickName}/{imageName}', name: 'get_trick_image')]
-    public function getTrickImage($groupName, $trickName, $imageName): Response
+    #[Route('/trickImage/{trickName}/{imageName}', name: 'get_trick_image')]
+    public function getTrickImage(ParameterBagInterface $parameterBag, $trickName, $imageName): Response
     {
-        $imagePath = '../assets/uploads/Trick/'.$groupName.'/'.str_replace(' ', '_', $trickName).
-            '/'.$imageName;
+        $imagePath = PathUtils::buildTrickPath($parameterBag, $this->manager, $trickName).'/'.$imageName;
 
         return $this->mediaService->serveProtectedImage($imagePath);
     }
@@ -131,6 +140,4 @@ class TrickController extends AbstractController
             'hiddeLoadButton' => $hiddeLoadButton,
         ]);
     }
-
-
 }
