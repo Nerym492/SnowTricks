@@ -1,16 +1,35 @@
+import JustValidate from "../modules/just-validate";
+
+const trickForm = document.getElementById('trick_form');
 const fileInputs = document.querySelectorAll('.trick-form-file');
 const imagePlaceholder = '<img class="image-trick-details" src="/build/images/image-placeholder.webp" alt="">';
 let imagesCollection = document.getElementById('images-list');
 let index = imagesCollection.children.length - 1;
 let addImageFormButton = document.getElementById('add-image-form-button');
 
+const trickValidator = new JustValidate('#trick_form', {
+  validateBeforeSubmitting: true,
+});
+
 function addInputChangeListener(fileInput, preview) {
   fileInput.addEventListener('change', function (event) {
     const files = event.target.files;
-    if (fileInput.classList.contains('just-validate-error-field')) {
-      preview.innerHTML = imagePlaceholder;
+    // For files that already had a preview when the form was loaded
+    if (fileInput.classList.contains("isFilled")) {
+      addInputFileValidation(fileInput);
+      trickValidator.revalidateField("#"+fileInput.id).then(isValid => {
+        if (isValid) {
+          displayImagePreview(files, preview);
+        } else {
+          preview.innerHTML = imagePlaceholder;
+        }
+      })
     } else {
-      displayImagePreview(files, preview);
+      if (event.target.classList.contains('just-validate-error-field')) {
+        preview.innerHTML = imagePlaceholder;
+      } else {
+        displayImagePreview(files, preview);
+      }
     }
   })
 }
@@ -22,7 +41,30 @@ function addDeleteListener(deleteButton) {
 }
 
 function addInputFileValidation(input) {
-
+  trickValidator.addField("#" + input.id, [
+    {
+      rule: 'minFilesCount',
+      value: 1,
+      errorMessage: 'Please select a file or click on the trash can icon',
+    },
+    {
+      rule: 'maxFilesCount',
+      value: 1,
+      errorMessage: 'Please select a file or click on the trash can icon',
+    },
+    {
+      rule: 'files',
+      value: {
+        files: {
+          types: ['image/png', 'image/webp', 'image/jpeg'],
+          extensions: ['png', 'jpeg', 'jpg', 'webp'],
+          maxSize: 600000,
+          minSize: 5000,
+        },
+      },
+      errorMessage: 'The file must be an image (png, jpeg, jpg, webp). Maximum size 600kb'
+    },
+  ]);
 }
 
 function displayImagePreview(files, preview) {
@@ -79,7 +121,7 @@ function addImageForm(imagePlaceholder) {
   // Select delete button after insertion
   let deleteButton = document.getElementById("delete-img-btn-"+index)
   addDeleteListener(deleteButton)
-  //addInputFileValidation(newFileInput);
+  addInputFileValidation(newFileInput);
   addInputChangeListener(newFileInput, newPreview);
 }
 
@@ -92,8 +134,37 @@ fileInputs.forEach(fileInput => {
   //Retrieving the parent group with the image, preview and buttons
   const imageItem = fileInput.closest('.trick-image-item');
   const preview = imageItem.querySelector('.trick-image-preview');
-  //addInputFileValidation(fileInput);
+  if (fileInput.classList.contains("isFilled") === false) {
+    addInputFileValidation(fileInput);
+  }
   //Preview image as it changes.
   addInputChangeListener(fileInput, preview);
   addDeleteListener(imageItem.querySelector('.delete-image-btn'));
 });
+
+trickValidator
+  .addField('#trick_form_name',[
+    {
+      rule: 'required',
+      errorMessage: 'Please enter a trick name',
+    }
+  ])
+  .addField('#trick_form_description',[
+    {
+      rule: 'required',
+      errorMessage: 'Please enter a description',
+    }
+  ])
+  .addField('#trick_form_group_trick', [
+    {
+      rule: 'required',
+      errorMessage: 'Please select a group',
+    }
+  ])
+
+trickValidator.onSuccess(function (event){
+  event.preventDefault();
+  trickForm.submit();
+});
+
+
