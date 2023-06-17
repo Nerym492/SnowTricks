@@ -7,7 +7,7 @@
 
 {% block content %}
     <div class="trick-container">
-        {% include 'partials/header_trick.html.twig' with {headerImage: headerImage.fileName} %}
+        {% include 'partials/header_trick.html.twig' %}
 
         {{ form_start(trickForm, {'attr': {'class': 'form', 'id': 'trick_form'}}) }}
         <h2>Images</h2>
@@ -19,7 +19,7 @@
                         {% if image.vars.value.fileName is empty %}
                             <img class="image-trick-details" src="/build/images/image-placeholder.webp" alt="">
                         {% else %}
-                            <img class="image-trick-details" src="{{ path(
+                            <img class="image-trick-details img-form" src="{{ path(
                                 'get_trick_image',
                                 {'trickName': trick.name,'imageName': image.vars.value.fileName}
                             ) }}" alt="Image {{ loop.index }}">
@@ -27,7 +27,7 @@
                     </div>
                     {{ form_row(image.fileName) }}
                     <div class="image-file-actions">
-                        {{ form_widget(image.file) }}
+                        {{ form_widget(image.file, {'attr': {'class': image.file.vars.attr.class ~ ' isFilled'}}) }}
                         <a role="button" class="delete-image-btn" id="delete-img-btn-{{ loop.index-1 }}">
                             <i class="fa-solid fa-trash icon-delete-img"></i>
                         </a>
@@ -54,9 +54,10 @@
             {{ form_widget(trickForm.group_trick) }}
             {{ form_label(trickForm.group_trick) }}
         </div>
-        <button type="submit" class="btn-submit">Save</button>
+        <button type="submit" class="btn-submit" data-just-validate-fallback-disabled="false">Save</button>
         {{ form_end(trickForm) }}
     </div>
+
 {% endblock %}
 
 {% block scripts_end_body %}

@@ -65,7 +65,10 @@ class TrickController extends AbstractController
 
         // Collection of ImagesTricks before form submission
         $imagesCollection = new ArrayCollection();
-        $imagesCollection->add($trickMedias['headerImage']);
+        if (isset($trickMedias['headerImage'])) {
+            $imagesCollection->add($trickMedias['headerImage']);
+        }
+
         foreach ($trickImages as $trickImage) {
             $imagesCollection->add($trickImage);
         }
@@ -80,25 +83,28 @@ class TrickController extends AbstractController
 
             $fileBag = $request->files;
 
-            // UploadedFile collection
-            $newImagesFiles = $fileBag->get('trick_form')['imagesTricks'];
+            if (isset($fileBag->get('trick_form')['imagesTricks'])) {
+                // UploadedFile collection
+                $newImagesFiles = $fileBag->get('trick_form')['imagesTricks'];
 
-            foreach ($newImagesFiles as $newImageFileKey => $newImageFile) {
-                $newFileName = '';
-                // New image added in the form
-                if (null !== $newImageFile['file']) {
-                    $newFileName = $this->mediaService->uploadTrickImage(
-                        $newImageFile['file'],
-                        $trick->getName()
-                    );
-                }
+                foreach ($newImagesFiles as $newImageFileKey => $newImageFile) {
+                    $newFileName = '';
+                    // New image added in the form
+                    if (null !== $newImageFile['file']) {
+                        $newFileName = $this->mediaService->uploadTrickImage(
+                            $newImageFile['file'],
+                            $trick->getName()
+                        );
+                    }
 
-                // The new image has been uploaded successfully
-                if ('' !== $newFileName) {
-                    $imagesData[$newImageFileKey]->setFileName($newFileName);
-                    $imagesData[$newImageFileKey]->setIsInTheHeader(false);
+                    // The new image has been uploaded successfully
+                    if ('' !== $newFileName) {
+                        $imagesData[$newImageFileKey]->setFileName($newFileName);
+                        $imagesData[$newImageFileKey]->setIsInTheHeader(false);
+                    }
                 }
             }
+            dump($imagesCollection);
             // Deleting images files that no longer exist in the trick
             foreach ($imagesCollection as $image) {
                 $imageDeleted = false;
@@ -111,7 +117,7 @@ class TrickController extends AbstractController
                     $image->setTrick($trick);
                 }
             }
-            dump($form->getData());
+
             // Persist the Trick
             $this->manager->persist($form->getData());
             $this->manager->flush();
