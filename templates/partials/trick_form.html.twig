@@ -15,6 +15,10 @@
              data-prototype="{{ form_widget(trickForm.imagesTricks.vars.prototype)|e('html_attr') }}">
             {% for image in trickForm.imagesTricks %}
                 <div id="trick_form_imagesTricks_{{ loop.index-1 }}" class="trick-image-item">
+                    <img class="border-isheader isheader-top" src="/build/images/border-top-isheader.png" alt="border top isheader">
+                    <img class="border-isheader isheader-right" src="/build/images/border-right-isheader.png" alt="border right isheader">
+                    <img class="border-isheader isheader-bot" src="/build/images/border-bot-isheader.png" alt="border bot isheader">
+                    <img class="border-isheader isheader-left" src="/build/images/border-left-isheader.png" alt="border left isheader">
                     <div class="trick-image-preview">
                         {% if image.vars.value.fileName is empty %}
                             <img class="image-trick-details" src="/build/images/image-placeholder.webp" alt="">

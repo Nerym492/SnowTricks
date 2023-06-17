@@ -43,4 +43,31 @@
   align-items: center;
 }
 
+.border-isheader {
+  position: absolute;
+
+  &.isheader-top {
+    top: -13px;
+    right: 18px;
+  }
+
+  &.isheader-right {
+    right: -10px;
+    top: 20px;
+  }
+
+  &.isheader-bot {
+    bottom: 42px;
+    left: 18px;
+  }
+
+  &.isheader-left {
+    left: -10px;
+    top: 20px;
+  }
+}
+
+.trick-image-item {
+  position: relative;
+}
 
