@@ -1,6 +1,7 @@
 @import "variables";
 @import "mixins";
 @import "fonts";
+@import '../../node_modules/animate.css/animate.css';
 @import "layouts/navbar";
 @import "layouts/header";
 @import "layouts/tricks-list";
@@ -9,6 +10,7 @@
 @import "components/buttons";
 @import "components/icons";
 @import "boostrap-custom";
+
 
 html {
   scroll-behavior: smooth;
