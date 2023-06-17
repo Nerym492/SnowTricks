@@ -24,6 +24,7 @@
     z-index: 0;
     width: 100%;
     aspect-ratio: 16/9;
+    border-radius: 10px;
   }
 
   h1 {
@@ -40,6 +41,10 @@
 .image-trick-details {
   width: 100%;
   aspect-ratio: 16/9;
+
+  &.img-form {
+    border-radius: 10px;
+  }
 }
 
 .trick-detail-description {
