@@ -49,25 +49,62 @@
   &.isheader-top {
     top: -13px;
     right: 18px;
+    width: 317px;
+    height: 8.78px;
   }
 
   &.isheader-right {
     right: -10px;
     top: 20px;
+    width: 5.89px;
+    height: 157.5px;
   }
 
   &.isheader-bot {
-    bottom: 42px;
+    top: 202px;
     left: 18px;
+    width: 317px;
+    height: 8.78px;
   }
 
   &.isheader-left {
     left: -10px;
     top: 20px;
+    width: 5.89px;
+    height: 157.5px;
   }
 }
 
 .trick-image-item {
   position: relative;
+  transition: all 300ms ease;
 }
+
+.border-fade-out {
+  animation: fadeOut;
+  animation-duration: 200ms;
+}
+
+.border-fade-in-down {
+  animation: fadeInDown;
+  animation-duration: 200ms;
+}
+
+.border-fade-in-right {
+  animation: fadeInRight;
+  animation-duration: 200ms;
+}
+
+.border-fade-in-up {
+  animation: fadeInUp;
+  animation-duration: 200ms;
+}
+
+.border-fade-in-left {
+  animation: fadeInLeft;
+  animation-duration: 200ms;
+}
+
+
+
 

@@ -11,6 +11,7 @@
   grid-template-columns: repeat(3, 352px);
   grid-column-gap: 20px;
   padding: 0 20px;
+  transition: width 300ms, height 300ms;
 }
 
 
@@ -113,5 +114,19 @@
     margin: 0;
     font-size: 0.9rem;
   }
+}
 
+.header-img-zoom-in {
+  animation: zoomIn;
+  animation-duration: 700ms;
+}
+
+.img-item-zoom-out {
+  animation: zoomOut;
+  animation-duration: 300ms;
+}
+
+.img-item-zoom-in {
+  animation: zoomIn;
+  animation-duration: 400ms;
 }
