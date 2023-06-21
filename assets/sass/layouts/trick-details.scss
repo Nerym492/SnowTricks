@@ -10,6 +10,7 @@
   justify-content: center;
   grid-template-columns: repeat(3, 352px);
   grid-column-gap: 20px;
+  grid-row-gap: 20px;
   padding: 0 20px;
   transition: width 300ms, height 300ms;
 }
@@ -38,6 +39,10 @@
   width: 100%;
   aspect-ratio: 16/9;
   border: 0;
+
+  &-preview {
+    height: 198px;
+  }
 }
 
 .image-trick-details {

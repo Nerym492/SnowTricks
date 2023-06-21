@@ -5,12 +5,26 @@ const trickForm = document.getElementById('trick_form');
 const fileInputs = document.querySelectorAll('.trick-form-file');
 const imagePlaceholderSrc = '/build/images/image-placeholder.webp';
 const imagePlaceholder = '<img class="image-trick-details img-form" src="'+imagePlaceholderSrc+'" alt="">';
+const addImageFormButton = document.getElementById('add-image-form-button');
+let imagesCollection = {
+  'index': document.getElementById('images-list').children.length - 1,
+  'class': 'trick-image-item',
+  'previewClass': 'trick-image-preview',
+  'data':  document.getElementById('images-list'),
+}
+
 const videosLinks = document.querySelectorAll('.trick-video-link');
 const videoPlaceholderSrc = '/build/images/video-placeholder.png';
 const videoPlaceholder = '<img class="image-trick-details img-form" src="'+videoPlaceholderSrc+'" alt="">';
-let imagesCollection = document.getElementById('images-list');
-let imagesCollectionIndex = imagesCollection.children.length - 1;
-let addImageFormButton = document.getElementById('add-image-form-button');
+let videoCollection = {
+  'index': document.getElementById('videos-list').children.length - 1,
+  'class': 'trick-video-item',
+  'previewClass': 'trick-video-preview',
+  'data': document.getElementById('videos-list'),
+}
+const addVideoFormButton = document.getElementById('add-video-form-button');
+
+
 let isProcessing = false;
 
 const bordersHtml = '<img class="border-isheader isheader-top" src="/build/images/border-top-isheader.png"\n' +
@@ -116,7 +130,7 @@ function addInputChangeListener(fileInput, preview) {
   })
 }
 
-function addDeleteListener(deleteButton) {
+function addDeleteImageListener(deleteButton) {
   deleteButton.addEventListener('click', function () {
     let trickImgItem = deleteButton.closest('.trick-image-item');
     let isHeaderBorders = trickImgItem.querySelectorAll('.border-isheader')
@@ -287,47 +301,112 @@ function animateElement(element, animation, actionAfterAnimation) {
 }
 
 function addImageForm(imagePlaceholder) {
-  // Retrieves the prototype of the collection field.
-  let prototype = imagesCollection.dataset.prototype;
+  let newForm = createItemFromPrototype(imagePlaceholder, imagesCollection, addImageFormButton);
 
-  let newForm = prototype.replace(/__name__/g, imagesCollectionIndex);
+  const trickImgItem = document.getElementById(newForm.id);
+  const newFileInput = trickImgItem.querySelector('.trick-form-file');
+  // New delete button HTML
+  let deleteButtonHtml = '<a role="button" class="delete-image-btn" id="delete-img-btn-' + imagesCollection.index + '">\n' +
+    '<i class=\"fa-solid fa-trash icon-delete-img\"></i>\n' +
+    '</a>'
+  // Insert the new delete button
+  newFileInput.parentElement.insertAdjacentHTML('beforeend', deleteButtonHtml)
+  // Add listener to the delete button
+  addDeleteImageListener(document.getElementById("delete-img-btn-" + imagesCollection.index))
+  addInputFileValidation(newFileInput);
+  addInputChangeListener(newFileInput, newForm.preview);
+  // isTheHeader field set to 0 by default
+  trickImgItem.querySelector('.trick-form-isheader').value = '0'
+}
+
+function addVideoForm(videoPlaceholder) {
+  let newForm = createItemFromPrototype(videoPlaceholder, videoCollection, addVideoFormButton);
+  let newFormElement = document.getElementById(newForm.id);
+  addVideoLinkValidation(newFormElement.querySelector('.trick-video-link'));
+
+  let tempDiv = document.createElement('div');
+  tempDiv.classList.add('trick-video-actions');
+  let videoLinkGroup = newFormElement.querySelector('.trick-video-link-group');
+  let videoDeleteButtonHtml = '<a role="button" class="delete-video-btn" id="delete-video-btn-{{ loop.index-1 }}">\n' +
+    '<i class="fa-solid fa-trash icon-delete-img"></i>\n' +
+    '</a>'
+  tempDiv.insertAdjacentHTML('afterbegin', videoDeleteButtonHtml);
+  tempDiv.insertAdjacentElement('afterbegin', videoLinkGroup);
+  newFormElement.insertAdjacentElement('beforeend',tempDiv);
+  addDeleteVideoListener(newFormElement.querySelector('.delete-video-btn'));
+  addVideoLinkKeyup(newFormElement.querySelector('.trick-video-link'))
+}
+
+function createItemFromPrototype(imagePlaceholder, collection, addItemFormButton) {
+  // Retrieves the prototype of the collection field.
+  let prototype = collection.data.dataset.prototype;
+
+  let newForm = prototype.replace(/__name__/g, collection.index);
   // Increment imagesCollectionIndex for next addition.
-  imagesCollectionIndex++;
+  collection.index++;
 
   let tempDiv = document.createElement('div');
   tempDiv.innerHTML = newForm;
-  tempDiv.firstElementChild.classList.add('trick-image-item');
+  tempDiv.firstElementChild.classList.add(collection.class);
   // Create new input preview
   let newPreview = document.createElement('div');
-  newPreview.classList.add('trick-image-preview');
+  newPreview.classList.add(collection.previewClass);
   newPreview.innerHTML = imagePlaceholder;
-  // New delete button HTML
-  let deleteButtonHtml = '<a role="button" class="delete-image-btn" id="delete-img-btn-' + imagesCollectionIndex + '">\n' +
-    '<i class=\"fa-solid fa-trash icon-delete-img\"></i>\n' +
-    '</a>'
 
   // Retrieves new form id.
   let newFormId = tempDiv.firstChild.id;
   // Insert the new preview inside the tempDiv
   tempDiv.firstChild.insertBefore(newPreview, tempDiv.firstChild.firstChild)
   animateElement(tempDiv.firstChild, 'img-item-zoom-in', ()=>{})
+  collection.data.insertBefore(tempDiv.firstChild, addItemFormButton);
 
-  imagesCollection.insertBefore(tempDiv.firstChild, addImageFormButton);
-  const trickImgItem = document.getElementById(newFormId);
-  const newFileInput = trickImgItem.querySelector('.trick-form-file');
-  // Insert the new delete button
-  newFileInput.parentElement.insertAdjacentHTML('beforeend', deleteButtonHtml)
-  // Select delete button after insertion
-  let deleteButton = document.getElementById("delete-img-btn-" + imagesCollectionIndex)
-  addDeleteListener(deleteButton)
-  addInputFileValidation(newFileInput);
-  addInputChangeListener(newFileInput, newPreview);
-  // isTheHeader field set to 0 by default
-  trickImgItem.querySelector('.trick-form-isheader').value = '0'
+  return {
+    'id': newFormId,
+    'preview': newPreview,
+  };
+}
+
+function addVideoLinkValidation(link) {
+  trickValidator
+    .addField('#'+link.id, [
+      {
+        rule: 'required',
+        errorMessage: 'The link cannot be empty',
+      },
+      {
+        rule: 'customRegexp',
+        value: /^https?:\/\/(?:www\.)?youtube\.com\/embed\/[A-Za-z0-9_-]{11}$/,
+        errorMessage: 'The link is not valid.<br>https://www.youtube.com/embed/code',
+      },
+    ]);
+}
+
+function addVideoLinkKeyup(link) {
+  link.addEventListener('keyup', () => {
+    let preview = link.closest('.trick-video-item').querySelector('.trick-video-preview');
+    if (link.classList.contains('just-validate-success-field')) {
+      preview.innerHTML = '<iframe class="trick-video" src="'+link.value+'" allowfullscreen></iframe>'
+    } else {
+      preview.innerHTML = videoPlaceholder
+    }
+  })
+}
+
+function addDeleteVideoListener(button) {
+  button.addEventListener('click', () => {
+    let trickVideoItem = button.closest('.trick-video-item');
+    animateElement(trickVideoItem,'img-item-zoom-out',()=>{
+      trickVideoItem.remove()
+    })
+  })
 }
 
 addImageFormButton.addEventListener('click', function () {
   addImageForm(imagePlaceholder);
+})
+
+addVideoFormButton.addEventListener('click', function () {
+  addVideoForm(videoPlaceholder);
 })
 
 fileInputs.forEach(fileInput => {
@@ -345,23 +424,17 @@ fileInputs.forEach(fileInput => {
   }
   //Preview image as it changes.
   addInputChangeListener(fileInput, preview);
-  addDeleteListener(imageItem.querySelector('.delete-image-btn'));
+  addDeleteImageListener(imageItem.querySelector('.delete-image-btn'));
   borderObserver.observe(linkFavoriteImg, observerOptions);
 });
 
 videosLinks.forEach(link => {
-  trickValidator
-    .addField('#'+link.id, [
-      {
-        rule: 'required',
-        errorMessage: 'The link cannot be empty'
-      },
-      {
-        rule: 'customRegexp',
-        value: /^https?:\/\/(?:www\.)?youtube\.com\/embed\/[A-Za-z0-9_-]{11}$/,
-        errorMessage: 'The link is not valid',
-      }
-    ])
+  addVideoLinkValidation(link);
+  addVideoLinkKeyup(link);
+})
+
+document.querySelectorAll('.delete-video-btn').forEach(btn => {
+  addDeleteVideoListener(btn)
 })
 
 trickValidator

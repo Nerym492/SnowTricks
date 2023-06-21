@@ -69,7 +69,12 @@
                             <iframe class="trick-video" src="{{ video.vars.value.url }}" allowfullscreen></iframe>
                         {% endif %}
                     </div>
-                    {{ form_row(video.url) }}
+                    <div class="trick-video-actions">
+                        {{ form_row(video.url) }}
+                        <a role="button" class="delete-video-btn" id="delete-video-btn-{{ loop.index-1 }}">
+                            <i class="fa-solid fa-trash icon-delete-img"></i>
+                        </a>
+                    </div>
                 </div>
             {% endfor %}
             <div class="trick-video-item" id="add-video-form-button">
