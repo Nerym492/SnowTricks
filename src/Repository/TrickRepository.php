@@ -69,9 +69,9 @@ class TrickRepository extends ServiceEntityRepository
             ->leftJoin('t.group_trick', 'g')
             ->leftJoin('t.imagesTricks', 'it')
             ->andWhere('it.id = (
-                SELECT MIN(it2.id)
+                SELECT it2.id
                 FROM App\Entity\ImagesTrick it2
-                WHERE it2.trick = t
+                WHERE it2.trick = t AND it2.isInTheHeader = 1
             )')
             ->setMaxResults($nbTricksToLoad);
 

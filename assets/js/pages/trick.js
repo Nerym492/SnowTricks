@@ -5,6 +5,7 @@ const trickForm = document.getElementById('trick_form');
 const fileInputs = document.querySelectorAll('.trick-form-file');
 const placeholderSrc = '/build/images/image-placeholder.webp';
 const imagePlaceholder = '<img class="image-trick-details img-form" src="'+placeholderSrc+'" alt="">';
+const videosLinks = document.querySelectorAll('.trick-video-link');
 let imagesCollection = document.getElementById('images-list');
 let index = imagesCollection.children.length - 1;
 let addImageFormButton = document.getElementById('add-image-form-button');
@@ -35,6 +36,15 @@ let borderObserver = new MutationObserver(function (mutationsList) {
     if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
       let addedElement = mutation.addedNodes[0];
       let borderName = addedElement.classList[1].split('-')[1];
+      // isHeader input is updated for the first mutation only
+      if (borderName === 'top') {
+        let allInputsIsHeader = document.querySelectorAll('.trick-form-isheader');
+        allInputsIsHeader.forEach(input => {
+          input.value = '0';
+        })
+        let inputIsHeader = addedElement.closest('.trick-image-item').querySelector('.trick-form-isheader');
+        inputIsHeader.value = '1';
+      }
       animateBorder(addedElement, animationsBorders[borderName].fadeIn, 'fadeIn',
         addedElement.closest('.favorite-image'));
     }
@@ -48,12 +58,13 @@ let observerOptions = {
 // Checks for attribute changes
 let imageHeaderObserver = new MutationObserver(function (mutations){
   if (isProcessing) {
-    return; // Ignorer les mutations supplémentaires tant que le traitement est en cours
+    // Ignore additional mutations while processing is in progress
+    return;
   }
 
   isProcessing = true;
 
-  // Récupérer seulement la dernière mutation de la liste
+  // Retrieve only the last mutation in the list
   let lastMutation = mutations[mutations.length - 1];
 
   if (lastMutation.type === 'attributes' && lastMutation.attributeName === 'src') {
@@ -61,7 +72,7 @@ let imageHeaderObserver = new MutationObserver(function (mutations){
     animateElement(headerImage, 'header-img-zoom-in', ()=>{});
   }
 
-  // Réinitialiser le drapeau isProcessing après un délai de 200 ms
+  // Reset isProcessing flag after 200 ms delay
   setTimeout(function() {
     isProcessing = false;
   }, 200);
@@ -86,7 +97,15 @@ function addInputChangeListener(fileInput, preview) {
       })
     } else {
       if (event.target.classList.contains('just-validate-error-field')) {
+        let borders = preview.querySelectorAll('.border-isheader');
+        let tempDiv = document.createElement('div')
+        borders.forEach(border => {
+          tempDiv.appendChild(border);
+        })
         preview.innerHTML = imagePlaceholder;
+        if (borders.length > 0) {
+          reassignIsHeaderImage(tempDiv);
+        }
       } else {
         displayImagePreview(files, preview);
       }
@@ -127,21 +146,10 @@ function addDeleteListener(deleteButton) {
         item.style.transitionDelay = `${index * 0.1}s`;
       });
 
-      // Borders are automatically reassign to the last image of the collection
       if (tempDiv.innerHTML !== '') {
-        let favoriteImages = document.querySelectorAll('.favorite-image');
-        // Create an array with the NodeList
-        let borders = Array.from(tempDiv.childNodes);
-        if (favoriteImages.length > 0) {
-          let lastFavoriteImg = favoriteImages[favoriteImages.length - 1]
-          borders.forEach(border => {
-            lastFavoriteImg.appendChild(border);
-          })
-        }
-        // No image defined as header
-        if (favoriteImages.length === 0) {
-          document.getElementById('image-header-details').src = placeholderSrc;
-        }
+        // Borders are automatically reassign to the first valid image of the collection
+        // New isHeaderImage is set
+        reassignIsHeaderImage(tempDiv)
       }
     })
   })
@@ -219,6 +227,22 @@ function addLinkFavoriteImage(preview) {
   borderObserver.observe(linkFavoriteImg, observerOptions);
 }
 
+function reassignIsHeaderImage(tempDiv) {
+  let otherFavoriteImages = document.querySelectorAll('.favorite-image');
+  // Create an array with the NodeList
+  let borders = Array.from(tempDiv.childNodes);
+  if (otherFavoriteImages.length > 0) {
+    let lastFavoriteImg = otherFavoriteImages[0]
+    borders.forEach(border => {
+      lastFavoriteImg.appendChild(border);
+    })
+  }
+  // No image defined as header
+  if (otherFavoriteImages.length === 0) {
+    document.getElementById('image-header-details').src = placeholderSrc;
+  }
+}
+
 function moveFavoriteImgBorders(linkFavoriteImg) {
   let borderTop = document.getElementById('border-isheader-top');
   let borderRight = document.getElementById('border-isheader-right');
@@ -286,8 +310,8 @@ function addImageForm(imagePlaceholder) {
   animateElement(tempDiv.firstChild, 'img-item-zoom-in', ()=>{})
 
   imagesCollection.insertBefore(tempDiv.firstChild, addImageFormButton);
-
-  const newFileInput = document.getElementById(newFormId).lastElementChild.firstChild;
+  const trickImgItem = document.getElementById(newFormId);
+  const newFileInput = trickImgItem.querySelector('.trick-form-file');
   // Insert the new delete button
   newFileInput.parentElement.insertAdjacentHTML('beforeend', deleteButtonHtml)
   // Select delete button after insertion
@@ -295,6 +319,8 @@ function addImageForm(imagePlaceholder) {
   addDeleteListener(deleteButton)
   addInputFileValidation(newFileInput);
   addInputChangeListener(newFileInput, newPreview);
+  // isTheHeader field set to 0 by default
+  trickImgItem.querySelector('.trick-form-isheader').value = '0'
 }
 
 addImageFormButton.addEventListener('click', function () {
@@ -320,6 +346,21 @@ fileInputs.forEach(fileInput => {
   borderObserver.observe(linkFavoriteImg, observerOptions);
 });
 
+videosLinks.forEach(link => {
+  trickValidator
+    .addField('#'+link.id, [
+      {
+        rule: 'required',
+        errorMessage: 'The link cannot be empty'
+      },
+      {
+        rule: 'customRegexp',
+        value: /^https?:\/\/(?:www\.)?youtube\.com\/embed\/[A-Za-z0-9_-]{11}$/,
+        errorMessage: 'The link is not valid',
+      }
+    ])
+})
+
 trickValidator
   .addField('#trick_form_name', [
     {
@@ -343,6 +384,7 @@ trickValidator
 trickValidator.onSuccess(function (event) {
   event.preventDefault();
   trickForm.submit();
+  console.log('hello !!!')
 });
 
 imageHeaderObserver.observe(headerImage, { attributes: true, attributeFilter: ['src']})

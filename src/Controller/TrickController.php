@@ -104,7 +104,6 @@ class TrickController extends AbstractController
                     }
                 }
             }
-            dump($imagesCollection);
             // Deleting images files that no longer exist in the trick
             foreach ($imagesCollection as $image) {
                 $imageDeleted = false;

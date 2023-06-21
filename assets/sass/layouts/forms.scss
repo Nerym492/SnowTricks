@@ -1,5 +1,4 @@
 .form {
-  margin-top: 32px;
   display: grid;
   grid-template-columns: 400px;
   justify-content: center;
@@ -78,6 +77,11 @@
 .trick-image-item {
   position: relative;
   transition: all 300ms ease;
+}
+
+.trick-video-link {
+  margin-top: 6px;
+  width: 100%;
 }
 
 .border-fade-out {

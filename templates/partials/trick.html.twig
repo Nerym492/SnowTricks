@@ -25,8 +25,7 @@
         <h2>Videos</h2>
         <div class="medias-container">
             {% for trickVideo in trickVideos %}
-                <iframe class="trick-video" src="{{ trickVideo.url }}" frameborder="0"
-                        allowfullscreen></iframe>
+                <iframe class="trick-video" src="{{ trickVideo.url }}" allowfullscreen></iframe>
             {% endfor %}
         </div>
         {% endif %}

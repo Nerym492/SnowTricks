@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\GroupTrick;
 use App\Entity\Trick;
+use App\Entity\VideosTrick;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -23,6 +24,12 @@ class TrickFormType extends AbstractType
             ])
             ->add('imagesTricks', CollectionType::class, [
                 'entry_type' => ImagesTrickFormType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+            ])
+            ->add('videosTricks', CollectionType::class, [
+                'entry_type' => VideosTrickFormType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,

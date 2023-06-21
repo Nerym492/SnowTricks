@@ -38,6 +38,11 @@ class ImagesTrickFormType extends AbstractType
                         'mimeTypesMessage' => 'Please upload a WEBP, JPEG or PNG file.',
                     ]),
                 ],
+            ])
+            ->add('isInTheHeader', HiddenType::class, [
+                'required' => true,
+                'attr' => ['class' => 'trick-form-isheader'],
+                'empty_data' => 0,
             ]);
     }
 
