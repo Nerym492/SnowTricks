@@ -3,11 +3,13 @@ import JustValidate from "../modules/just-validate";
 const headerImage = document.getElementById('image-header-details');
 const trickForm = document.getElementById('trick_form');
 const fileInputs = document.querySelectorAll('.trick-form-file');
-const placeholderSrc = '/build/images/image-placeholder.webp';
-const imagePlaceholder = '<img class="image-trick-details img-form" src="'+placeholderSrc+'" alt="">';
+const imagePlaceholderSrc = '/build/images/image-placeholder.webp';
+const imagePlaceholder = '<img class="image-trick-details img-form" src="'+imagePlaceholderSrc+'" alt="">';
 const videosLinks = document.querySelectorAll('.trick-video-link');
+const videoPlaceholderSrc = '/build/images/video-placeholder.png';
+const videoPlaceholder = '<img class="image-trick-details img-form" src="'+videoPlaceholderSrc+'" alt="">';
 let imagesCollection = document.getElementById('images-list');
-let index = imagesCollection.children.length - 1;
+let imagesCollectionIndex = imagesCollection.children.length - 1;
 let addImageFormButton = document.getElementById('add-image-form-button');
 let isProcessing = false;
 
@@ -80,6 +82,7 @@ let imageHeaderObserver = new MutationObserver(function (mutations){
 
 const trickValidator = new JustValidate('#trick_form', {
   validateBeforeSubmitting: true,
+  errorLabelCssClass: ['invalid-field-text'],
 });
 
 function addInputChangeListener(fileInput, preview) {
@@ -239,7 +242,7 @@ function reassignIsHeaderImage(tempDiv) {
   }
   // No image defined as header
   if (otherFavoriteImages.length === 0) {
-    document.getElementById('image-header-details').src = placeholderSrc;
+    document.getElementById('image-header-details').src = imagePlaceholderSrc;
   }
 }
 
@@ -287,9 +290,9 @@ function addImageForm(imagePlaceholder) {
   // Retrieves the prototype of the collection field.
   let prototype = imagesCollection.dataset.prototype;
 
-  let newForm = prototype.replace(/__name__/g, index);
-  // Increment index for next addition.
-  index++;
+  let newForm = prototype.replace(/__name__/g, imagesCollectionIndex);
+  // Increment imagesCollectionIndex for next addition.
+  imagesCollectionIndex++;
 
   let tempDiv = document.createElement('div');
   tempDiv.innerHTML = newForm;
@@ -299,7 +302,7 @@ function addImageForm(imagePlaceholder) {
   newPreview.classList.add('trick-image-preview');
   newPreview.innerHTML = imagePlaceholder;
   // New delete button HTML
-  let deleteButtonHtml = '<a role="button" class="delete-image-btn" id="delete-img-btn-' + index + '">\n' +
+  let deleteButtonHtml = '<a role="button" class="delete-image-btn" id="delete-img-btn-' + imagesCollectionIndex + '">\n' +
     '<i class=\"fa-solid fa-trash icon-delete-img\"></i>\n' +
     '</a>'
 
@@ -315,7 +318,7 @@ function addImageForm(imagePlaceholder) {
   // Insert the new delete button
   newFileInput.parentElement.insertAdjacentHTML('beforeend', deleteButtonHtml)
   // Select delete button after insertion
-  let deleteButton = document.getElementById("delete-img-btn-" + index)
+  let deleteButton = document.getElementById("delete-img-btn-" + imagesCollectionIndex)
   addDeleteListener(deleteButton)
   addInputFileValidation(newFileInput);
   addInputChangeListener(newFileInput, newPreview);
