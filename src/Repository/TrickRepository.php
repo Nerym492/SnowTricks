@@ -67,12 +67,7 @@ class TrickRepository extends ServiceEntityRepository
 
         $tricksQuery->select('t AS data', 'g.name AS group_name', 'it.fileName')
             ->leftJoin('t.group_trick', 'g')
-            ->leftJoin('t.imagesTricks', 'it')
-            ->andWhere('it.id = (
-                SELECT it2.id
-                FROM App\Entity\ImagesTrick it2
-                WHERE it2.trick = t AND it2.isInTheHeader = 1
-            )')
+            ->leftJoin('t.imagesTricks', 'it', 'WITH', 'it.isInTheHeader = 1')
             ->setMaxResults($nbTricksToLoad);
 
         foreach ($orderBy as $field => $direction) {

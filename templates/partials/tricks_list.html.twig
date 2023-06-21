@@ -4,10 +4,14 @@
             <div class="trick-preview" id="trick-{{ trick.data.id }}">
                 <a href="/tricks/details/{{ trick.data.id }}">
                     <figure class="image-trick-list">
-                        <img src="{{ path(
-                            'get_trick_image',
-                            {'trickName': trick.data.name,'imageName': trick.fileName}
-                        ) }}" alt=""/>
+                        {% if trick.fileName is not empty %}
+                            <img src="{{ path(
+                                'get_trick_image',
+                                {'trickName': trick.data.name,'imageName': trick.fileName}
+                            ) }}" alt=""/>
+                        {% else %}
+                            <img class="image-trick-details" src="/build/images/image-placeholder.webp" alt="">
+                        {% endif %}
                     </figure>
                 </a>
                 <div class="trick-description">
