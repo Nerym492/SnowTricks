@@ -188,4 +188,18 @@ class TrickController extends AbstractController
             'hiddeLoadButton' => $hiddeLoadButton,
         ]);
     }
+
+    #[Route('/tricks/create', name: 'create_trick')]
+    public function createTrick(): Response
+    {
+        $trick = new Trick();
+        $form = $this->createForm(TrickFormType::class, $trick);
+
+        return $this->render('partials/trick_form.html.twig', [
+            'trick' => $trick,
+            'headerImageExist' => false,
+            'headerImage' => null,
+            'trickForm' => $form->createView(),
+        ]);
+    }
 }
