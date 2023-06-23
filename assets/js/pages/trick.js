@@ -4,18 +4,18 @@ const headerImage = document.getElementById('image-header-details');
 const trickForm = document.getElementById('trick_form');
 const fileInputs = document.querySelectorAll('.trick-form-file');
 const imagePlaceholderSrc = '/build/images/image-placeholder.webp';
-const imagePlaceholder = '<img class="image-trick-details img-form" src="'+imagePlaceholderSrc+'" alt="">';
+const imagePlaceholder = '<img class="image-trick-details img-form" src="' + imagePlaceholderSrc + '" alt="">';
 const addImageFormButton = document.getElementById('add-image-form-button');
 let imagesCollection = {
   'index': document.getElementById('images-list').children.length - 1,
   'class': 'trick-image-item',
   'previewClass': 'trick-image-preview',
-  'data':  document.getElementById('images-list'),
+  'data': document.getElementById('images-list'),
 }
 
 const videosLinks = document.querySelectorAll('.trick-video-link');
 const videoPlaceholderSrc = '/build/images/video-placeholder.png';
-const videoPlaceholder = '<img class="image-trick-details img-form" src="'+videoPlaceholderSrc+'" alt="">';
+const videoPlaceholder = '<img class="image-trick-details img-form" src="' + videoPlaceholderSrc + '" alt="">';
 let videoCollection = {
   'index': document.getElementById('videos-list').children.length - 1,
   'class': 'trick-video-item',
@@ -28,13 +28,13 @@ const addVideoFormButton = document.getElementById('add-video-form-button');
 let isProcessing = false;
 
 const bordersHtml = '<img class="border-isheader isheader-top" src="/build/images/border-top-isheader.png"\n' +
-                          'alt="border top isheader" id="border-isheader-top">\n' +
-                    '<img class="border-isheader isheader-right" src="/build/images/border-right-isheader.png"\n' +
-                          'alt="border right isheader" id="border-isheader-right">\n' +
-                    '<img class="border-isheader isheader-bot" src="/build/images/border-bot-isheader.png"\n' +
-                          'alt="border bot isheader" id="border-isheader-bot">\n' +
-                    '<img class="border-isheader isheader-left" src="/build/images/border-left-isheader.png"\n' +
-                          'alt="border left isheader" id="border-isheader-left">'
+  'alt="border top isheader" id="border-isheader-top">\n' +
+  '<img class="border-isheader isheader-right" src="/build/images/border-right-isheader.png"\n' +
+  'alt="border right isheader" id="border-isheader-right">\n' +
+  '<img class="border-isheader isheader-bot" src="/build/images/border-bot-isheader.png"\n' +
+  'alt="border bot isheader" id="border-isheader-bot">\n' +
+  '<img class="border-isheader isheader-left" src="/build/images/border-left-isheader.png"\n' +
+  'alt="border left isheader" id="border-isheader-left">'
 
 const borderFadeOut = 'border-fade-out'
 const animationsBorders = {
@@ -47,9 +47,12 @@ const animationsBorders = {
 console.log(animationsBorders);
 
 // Actions performed when adding elements to another
-let borderObserver = new MutationObserver(function (mutationsList) {
+let previewObserver = new MutationObserver(function (mutationsList) {
+  console.log(mutationsList);
   for (let mutation of mutationsList) {
-    if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+    if (mutation.type === 'childList' && mutation.addedNodes.length > 0 && mutation.addedNodes.length < 7
+      && mutation.addedNodes[0].classList.contains('border-isheader')) {
+      // Borders are moved from one preview to another
       let addedElement = mutation.addedNodes[0];
       let borderName = addedElement.classList[1].split('-')[1];
       // isHeader input is updated for the first mutation only
@@ -62,7 +65,25 @@ let borderObserver = new MutationObserver(function (mutationsList) {
         inputIsHeader.value = '1';
       }
       animateBorder(addedElement, animationsBorders[borderName].fadeIn, 'fadeIn',
-        addedElement.closest('.favorite-image'));
+        addedElement.closest('.trick-image-preview'))
+
+    } else if (mutation.type === 'childList' && mutation.addedNodes.length === 7
+      && mutation.addedNodes[0].classList.contains('border-isheader')) {
+      // The borders have been added using the bordersHtml variable.(not moved from another preview)
+      mutation.addedNodes.forEach(addedNode => {
+        if (addedNode.tagName === 'IMG') {
+          let borderName = addedNode.classList[1].split('-')[1];
+          animateBorder(addedNode, animationsBorders[borderName].fadeIn, 'fadeIn',
+            addedNode.closest('.trick-image-preview'))
+        }
+      })
+    } else if (mutation.type === 'childList' && mutation.addedNodes.length > 0
+      && mutation.target === mutation.addedNodes[0].parentElement) {
+      let borders = mutation.addedNodes[0].closest('.trick-image-preview').querySelectorAll('.border-isheader')
+      // if the image is defined as favorite, change the header
+      if (borders.length > 0) {
+        document.getElementById('image-header-details').src = mutation.addedNodes[0].src
+      }
     }
   }
 });
@@ -72,7 +93,7 @@ let observerOptions = {
 }
 
 // Checks for attribute changes
-let imageHeaderObserver = new MutationObserver(function (mutations){
+let imageHeaderObserver = new MutationObserver(function (mutations) {
   if (isProcessing) {
     // Ignore additional mutations while processing is in progress
     return;
@@ -85,11 +106,12 @@ let imageHeaderObserver = new MutationObserver(function (mutations){
 
   if (lastMutation.type === 'attributes' && lastMutation.attributeName === 'src') {
     // Traiter la dernière mutation
-    animateElement(headerImage, 'header-img-zoom-in', ()=>{});
+    animateElement(headerImage, 'header-img-zoom-in', () => {
+    });
   }
 
   // Reset isProcessing flag after 200 ms delay
-  setTimeout(function() {
+  setTimeout(function () {
     isProcessing = false;
   }, 200);
 })
@@ -212,12 +234,17 @@ function displayImagePreview(files, preview) {
       img.src = reader.result;
       img.classList.add('image-trick-details', 'img-form');
 
-      preview.querySelector('.image-trick-details').remove();
-      preview.appendChild(img);
-      addLinkFavoriteImage(preview);
+      let imageLink = preview.querySelector('.favorite-image');
+      // Add a link if none exists
+      if (!imageLink) {
+        imageLink = addLinkFavoriteImage(preview);
+      }
+      // Replaces existing image
+      imageLink.replaceChild(img, preview.querySelector('.image-trick-details'));
+      // No header set
       // Add borders and set this image to favorite
       if (borderIsHeader.length === 0) {
-        preview.querySelector('.favorite-image').insertAdjacentHTML('afterbegin', bordersHtml);
+        preview.insertAdjacentHTML('afterbegin', bordersHtml);
       }
     };
 
@@ -239,9 +266,11 @@ function addLinkFavoriteImage(preview) {
 
   let linkFavoriteImg = preview.querySelector('.favorite-image');
   linkFavoriteImg.addEventListener('click', () => {
-    moveFavoriteImgBorders(linkFavoriteImg);
+    moveFavoriteImgBorders(preview);
   })
-  borderObserver.observe(linkFavoriteImg, observerOptions);
+  previewObserver.observe(preview, observerOptions);
+  previewObserver.observe(preview.querySelector('.favorite-image'), observerOptions);
+  return link;
 }
 
 function reassignIsHeaderImage(tempDiv) {
@@ -249,9 +278,10 @@ function reassignIsHeaderImage(tempDiv) {
   // Create an array with the NodeList
   let borders = Array.from(tempDiv.childNodes);
   if (otherFavoriteImages.length > 0) {
-    let lastFavoriteImg = otherFavoriteImages[0]
+    // Retrieves the first valid preview
+    let firstValidPreview = otherFavoriteImages[0].closest('.trick-image-preview');
     borders.forEach(border => {
-      lastFavoriteImg.appendChild(border);
+      firstValidPreview.appendChild(border);
     })
   }
   // No image defined as header
@@ -260,28 +290,32 @@ function reassignIsHeaderImage(tempDiv) {
   }
 }
 
-function moveFavoriteImgBorders(linkFavoriteImg) {
+function moveFavoriteImgBorders(preview) {
   let borderTop = document.getElementById('border-isheader-top');
   let borderRight = document.getElementById('border-isheader-right');
   let borderBot = document.getElementById('border-isheader-bot');
   let borderLeft = document.getElementById('border-isheader-left');
   // Select all borders
-  animateBorder(borderTop, animationsBorders.top.fadeOut, 'fadeOut', linkFavoriteImg);
-  animateBorder(borderRight, animationsBorders.right.fadeOut, 'fadeOut', linkFavoriteImg);
-  animateBorder(borderBot, animationsBorders.left.fadeOut, 'fadeOut', linkFavoriteImg);
-  animateBorder(borderLeft, animationsBorders.bot.fadeOut, 'fadeOut', linkFavoriteImg);
+  animateBorder(borderTop, animationsBorders.top.fadeOut, 'fadeOut', preview);
+  animateBorder(borderRight, animationsBorders.right.fadeOut, 'fadeOut', preview);
+  animateBorder(borderBot, animationsBorders.left.fadeOut, 'fadeOut', preview);
+  animateBorder(borderLeft, animationsBorders.bot.fadeOut, 'fadeOut', preview);
 }
 
-function animateBorder(border, animation, animationType, linkFavoriteImg) {
+function animateBorder(border, animation, animationType, preview) {
 
   border.classList.add(animation);
   border.addEventListener('animationend', function afterFadeOutHandler(event) {
     if (animationType === 'fadeOut') {
-      linkFavoriteImg.appendChild(border);
+      preview.appendChild(border);
     } else if (animationType === 'fadeIn') {
       // Set the image header
       let headerImage = document.getElementById('image-header-details');
-      headerImage.src = linkFavoriteImg.querySelector('.image-trick-details').src
+      let imagePreview = preview.querySelector('.image-trick-details').src
+      if (headerImage.src !== imagePreview) {
+        headerImage.src = imagePreview
+      }
+
     }
 
     border.classList.remove(animation);
@@ -291,7 +325,7 @@ function animateBorder(border, animation, animationType, linkFavoriteImg) {
 
 function animateElement(element, animation, actionAfterAnimation) {
   element.classList.add(animation)
-  element.addEventListener('animationend', function animationEndHandler (event) {
+  element.addEventListener('animationend', function animationEndHandler(event) {
     if (actionAfterAnimation !== 'undefined') {
       actionAfterAnimation();
     }
@@ -332,7 +366,7 @@ function addVideoForm(videoPlaceholder) {
     '</a>'
   tempDiv.insertAdjacentHTML('afterbegin', videoDeleteButtonHtml);
   tempDiv.insertAdjacentElement('afterbegin', videoLinkGroup);
-  newFormElement.insertAdjacentElement('beforeend',tempDiv);
+  newFormElement.insertAdjacentElement('beforeend', tempDiv);
   addDeleteVideoListener(newFormElement.querySelector('.delete-video-btn'));
   addVideoLinkKeyup(newFormElement.querySelector('.trick-video-link'))
 }
@@ -357,7 +391,8 @@ function createItemFromPrototype(imagePlaceholder, collection, addItemFormButton
   let newFormId = tempDiv.firstChild.id;
   // Insert the new preview inside the tempDiv
   tempDiv.firstChild.insertBefore(newPreview, tempDiv.firstChild.firstChild)
-  animateElement(tempDiv.firstChild, 'img-item-zoom-in', ()=>{})
+  animateElement(tempDiv.firstChild, 'img-item-zoom-in', () => {
+  })
   collection.data.insertBefore(tempDiv.firstChild, addItemFormButton);
 
   return {
@@ -368,7 +403,7 @@ function createItemFromPrototype(imagePlaceholder, collection, addItemFormButton
 
 function addVideoLinkValidation(link) {
   trickValidator
-    .addField('#'+link.id, [
+    .addField('#' + link.id, [
       {
         rule: 'required',
         errorMessage: 'The link cannot be empty',
@@ -385,7 +420,7 @@ function addVideoLinkKeyup(link) {
   link.addEventListener('keyup', () => {
     let preview = link.closest('.trick-video-item').querySelector('.trick-video-preview');
     if (link.classList.contains('just-validate-success-field')) {
-      preview.innerHTML = '<iframe class="trick-video" src="'+link.value+'" allowfullscreen></iframe>'
+      preview.innerHTML = '<iframe class="trick-video" src="' + link.value + '" allowfullscreen></iframe>'
     } else {
       preview.innerHTML = videoPlaceholder
     }
@@ -395,7 +430,7 @@ function addVideoLinkKeyup(link) {
 function addDeleteVideoListener(button) {
   button.addEventListener('click', () => {
     let trickVideoItem = button.closest('.trick-video-item');
-    animateElement(trickVideoItem,'img-item-zoom-out',()=>{
+    animateElement(trickVideoItem, 'img-item-zoom-out', () => {
       trickVideoItem.remove()
     })
   })
@@ -416,7 +451,7 @@ fileInputs.forEach(fileInput => {
   const linkFavoriteImg = preview.querySelector('.favorite-image');
 
   linkFavoriteImg.addEventListener('click', () => {
-    moveFavoriteImgBorders(linkFavoriteImg);
+    moveFavoriteImgBorders(preview);
   })
 
   if (fileInput.classList.contains("isFilled") === false) {
@@ -425,7 +460,8 @@ fileInputs.forEach(fileInput => {
   //Preview image as it changes.
   addInputChangeListener(fileInput, preview);
   addDeleteImageListener(imageItem.querySelector('.delete-image-btn'));
-  borderObserver.observe(linkFavoriteImg, observerOptions);
+  previewObserver.observe(preview, observerOptions);
+  previewObserver.observe(preview.querySelector('.favorite-image'), observerOptions);
 });
 
 videosLinks.forEach(link => {
@@ -463,6 +499,6 @@ trickValidator.onSuccess(function (event) {
   console.log('hello !!!')
 });
 
-imageHeaderObserver.observe(headerImage, { attributes: true, attributeFilter: ['src']})
+imageHeaderObserver.observe(headerImage, {attributes: true, attributeFilter: ['src']})
 
 
