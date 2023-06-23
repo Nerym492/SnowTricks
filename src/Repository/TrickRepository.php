@@ -43,13 +43,13 @@ class TrickRepository extends ServiceEntityRepository
         }
     }
 
-    public function findAllTricksBy(array $orderBy, int $tricksReloaded = 0): array
+    public function findAllTricksBy(array $orderBy, int $tricksReloaded = 0, bool $loadMore = true): array
     {
         $tricksListLoadLimit = $this->parameterBag->get('tricks_list_load_limit');
         $nbTricksToLoad = $tricksListLoadLimit;
         $nbTricksToAdd = 0;
 
-        if (0 < $tricksReloaded) {
+        if (0 < $tricksReloaded && $loadMore) {
             $tricksCountQuery = $this->createQueryBuilder('t');
             $tricksCountQuery->select('COUNT(t) AS nbTricks');
             $tricksCountResult = $tricksCountQuery->getQuery()->getResult();
@@ -57,9 +57,9 @@ class TrickRepository extends ServiceEntityRepository
             $nbTricksToAdd = ($tricksCount - $tricksReloaded);
         }
 
-        if (0 < $nbTricksToAdd) {
+        if (0 < $nbTricksToAdd && $loadMore) {
             $nbTricksToLoad = $tricksReloaded + $tricksListLoadLimit;
-        } elseif (0 === $nbTricksToAdd && 0 < $tricksReloaded) {
+        } elseif ((0 === $nbTricksToAdd && 0 < $tricksReloaded) || !$loadMore) {
             $nbTricksToLoad = $tricksReloaded;
         }
 

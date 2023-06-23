@@ -8,38 +8,37 @@ function reloadTricks() {
     // Current number of loaded Tricks
     const nbLoadedTricks = document.getElementById("trick-section-home").childElementCount;
     let trickList = document.getElementById("trick-list");
-    addXmlhttpRequest("tricks/loadMore/" + nbLoadedTricks, trickList, function scrollToTricksEnd () {
-      let newTrickList = document.getElementById("trick-list");
-
-      // Scroll to the end of the section
-      let position = newTrickList.offsetTop + newTrickList.offsetHeight;
-      window.scrollTo(0, position);
-      addDeleteListener();
-
-      if (document.getElementById("btn-load-more-tricks")) {
-        reloadTricks();
-      }
-    })
+    addXmlhttpRequest("tricks/loadMore/" + nbLoadedTricks, trickList, scrollToTricksEnd)
   })
+}
+
+function scrollToTricksEnd () {
+  let newTrickList = document.getElementById("trick-list");
+
+  // Scroll to the end of the section
+  let position = newTrickList.offsetTop + newTrickList.offsetHeight;
+  window.scrollTo(0, position);
+  addDeleteListener();
+
+  if (document.getElementById("btn-load-more-tricks")) {
+    reloadTricks();
+  }
 }
 
 function addDeleteListener() {
   document.querySelectorAll('.trick-delete-button').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.getElementById('trick-to-delete').innerHTML = btn.closest('.trick-name');
+      let trickName = btn.closest('.trick-description').querySelector('.trick-name').innerHTML
+      document.getElementById('trick-to-delete').innerHTML = trickName;
     })
   })
 }
 
-document.getElementById('delete-trick-btn').addEventListener('click', () => {
-  const xmlHttp = new XMLHttpRequest();
-  xmlHttp.onreadystatechange = function () {
-    if (this.readyState === 4 && this.status === 200) {
-      const newContent = this.responseText;
-    }
-  }
-  xmlHttp.open("GET", "trick/delete/", true);
-  xmlHttp.send();
+document.getElementById('delete-trick-btn').addEventListener('click', (event) => {
+    const trickName = event.target.firstElementChild.innerHTML
+    const nbLoadedTricks = document.getElementById("trick-section-home").childElementCount;
+    let trickList = document.getElementById("trick-list");
+    addXmlhttpRequest('tricks/delete/'+trickName+'/loaded/'+nbLoadedTricks, trickList, scrollToTricksEnd)
 })
 
 function addXmlhttpRequest(url, elementToRefresh, afterRefreshAction) {

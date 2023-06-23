@@ -93,13 +93,31 @@ class MediaService
     public function deleteTrickImage(string $trickName, string $fileName): bool
     {
         $filePath = PathUtils::buildTrickPath($this->parameterBag, $this->entityManager, $trickName).'/'.$fileName;
+
+        return $this->deleteFile($filePath, $fileName);
+    }
+
+    public function deleteTrickFolder(string $trickName): bool
+    {
+        $folderPath = PathUtils::buildTrickPath($this->parameterBag, $this->entityManager, $trickName);
+
+        return $this->deleteFile($folderPath);
+    }
+
+    private function deleteFile(string $filePath, string $fileName = ''): bool
+    {
         $fileSystem = new Filesystem();
         if ($fileSystem->exists($filePath)) {
             try {
                 $fileSystem->remove($filePath);
             } catch (IOException) {
                 $flashBag = $this->requestStack->getSession()->getFlashBag()->clear();
-                $flashBag->add('error', 'Unable to remove file '.$fileName);
+                if ('' !== $fileName) {
+                    $flashBag->add('error', 'Unable to remove file '.$fileName);
+                } else {
+                    $flashBag->add('error', 'Unable to remove all trick files');
+                }
+
                 return false;
             }
         }

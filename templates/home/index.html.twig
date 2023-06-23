@@ -9,3 +9,7 @@
 {% block content %}
         {% include 'partials/tricks_list.html.twig' with {'hiddeLoadButton': false} %}
 {% endblock %}
+
+{% block scripts_end_body %}
+    {{ encore_entry_script_tags('bootstrap') }}
+{% endblock %}

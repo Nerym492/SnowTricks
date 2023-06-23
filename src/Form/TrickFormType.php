@@ -27,12 +27,14 @@ class TrickFormType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
+                'row_attr' => ['class' => 'hidden'],
             ])
             ->add('videosTricks', CollectionType::class, [
                 'entry_type' => VideosTrickFormType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
+                'row_attr' => ['class' => 'hidden'],
             ])
             ->add('description', null, [
                 'attr' => [

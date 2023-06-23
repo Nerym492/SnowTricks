@@ -100,7 +100,6 @@ class TrickController extends AbstractController
                     // The new image has been uploaded successfully
                     if ('' !== $newFileName) {
                         $imagesData[$newImageFileKey]->setFileName($newFileName);
-                        $imagesData[$newImageFileKey]->setIsInTheHeader(false);
                     }
                 }
             }
@@ -149,6 +148,35 @@ class TrickController extends AbstractController
         $trickRepository = $this->manager->getRepository(Trick::class);
         $hiddeLoadButton = false;
         $tricks = $trickRepository->findAllTricksBy(['name' => 'ASC'], $tricksReloaded);
+        $nbTricks = $trickRepository->countTricks();
+
+        if ($nbTricks === count($tricks)) {
+            $hiddeLoadButton = true;
+        }
+
+        return $this->render('partials/tricks_list.html.twig', [
+            'tricks' => $tricks,
+            'hiddeLoadButton' => $hiddeLoadButton,
+        ]);
+    }
+
+    #[Route('/tricks/delete/{trickName}/loaded/{tricksLoaded}', name: 'delete_trick')]
+    public function deleteTrick(string $trickName, int $tricksLoaded): Response
+    {
+        $hiddeLoadButton = false;
+        $trickRepository = $this->manager->getRepository(Trick::class);
+        $trickToDelete = $trickRepository->findOneBy(['name' => $trickName]);
+
+        if ($trickToDelete) {
+            $folderDeleted = $this->mediaService->deleteTrickFolder($trickName);
+
+            if ($folderDeleted) {
+                $this->manager->remove($trickToDelete);
+                $this->manager->flush();
+            }
+        }
+
+        $tricks = $trickRepository->findAllTricksBy(['name' => 'ASC'], $tricksLoaded, false);
         $nbTricks = $trickRepository->countTricks();
 
         if ($nbTricks === count($tricks)) {
