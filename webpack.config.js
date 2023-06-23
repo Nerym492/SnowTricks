@@ -8,6 +8,7 @@ Encore
   .setPublicPath('/build')
   .addEntry('home', './assets/js/pages/home.js')
   .addEntry('trick', './assets/js/pages/trick.js')
+  .addEntry('bootstrap', 'bootstrap')
   .addStyleEntry('styles', './assets/sass/app.scss')
   .enableSassLoader()
   .enablePostCssLoader()

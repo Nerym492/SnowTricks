@@ -21,7 +21,10 @@
                             <a href="/trick/modify/{{ trick.data.id }}">
                                 <i class="fa-solid fa-pencil fa-lg"></i>
                             </a>
-                            <i class="fa-regular fa-trash-can fa-lg"></i>
+                            <a role="button" class="trick-delete-button" data-bs-toggle="modal"
+                               data-bs-target="#suppressionConfirm">
+                                <i class="fa-regular fa-trash-can fa-lg"></i>
+                            </a>
                         </div>
                     {% endif %}
                 </div>
@@ -34,6 +37,25 @@
         </div>
     {% endif %}
 </div>
+<div class="modal fade" id="suppressionConfirm" tabindex="-1" aria-labelledby="suppressionConfirm" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-modal">
+                Confirm suppression ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-small-grey" data-bs-dismiss="modal">No</button>
+                <button type="button" class="btn-small-red" data-bs-dismiss="modal"
+                        id="delete-trick-btn">
+                    <span id="trick-to-delete" class="hidden"></span>
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 
 

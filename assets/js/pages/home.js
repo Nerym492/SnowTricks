@@ -19,6 +19,7 @@ function reloadTricks (){
         // Scroll to the end of the section
         let position = newTrickList.offsetTop + newTrickList.offsetHeight;
         window.scrollTo(0, position);
+        addDeleteListener();
 
         if (document.getElementById("btn-load-more-tricks")) {
           reloadTricks();
@@ -32,6 +33,16 @@ function reloadTricks (){
   })
 }
 
+function addDeleteListener() {
+  document.querySelectorAll('.trick-delete-button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      let trickName = btn.closest('.trick-name');
+      document.getElementById('trick-to-delete').innerHTML = trickName;
+    })
+  })
+}
+
 reloadTricks();
+addDeleteListener();
 
 
