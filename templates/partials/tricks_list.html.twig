@@ -4,24 +4,58 @@
             <div class="trick-preview" id="trick-{{ trick.data.id }}">
                 <a href="/tricks/details/{{ trick.data.id }}">
                     <figure class="image-trick-list">
-                        <img src="{{ path(
-                            'get_trick_image',
-                            {'groupName': trick.group_name, 'trickName': trick.data.name,'imageName': trick.fileName}
-                        ) }}" alt=""/>
+                        {% if trick.fileName is not empty %}
+                            <img src="{{ path(
+                                'get_trick_image',
+                                {'trickName': trick.data.name,'imageName': trick.fileName}
+                            ) }}" alt=""/>
+                        {% else %}
+                            <img class="image-trick-details" src="/build/images/image-placeholder.webp" alt="">
+                        {% endif %}
                     </figure>
                 </a>
                 <div class="trick-description">
-                    <h2>{{ trick.data.name }}</h2>
+                    <h2 class="trick-name">{{ trick.data.name }}</h2>
+                    {% if app.user %}
+                        <div class="trick-preview-actions">
+                            <a href="/trick/modify/{{ trick.data.id }}">
+                                <i class="fa-solid fa-pencil fa-lg"></i>
+                            </a>
+                            <a role="button" class="trick-delete-button" data-bs-toggle="modal"
+                               data-bs-target="#suppressionConfirm">
+                                <i class="fa-regular fa-trash-can fa-lg"></i>
+                            </a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}
     </section>
     {% if hiddeLoadButton is empty %}
         <div class="center">
-            <button class="btn-arrow--black btn-trick-list" id="btn-load-more-tricks">Load more</button>
+            <button class="btn-arrow--white btn-trick-list" id="btn-load-more-tricks">Load more</button>
         </div>
     {% endif %}
 </div>
+<div class="modal fade" id="suppressionConfirm" tabindex="-1" aria-labelledby="suppressionConfirm" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-modal">
+                Confirm suppression ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-small-grey" data-bs-dismiss="modal">No</button>
+                <button type="button" class="btn-small-red" data-bs-dismiss="modal"
+                        id="delete-trick-btn">
+                    <span id="trick-to-delete" class="hidden"></span>
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 
 

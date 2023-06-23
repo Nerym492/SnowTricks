@@ -18,15 +18,18 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('pseudo', null, [
-                'row_attr' => ['class' => 'register-form-row'],
-                'attr' => ['class' => 'test'],
+                'row_attr' => ['class' => 'form-floating'],
+                'attr' => ['class' => 'form-control', 'placeholder' => 'Pseudo'],
             ])
             ->add('mail', null, [
-                'row_attr' => ['class' => 'register-form-row'],
+                'row_attr' => ['class' => 'form-floating'],
+                'attr' => ['class' => 'form-control', 'placeholder' => 'Mail'],
+
             ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
-                'row_attr' => ['class' => 'register-form-row'],
+                'row_attr' => ['class' => 'group-gdpr-checkbox'],
+                'attr' => ['class' => 'form-check-input'],
                 'constraints' => [
                     new IsTrue([
                         'message' => 'You should agree to our terms.',
@@ -37,8 +40,13 @@ class RegistrationFormType extends AbstractType
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
                 'mapped' => false,
-                'row_attr' => ['class' => 'register-form-row'],
-                'attr' => ['autocomplete' => 'new-password'],
+                'label' => 'Password',
+                'row_attr' => ['class' => 'form-floating'],
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Password',
+                    'autocomplete' => 'new-password',
+                ],
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Please enter a password',

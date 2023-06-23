@@ -1,4 +1,7 @@
+@import "variables";
+@import "mixins";
 @import "fonts";
+@import '../../node_modules/animate.css/animate.css';
 @import "layouts/navbar";
 @import "layouts/header";
 @import "layouts/tricks-list";
@@ -6,6 +9,8 @@
 @import "layouts/forms";
 @import "components/buttons";
 @import "components/icons";
+@import "boostrap-custom";
+
 
 html {
   scroll-behavior: smooth;
@@ -18,6 +23,10 @@ body {
 
 h1, h2 {
   text-align: center;
+}
+
+h2 {
+  margin: 20px 0;
 }
 
 .center {
@@ -49,4 +58,8 @@ h1, h2 {
 
 .small {
   font-size: 0.875em;
+}
+
+.hidden {
+  display: none;
 }

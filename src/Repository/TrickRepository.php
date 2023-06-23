@@ -43,13 +43,13 @@ class TrickRepository extends ServiceEntityRepository
         }
     }
 
-    public function findAllTricksBy(array $orderBy, int $tricksReloaded = 0): array
+    public function findAllTricksBy(array $orderBy, int $tricksReloaded = 0, bool $loadMore = true): array
     {
         $tricksListLoadLimit = $this->parameterBag->get('tricks_list_load_limit');
         $nbTricksToLoad = $tricksListLoadLimit;
         $nbTricksToAdd = 0;
 
-        if (0 < $tricksReloaded) {
+        if (0 < $tricksReloaded && $loadMore) {
             $tricksCountQuery = $this->createQueryBuilder('t');
             $tricksCountQuery->select('COUNT(t) AS nbTricks');
             $tricksCountResult = $tricksCountQuery->getQuery()->getResult();
@@ -57,22 +57,17 @@ class TrickRepository extends ServiceEntityRepository
             $nbTricksToAdd = ($tricksCount - $tricksReloaded);
         }
 
-        if (0 < $nbTricksToAdd) {
+        if (0 < $nbTricksToAdd && $loadMore) {
             $nbTricksToLoad = $tricksReloaded + $tricksListLoadLimit;
-        } elseif (0 === $nbTricksToAdd && 0 < $tricksReloaded) {
+        } elseif ((0 === $nbTricksToAdd && 0 < $tricksReloaded) || !$loadMore) {
             $nbTricksToLoad = $tricksReloaded;
         }
 
         $tricksQuery = $this->createQueryBuilder('t');
 
-        $tricksQuery->select('t AS data', 'g.name AS group_name', 'it.description', 'it.fileName')
+        $tricksQuery->select('t AS data', 'g.name AS group_name', 'it.fileName')
             ->leftJoin('t.group_trick', 'g')
-            ->leftJoin('t.imagesTricks', 'it')
-            ->andWhere('it.id = (
-                SELECT MIN(it2.id)
-                FROM App\Entity\ImagesTrick it2
-                WHERE it2.trick = t
-            )')
+            ->leftJoin('t.imagesTricks', 'it', 'WITH', 'it.isInTheHeader = 1')
             ->setMaxResults($nbTricksToLoad);
 
         foreach ($orderBy as $field => $direction) {

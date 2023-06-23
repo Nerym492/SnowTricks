@@ -4,59 +4,142 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\GroupTrick;
-use App\Entity\ImagesTrick;
 use App\Entity\Trick;
-use App\Entity\VideosTrick;
-use App\Utils\ImageUtils;
+use App\Form\TrickFormType;
+use App\Service\MediaService;
+use App\Utils\PathUtils;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class TrickController extends AbstractController
 {
-    private EntityManagerInterface $manager;
-
-    public function __construct(EntityManagerInterface $manager)
-    {
-        $this->manager = $manager;
+    public function __construct(
+        private EntityManagerInterface $manager,
+        private MediaService $mediaService,
+    ) {
     }
 
-    #[Route('/tricks/details/{trickId}')]
-    public function getTrickDetails(string $trickId): Response
+    #[Route('/tricks/details/{trickId}', name: 'trick_details')]
+    public function getTrickDetails(int $trickId): Response
     {
         $trick = $this->manager->getRepository(Trick::class)->findOneBy(['id' => $trickId]);
         $groupeTrick = $this->manager->getRepository(GroupTrick::class)->findOneBy([
             'id' => $trick->getGroupTrick()->getId(),
         ]);
-        $imagesTrickRepo = $this->manager->getRepository(ImagesTrick::class);
-        $headerImage = $imagesTrickRepo->findOneByTrick($trickId);
-        // All trick images except the one already in the header.
-        $trickImages = $imagesTrickRepo->findAllExceptFirst($trickId);
-
-        $trickVideos = $this->manager->getRepository(VideosTrick::class)->findAll();
+        $trickMedias = $this->mediaService->getAllTrickMedias($trickId);
 
         $comments = $this->manager->getRepository(Comment::class)->findAllOrdered(['creation_date' => 'DESC']);
 
         return $this->render('partials/trick.html.twig', [
             'trick' => $trick,
             'groupTrickName' => $groupeTrick->getName(),
-            'headerImage' => $headerImage,
-            'trickImages' => $trickImages,
-            'trickVideos' => $trickVideos,
+            'headerImageExist' => true,
+            'headerImage' => $trickMedias['headerImage'],
+            'trickImages' => $trickMedias['images'],
+            'trickVideos' => $trickMedias['videos'],
             'comments' => $comments,
         ]);
     }
 
-    #[Route('/trickImage/{groupName}/{trickName}/{imageName}', name: 'get_trick_image')]
-    public function getTrickImage($groupName, $trickName, $imageName): Response
+    #[Route('/trick/modify/{trickId}', name: 'trick_modification')]
+    public function showTrickForm(Request $request, int $trickId): Response
     {
-        $imagePath = '../assets/uploads/Trick/'.$groupName.'/'.str_replace(' ', '_', $trickName).
-            '/'.$imageName;
+        $headerImageExist = false;
+        $trick = $this->manager->getRepository(Trick::class)->findOneBy(['id' => $trickId]);
+        $groupeTrick = $this->manager->getRepository(GroupTrick::class)->findOneBy([
+            'id' => $trick->getGroupTrick()->getId(),
+        ]);
 
-        $imageUtils = new ImageUtils();
+        $trickMedias = $this->mediaService->getAllTrickMedias($trickId);
+        // All images except the header
+        $trickImages = $trickMedias['images'];
 
-        return $imageUtils->serveProtectedImage($imagePath);
+        if ('' !== $trickMedias['headerImage']) {
+            $headerImageExist = true;
+        }
+
+        // Collection of ImagesTricks before form submission
+        $imagesCollection = new ArrayCollection();
+        if (isset($trickMedias['headerImage'])) {
+            $imagesCollection->add($trickMedias['headerImage']);
+        }
+
+        foreach ($trickImages as $trickImage) {
+            $imagesCollection->add($trickImage);
+        }
+
+        $form = $this->createForm(TrickFormType::class, $trick);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Collection of ImagesTricks after form submission
+            $imagesData = $form->get('imagesTricks')->getData();
+
+            $fileBag = $request->files;
+
+            if (isset($fileBag->get('trick_form')['imagesTricks'])) {
+                // UploadedFile collection
+                $newImagesFiles = $fileBag->get('trick_form')['imagesTricks'];
+
+                foreach ($newImagesFiles as $newImageFileKey => $newImageFile) {
+                    $newFileName = '';
+                    // New image added in the form
+                    if (null !== $newImageFile['file']) {
+                        $newFileName = $this->mediaService->uploadTrickImage(
+                            $newImageFile['file'],
+                            $trick->getName()
+                        );
+                    }
+
+                    // The new image has been uploaded successfully
+                    if ('' !== $newFileName) {
+                        $imagesData[$newImageFileKey]->setFileName($newFileName);
+                    }
+                }
+            }
+            // Deleting images files that no longer exist in the trick
+            foreach ($imagesCollection as $image) {
+                $imageDeleted = false;
+                if (null === $image->getTrick()) {
+                    $imageDeleted = $this->mediaService->deleteTrickImage($trick->getName(), $image->getFileName());
+                }
+                // Image file suppression failed
+                if (false === $imageDeleted && null === $image->getTrick()) {
+                    // Cancels deletion of image from database
+                    $image->setTrick($trick);
+                }
+            }
+
+            // Persist the Trick
+            $this->manager->persist($form->getData());
+            $this->manager->flush();
+
+            return $this->redirectToRoute('trick_modification', ['trickId' => $trickId]);
+        }
+
+        return $this->render('partials/trick_form.html.twig', [
+            'trick' => $trick,
+            'groupTrickName' => $groupeTrick->getName(),
+            'headerImageExist' => $headerImageExist,
+            'headerImage' => $trickMedias['headerImage'],
+            'trickImages' => $trickMedias['images'],
+            'trickVideos' => $trickMedias['videos'],
+            'trickForm' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/trickImage/{trickName}/{imageName}', name: 'get_trick_image')]
+    public function getTrickImage(ParameterBagInterface $parameterBag, $trickName, $imageName): Response
+    {
+        $imagePath = PathUtils::buildTrickPath($parameterBag, $this->manager, $trickName).'/'.$imageName;
+
+        return $this->mediaService->serveProtectedImage($imagePath);
     }
 
     #[Route('/tricks/loadMore/{tricksReloaded}', name: 'load_more_tricks')]
@@ -65,6 +148,35 @@ class TrickController extends AbstractController
         $trickRepository = $this->manager->getRepository(Trick::class);
         $hiddeLoadButton = false;
         $tricks = $trickRepository->findAllTricksBy(['name' => 'ASC'], $tricksReloaded);
+        $nbTricks = $trickRepository->countTricks();
+
+        if ($nbTricks === count($tricks)) {
+            $hiddeLoadButton = true;
+        }
+
+        return $this->render('partials/tricks_list.html.twig', [
+            'tricks' => $tricks,
+            'hiddeLoadButton' => $hiddeLoadButton,
+        ]);
+    }
+
+    #[Route('/tricks/delete/{trickName}/loaded/{tricksLoaded}', name: 'delete_trick')]
+    public function deleteTrick(string $trickName, int $tricksLoaded): Response
+    {
+        $hiddeLoadButton = false;
+        $trickRepository = $this->manager->getRepository(Trick::class);
+        $trickToDelete = $trickRepository->findOneBy(['name' => $trickName]);
+
+        if ($trickToDelete) {
+            $folderDeleted = $this->mediaService->deleteTrickFolder($trickName);
+
+            if ($folderDeleted) {
+                $this->manager->remove($trickToDelete);
+                $this->manager->flush();
+            }
+        }
+
+        $tricks = $trickRepository->findAllTricksBy(['name' => 'ASC'], $tricksLoaded, false);
         $nbTricks = $trickRepository->countTricks();
 
         if ($nbTricks === count($tricks)) {

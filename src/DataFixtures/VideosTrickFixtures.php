@@ -31,24 +31,21 @@ class VideosTrickFixtures extends Fixture implements DependentFixtureInterface
 
         $this->addTrickVideo(
             $trickIndyGrab,
-            'Tuto Indy Grab',
             'https://www.youtube.com/embed/6yA3XqjTh_w'
         );
 
         $this->addTrickVideo(
             $trickIndyGrab,
-            'Indy Grab with style !',
             'https://www.youtube.com/embed/G_MEz7oJzro'
         );
 
         $manager->flush();
     }
 
-    private function addTrickVideo(Trick $trick, string $description, string $link): void
+    private function addTrickVideo(Trick $trick, string $link): void
     {
         $trickVideo = new VideosTrick();
         $trickVideo->setTrick($trick);
-        $trickVideo->setDescription($description);
         $trickVideo->setUrl($link);
         $this->manager->persist($trickVideo);
     }

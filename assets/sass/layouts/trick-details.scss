@@ -1,3 +1,21 @@
+.trick-container {
+  width: 1136px;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.medias-container {
+  display: grid;
+  justify-content: center;
+  grid-template-columns: repeat(3, 352px);
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
+  padding: 0 20px;
+  transition: width 300ms, height 300ms;
+}
+
+
 .head-trick-details{
   height: 40%;
   display: flex;
@@ -6,7 +24,9 @@
 
   img {
     z-index: 0;
-    max-height: 500px;
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: 10px;
   }
 
   h1 {
@@ -18,15 +38,25 @@
 .trick-video {
   width: 100%;
   aspect-ratio: 16/9;
+  border: 0;
+
+  &-preview {
+    height: 198px;
+  }
 }
 
 .image-trick-details {
   width: 100%;
   aspect-ratio: 16/9;
+
+  &.img-form {
+    border-radius: 10px;
+  }
 }
 
 .trick-detail-description {
   grid-column: 1 / -1;
+  padding: 0 20px;
 
   h2 {
     text-align: center;
@@ -90,5 +120,19 @@
     margin: 0;
     font-size: 0.9rem;
   }
+}
 
+.header-img-zoom-in {
+  animation: zoomIn;
+  animation-duration: 700ms;
+}
+
+.img-item-zoom-out {
+  animation: zoomOut;
+  animation-duration: 300ms;
+}
+
+.img-item-zoom-in {
+  animation: zoomIn;
+  animation-duration: 400ms;
 }

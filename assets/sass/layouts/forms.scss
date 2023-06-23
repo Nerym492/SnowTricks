@@ -1,19 +1,132 @@
-.register-form {
+.form {
   display: grid;
-  grid-template-columns: 500px;
+  grid-template-columns: 400px;
   justify-content: center;
+  grid-row-gap: 16px;
 
-  label {
-    grid-column: 1;
+  .trick-description {
+    height: 200px!important;
   }
 
-  input {
-    grid-column: 2;
+  .form-control:focus {
+    box-shadow: 0 0 8px 5px rgba($steel-blue, 0.6);
+    border-color: $steel-blue;
   }
 
-  &-row {
-    display: grid;
-    grid-template-columns: 150px 1fr;
+  .form-select:focus {
+    box-shadow: 0 0 8px 5px rgba($steel-blue, 0.6);
+    border-color: $steel-blue;
   }
 }
+
+.trick-form {
+  &-file {
+    font-family: Montserrat, serif;
+    font-size: 14px;
+  }
+
+  &-file::file-selector-button {
+    @include standard-btn(none, $steel-blue, $steel-blue, 170px)
+  }
+
+  &-file::file-selector-button:hover {
+    @include btn-slide-effect(#FFF, $steel-blue, 170px);
+  }
+}
+
+.image-file-actions {
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.border-isheader {
+  position: absolute;
+
+  &.isheader-top {
+    top: -13px;
+    right: 18px;
+    width: 317px;
+    height: 8.78px;
+  }
+
+  &.isheader-right {
+    right: -10px;
+    top: 20px;
+    width: 5.89px;
+    height: 157.5px;
+  }
+
+  &.isheader-bot {
+    top: 202px;
+    left: 18px;
+    width: 317px;
+    height: 8.78px;
+  }
+
+  &.isheader-left {
+    left: -10px;
+    top: 20px;
+    width: 5.89px;
+    height: 157.5px;
+  }
+}
+
+.trick-image-item {
+  position: relative;
+  transition: all 300ms ease;
+}
+
+.invalid-field-text {
+  animation: fadeIn;
+  animation-duration: 200ms;
+}
+
+.delete-video-btn {
+  margin-left: 8px;
+}
+
+.trick-video-actions {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.trick-video-link {
+  width: 100%;
+
+  &-group {
+    width: 100%;
+  }
+}
+
+.border-fade-out {
+  animation: fadeOut;
+  animation-duration: 200ms;
+}
+
+.border-fade-in-down {
+  animation: fadeInDown;
+  animation-duration: 200ms;
+}
+
+.border-fade-in-right {
+  animation: fadeInRight;
+  animation-duration: 200ms;
+}
+
+.border-fade-in-up {
+  animation: fadeInUp;
+  animation-duration: 200ms;
+}
+
+.border-fade-in-left {
+  animation: fadeInLeft;
+  animation-duration: 200ms;
+}
+
+
+
 

@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}{% endblock %}
+
+{% block scripts_head %}
+{% endblock %}
+
+{% block content %}
+    <div class="trick-container">
+        {% include 'partials/header_trick.html.twig' %}
+
+        {{ form_start(trickForm, {'attr': {'class': 'form', 'id': 'trick_form'}}) }}
+        <h2>Images</h2>
+        <div class="medias-container" id="images-list"
+             data-prototype="{{ form_widget(trickForm.imagesTricks.vars.prototype)|e('html_attr') }}">
+            {% for image in trickForm.imagesTricks %}
+                <div id="trick_form_imagesTricks_{{ loop.index-1 }}" class="trick-image-item">
+                    {% if image.vars.value.isInTheHeader %}
+                        <img class="border-isheader isheader-top" src="/build/images/border-top-isheader.png"
+                             alt="border top isheader" id="border-isheader-top">
+                        <img class="border-isheader isheader-right" src="/build/images/border-right-isheader.png"
+                             alt="border right isheader" id="border-isheader-right">
+                        <img class="border-isheader isheader-bot" src="/build/images/border-bot-isheader.png"
+                             alt="border bot isheader" id="border-isheader-bot">
+                        <img class="border-isheader isheader-left" src="/build/images/border-left-isheader.png"
+                             alt="border left isheader" id="border-isheader-left">
+                    {% endif %}
+                    <div class="trick-image-preview">
+                        {% if image.vars.value.fileName is empty %}
+                            <img class="image-trick-details" src="/build/images/image-placeholder.webp" alt="">
+                        {% else %}
+                            <a role="button" class="favorite-image">
+                                <img class="image-trick-details img-form" src="{{ path(
+                                    'get_trick_image',
+                                    {'trickName': trick.name,'imageName': image.vars.value.fileName}
+                                ) }}" alt="Image {{ loop.index }}">
+                            </a>
+                        {% endif %}
+                    </div>
+                    {{ form_row(image.fileName) }}
+                    {{ form_row(image.isInTheHeader) }}
+                    <div class="image-file-actions">
+                        {{ form_widget(image.file, {'attr': {'class': image.file.vars.attr.class ~ ' isFilled'}}) }}
+                        <a role="button" class="delete-image-btn" id="delete-img-btn-{{ loop.index-1 }}">
+                            <i class="fa-solid fa-trash icon-delete-img"></i>
+                        </a>
+                    </div>
+
+                </div>
+            {% endfor %}
+            <div class="trick-image-item" id="add-image-form-button">
+                <div class="image-trick-details center">
+                    <a role="button">
+                        <i class="fa-solid fa-circle-plus icon-add-item"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <h2>Videos</h2>
+        <div class="medias-container" id="videos-list"
+             data-prototype="{{ form_widget(trickForm.videosTricks.vars.prototype)|e('html_attr') }}">
+            {% for video in trickForm.videosTricks %}
+                <div id="trick_form_videosTricks_{{ loop.index-1 }}" class="trick-video-item">
+                    <div class="trick-video-preview">
+                        {% if video.vars.value.url is empty %}
+                            <img class="image-trick-details" src="/build/images/video-placeholder.png"
+                                 alt="video {{ loop.index }}">
+                        {% else %}
+                            <iframe class="trick-video" src="{{ video.vars.value.url }}" allowfullscreen></iframe>
+                        {% endif %}
+                    </div>
+                    <div class="trick-video-actions">
+                        {{ form_row(video.url) }}
+                        <a role="button" class="delete-video-btn" id="delete-video-btn-{{ loop.index-1 }}">
+                            <i class="fa-solid fa-trash icon-delete-img"></i>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="trick-video-item" id="add-video-form-button">
+                <div class="image-trick-details center">
+                    <a role="button">
+                        <i class="fa-solid fa-circle-plus icon-add-item"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <h2 class="mt-20">Informations</h2>
+        <div class="form-floating">
+            {{ form_widget(trickForm.name) }}
+            {{ form_label(trickForm.name) }}
+        </div>
+        <div class="form-floating">
+            {{ form_widget(trickForm.description) }}
+            {{ form_label(trickForm.description) }}
+        </div>
+        <div class="form-floating">
+            {{ form_widget(trickForm.group_trick) }}
+            {{ form_label(trickForm.group_trick) }}
+        </div>
+        <button type="submit" class="btn-submit" data-just-validate-fallback-disabled="false">Save</button>
+        {{ form_end(trickForm) }}
+
+    </div>
+{% endblock %}
+
+{% block scripts_end_body %}
+    {{ encore_entry_script_tags('trick') }}
+{% endblock %}

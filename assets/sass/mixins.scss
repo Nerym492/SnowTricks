@@ -1,0 +1,23 @@
+@mixin standard-btn($background-color, $border-color, $color, $width) {
+  width: $width;
+  font-family: Montserrat, serif;
+  background: $background-color;
+  border: $border-color 2px solid;
+  border-radius: 2px;
+  color: $color;
+  line-height: 0.7;
+  margin: 0.5em;
+  padding: 10px 15px;
+  transition: 0.25s ease-in-out;
+}
+
+@mixin btn-slide-effect($background-color, $color, $width) {
+  cursor: pointer;
+  color: $background-color;
+  box-shadow: inset $width 0 0 0 $color;
+}
+
+@mixin btn-close-effect($background-color, $color, $width) {
+  color: $color;
+  box-shadow: inset calc(-1 * ($width / 2)) 0 0 0 $background-color, inset calc($width / 2) 0 0 0 $background-color;
+}
