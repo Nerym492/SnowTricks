@@ -48,7 +48,6 @@ console.log(animationsBorders);
 
 // Actions performed when adding elements to another
 let previewObserver = new MutationObserver(function (mutationsList) {
-  console.log(mutationsList);
   for (let mutation of mutationsList) {
     if (mutation.type === 'childList' && mutation.addedNodes.length > 0 && mutation.addedNodes.length < 7
       && mutation.addedNodes[0].classList.contains('border-isheader')) {
@@ -77,6 +76,7 @@ let previewObserver = new MutationObserver(function (mutationsList) {
             addedNode.closest('.trick-image-preview'))
         }
       })
+      mutation.addedNodes[0].closest('.trick-image-item').querySelector('.trick-form-isheader').value = '1';
     } else if (mutation.type === 'childList' && mutation.addedNodes.length > 0
       && mutation.target === mutation.addedNodes[0].parentElement) {
       let borders = mutation.addedNodes[0].closest('.trick-image-preview').querySelectorAll('.border-isheader')
