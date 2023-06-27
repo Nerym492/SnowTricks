@@ -78,31 +78,7 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Collection of ImagesTricks after form submission
-            $imagesData = $form->get('imagesTricks')->getData();
-
-            $fileBag = $request->files;
-
-            if (isset($fileBag->get('trick_form')['imagesTricks'])) {
-                // UploadedFile collection
-                $newImagesFiles = $fileBag->get('trick_form')['imagesTricks'];
-
-                foreach ($newImagesFiles as $newImageFileKey => $newImageFile) {
-                    $newFileName = '';
-                    // New image added in the form
-                    if (null !== $newImageFile['file']) {
-                        $newFileName = $this->mediaService->uploadTrickImage(
-                            $newImageFile['file'],
-                            $trick->getName()
-                        );
-                    }
-
-                    // The new image has been uploaded successfully
-                    if ('' !== $newFileName) {
-                        $imagesData[$newImageFileKey]->setFileName($newFileName);
-                    }
-                }
-            }
+            $this->processFormImages($request, $trick, $form);
             // Deleting images files that no longer exist in the trick
             foreach ($imagesCollection as $image) {
                 $imageDeleted = false;
@@ -137,7 +113,8 @@ class TrickController extends AbstractController
     #[Route('/trickImage/{trickName}/{imageName}', name: 'get_trick_image')]
     public function getTrickImage(ParameterBagInterface $parameterBag, $trickName, $imageName): Response
     {
-        $imagePath = PathUtils::buildTrickPath($parameterBag, $this->manager, $trickName).'/'.$imageName;
+        $trick = $this->manager->getRepository(Trick::class)->findOneBy(['name' => $trickName]);
+        $imagePath = PathUtils::buildTrickPath($parameterBag, $trick).'/'.$imageName;
 
         return $this->mediaService->serveProtectedImage($imagePath);
     }
@@ -168,7 +145,7 @@ class TrickController extends AbstractController
         $trickToDelete = $trickRepository->findOneBy(['name' => $trickName]);
 
         if ($trickToDelete) {
-            $folderDeleted = $this->mediaService->deleteTrickFolder($trickName);
+            $folderDeleted = $this->mediaService->deleteTrickFolder($trickToDelete);
 
             if ($folderDeleted) {
                 $this->manager->remove($trickToDelete);

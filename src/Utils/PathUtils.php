@@ -10,13 +10,11 @@ class PathUtils
 {
     public static function buildTrickPath(
         ParameterBagInterface $parameterBag,
-        EntityManagerInterface $manager,
-        string $trickName
+        Trick $trick,
     ): string {
         $basePath = $parameterBag->get('trick_folder_path');
-        $trick = $manager->getRepository(Trick::class)->findOneBy(['name' => $trickName]);
         $trickGroupName = $trick->getGroupTrick()->getName();
 
-        return $basePath.'/'.$trickGroupName.'/'.str_replace(' ', '_', $trickName);
+        return $basePath.'/'.$trickGroupName.'/'.str_replace(' ', '_', $trick->getName());
     }
 }

@@ -32,7 +32,7 @@ class MediaService
         // All trick images except the one already in the header.
         $trickImages = $imagesTrickRepo->findBy(['trick' => $trickId, 'isInTheHeader' => 0]);
 
-        $trickVideos = $this->entityManager->getRepository(VideosTrick::class)->findAll();
+        $trickVideos = $this->entityManager->getRepository(VideosTrick::class)->findBy(['trick' => $trickId]);
 
         return [
             'headerImage' => $headerImage,
@@ -65,11 +65,11 @@ class MediaService
         throw new NotFoundHttpException('Image not found');
     }
 
-    public function uploadTrickImage(UploadedFile $file, string $trickName): string
+    public function uploadTrickImage(UploadedFile $file, Trick $trick): string
     {
-        $trickPath = PathUtils::buildTrickPath($this->parameterBag, $this->entityManager, $trickName);
+        $trickPath = PathUtils::buildTrickPath($this->parameterBag, $trick);
         $trickPathExists = file_exists($trickPath);
-        $newFileName = uniqid().'-'.$trickName.'.'.$file->guessExtension();
+        $newFileName = uniqid().'-'.$trick->getName().'.'.$file->guessExtension();
 
         if (!$trickPathExists) {
             $trickPathExists = mkdir($trickPath, 0777, true);
@@ -90,16 +90,16 @@ class MediaService
         return $newFileName;
     }
 
-    public function deleteTrickImage(string $trickName, string $fileName): bool
+    public function deleteTrickImage(Trick $trick, string $fileName): bool
     {
-        $filePath = PathUtils::buildTrickPath($this->parameterBag, $this->entityManager, $trickName).'/'.$fileName;
+        $filePath = PathUtils::buildTrickPath($this->parameterBag, $trick).'/'.$fileName;
 
         return $this->deleteFile($filePath, $fileName);
     }
 
-    public function deleteTrickFolder(string $trickName): bool
+    public function deleteTrickFolder(Trick $trick): bool
     {
-        $folderPath = PathUtils::buildTrickPath($this->parameterBag, $this->entityManager, $trickName);
+        $folderPath = PathUtils::buildTrickPath($this->parameterBag, $trick);
 
         return $this->deleteFile($folderPath);
     }
