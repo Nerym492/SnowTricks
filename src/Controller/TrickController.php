@@ -11,6 +11,7 @@ use App\Utils\PathUtils;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -167,10 +168,26 @@ class TrickController extends AbstractController
     }
 
     #[Route('/tricks/create', name: 'create_trick')]
-    public function createTrick(): Response
+    public function createTrick(Security $security, Request $request): Response
     {
         $trick = new Trick();
         $form = $this->createForm(TrickFormType::class, $trick);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->processFormImages($request, $trick, $form);
+            $trick->setCreationDate(new \DateTime());
+            $trick->setUser($security->getUser());
+
+            // Persist the Trick
+            $this->manager->persist($form->getData());
+            $this->manager->flush();
+
+            $this->addFlash('success', 'The trick has been successfully created !');
+
+            return $this->redirectToRoute('app_home');
+        }
 
         return $this->render('partials/trick_form.html.twig', [
             'trick' => $trick,
@@ -178,5 +195,32 @@ class TrickController extends AbstractController
             'headerImage' => null,
             'trickForm' => $form->createView(),
         ]);
+    }
+
+    private function processFormImages(Request $request, Trick $trick, $form)
+    {
+        $imagesData = $form->get('imagesTricks')->getData();
+        $fileBag = $request->files;
+
+        if (isset($fileBag->get('trick_form')['imagesTricks'])) {
+            // UploadedFile collection
+            $newImagesFiles = $fileBag->get('trick_form')['imagesTricks'];
+
+            foreach ($newImagesFiles as $newImageFileKey => $newImageFile) {
+                $newFileName = '';
+                // New image added in the form
+                if (null !== $newImageFile['file']) {
+                    $newFileName = $this->mediaService->uploadTrickImage(
+                        $newImageFile['file'],
+                        $trick
+                    );
+                }
+
+                // The new image has been uploaded successfully
+                if ('' !== $newFileName) {
+                    $imagesData[$newImageFileKey]->setFileName($newFileName);
+                }
+            }
+        }
     }
 }
