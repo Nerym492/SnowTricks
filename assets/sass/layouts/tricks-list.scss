@@ -1,8 +1,12 @@
 @import '../sections/trick-section';
 
+.trick-list {
+  position: relative;
+}
+
 .trick-preview {
   border-radius: 15px;
-  box-shadow: -3px -3px 18px 4px rgba(0,0,0,0.29);
+  box-shadow: -3px -3px 18px 4px rgba(0, 0, 0, 0.29);
   overflow: hidden;
 
   h2 {
@@ -37,7 +41,7 @@
     justify-content: space-between;
   }
 
-  .trick-description a{
+  .trick-description a {
     text-decoration: none;
     color: #000;
   }
@@ -60,3 +64,32 @@
   text-align: center;
   font-size: 20px;
 }
+
+.new-trick {
+  display: flex;
+  justify-content: center;
+}
+
+.link-new-trick {
+  display: flex;
+  align-items: center;
+  margin-top: 30px;
+  text-decoration: none;
+  color: $steel-blue;
+  transition: all 250ms ease-in-out;
+
+  p {
+    font-size: 20px;
+    margin-bottom: 0;
+    margin-left: 8px;
+  }
+
+  &:hover {
+    color: $azurin-blue;
+  }
+}
+
+.div-load-more {
+  position: relative;
+}
+
