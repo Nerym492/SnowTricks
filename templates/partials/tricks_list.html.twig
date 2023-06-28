@@ -1,4 +1,13 @@
-<div id="trick-list">
+<div id="trick-list" class="trick-list">
+    {% include 'partials/alert_box.html.twig' %}
+    {% if app.user %}
+    <div class="new-trick">
+        <a class="link-new-trick" href="/tricks/create">
+            <i class="fa-regular fa-plus fa-2xl fa-lh-unset me-2"></i>
+            <p>Create a new trick</p>
+        </a>
+    </div>
+    {% endif %}
     <section class="tricks-section" id="trick-section-home">
         {% for trick in tricks %}
             <div class="trick-preview" id="trick-{{ trick.data.id }}">
@@ -31,11 +40,16 @@
             </div>
         {% endfor %}
     </section>
-    {% if hiddeLoadButton is empty %}
-        <div class="center">
-            <button class="btn-arrow--white btn-trick-list" id="btn-load-more-tricks">Load more</button>
-        </div>
-    {% endif %}
+    <div class="div-load-more">
+        {% if hiddeLoadButton is empty %}
+            <div class="center">
+                <button class="btn-arrow--white btn-trick-list" id="btn-load-more-tricks">Load more</button>
+            </div>
+        {% endif %}
+        <a href="#trick-list">
+            <i class="fa-solid fa-arrow-up arrow end-tricks-arrow"></i>
+        </a>
+    </div>
 </div>
 <div class="modal fade" id="suppressionConfirm" tabindex="-1" aria-labelledby="suppressionConfirm" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">

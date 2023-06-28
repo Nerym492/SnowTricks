@@ -36,3 +36,35 @@
     color: rgba(0, 0, 0, 0.56);
   }
 }
+
+.arrow {
+  position: absolute;
+  font-size: 2em;
+
+  &.header-arrow {
+    position: absolute;
+    color: #FFF;
+    bottom: 30px;
+    right: 40px;
+  }
+
+  &.end-tricks-arrow {
+    color: #000;
+    bottom: 20px;
+    right: 20px;
+  }
+}
+
+.icon-close-alert {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  color: #6c757d;
+  transition: all 250ms ease-in-out;
+
+  &:hover {
+    color: #000;
+    scale: 1.2;
+  }
+}
+

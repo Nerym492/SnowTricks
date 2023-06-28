@@ -8,7 +8,10 @@ function reloadTricks() {
     // Current number of loaded Tricks
     const nbLoadedTricks = document.getElementById("trick-section-home").childElementCount;
     let trickList = document.getElementById("trick-list");
-    addXmlhttpRequest("tricks/loadMore/" + nbLoadedTricks, trickList, scrollToTricksEnd)
+    addXmlhttpRequest("tricks/loadMore/" + nbLoadedTricks, trickList, () => {
+      addDeleteListener();
+      addAlertListener();
+    })
   })
 }
 
@@ -19,10 +22,6 @@ function scrollToTricksEnd () {
   let position = newTrickList.offsetTop + newTrickList.offsetHeight;
   window.scrollTo(0, position);
   addDeleteListener();
-
-  if (document.getElementById("btn-load-more-tricks")) {
-    reloadTricks();
-  }
 }
 
 function addDeleteListener() {
@@ -34,13 +33,6 @@ function addDeleteListener() {
   })
 }
 
-document.getElementById('delete-trick-btn').addEventListener('click', (event) => {
-    const trickName = event.target.firstElementChild.innerHTML
-    const nbLoadedTricks = document.getElementById("trick-section-home").childElementCount;
-    let trickList = document.getElementById("trick-list");
-    addXmlhttpRequest('tricks/delete/'+trickName+'/loaded/'+nbLoadedTricks, trickList, scrollToTricksEnd)
-})
-
 function addXmlhttpRequest(url, elementToRefresh, afterRefreshAction) {
   const xmlHttp = new XMLHttpRequest();
   xmlHttp.onreadystatechange = function () {
@@ -51,13 +43,38 @@ function addXmlhttpRequest(url, elementToRefresh, afterRefreshAction) {
       elementToRefresh.replaceWith(tempElement.firstChild);
 
       afterRefreshAction();
+      if (document.getElementById("btn-load-more-tricks")) {
+        reloadTricks();
+      }
     }
   }
   xmlHttp.open("GET", url, true);
   xmlHttp.send();
 }
 
+document.getElementById('delete-trick-btn').addEventListener('click', (event) => {
+  const trickName = event.target.firstElementChild.innerHTML
+  const nbLoadedTricks = document.getElementById("trick-section-home").childElementCount;
+  let trickList = document.getElementById("trick-list");
+  addXmlhttpRequest('tricks/delete/'+trickName+'/loaded/'+nbLoadedTricks, trickList, () => {
+    addDeleteListener();
+    addAlertListener();
+    document.getElementById("trick-list").scrollIntoView();
+  })
+})
+
+function addAlertListener() {
+  document.querySelectorAll('.alert-box').forEach(alertBox => {
+    alertBox.addEventListener('click', (event) => {
+      alertBox.classList.add('alert-fade-out');
+      alertBox.addEventListener('animationend', () => {
+        alertBox.remove()
+      })
+    })
+  })
+}
+
+
 reloadTricks();
 addDeleteListener();
-
-
+addAlertListener();
