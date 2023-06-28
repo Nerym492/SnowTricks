@@ -8,7 +8,10 @@ function reloadTricks() {
     // Current number of loaded Tricks
     const nbLoadedTricks = document.getElementById("trick-section-home").childElementCount;
     let trickList = document.getElementById("trick-list");
-    addXmlhttpRequest("tricks/loadMore/" + nbLoadedTricks, trickList, addDeleteListener)
+    addXmlhttpRequest("tricks/loadMore/" + nbLoadedTricks, trickList, () => {
+      addDeleteListener();
+      addAlertListener();
+    })
   })
 }
 
@@ -53,16 +56,25 @@ document.getElementById('delete-trick-btn').addEventListener('click', (event) =>
   const trickName = event.target.firstElementChild.innerHTML
   const nbLoadedTricks = document.getElementById("trick-section-home").childElementCount;
   let trickList = document.getElementById("trick-list");
-  addXmlhttpRequest('tricks/delete/'+trickName+'/loaded/'+nbLoadedTricks, trickList, addDeleteListener)
-})
-
-document.getElementById('alert-box').addEventListener('click', (event) => {
-  let alertBox = event.target.closest('.alert-box');
-  alertBox.classList.add('alert-fade-out');
-  alertBox.addEventListener('animationend', () => {
-    alertBox.remove()
+  addXmlhttpRequest('tricks/delete/'+trickName+'/loaded/'+nbLoadedTricks, trickList, () => {
+    addDeleteListener();
+    addAlertListener();
+    document.getElementById("trick-list").scrollIntoView();
   })
 })
 
+function addAlertListener() {
+  document.querySelectorAll('.alert-box').forEach(alertBox => {
+    alertBox.addEventListener('click', (event) => {
+      alertBox.classList.add('alert-fade-out');
+      alertBox.addEventListener('animationend', () => {
+        alertBox.remove()
+      })
+    })
+  })
+}
+
+
 reloadTricks();
 addDeleteListener();
+addAlertListener();

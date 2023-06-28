@@ -187,7 +187,7 @@ class TrickController extends AbstractController
 
             $this->addFlash('success', 'The trick has been successfully created !');
 
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('app_home', ['_fragment' => 'trick-list']);
         }
 
         return $this->render('partials/trick_form.html.twig', [
