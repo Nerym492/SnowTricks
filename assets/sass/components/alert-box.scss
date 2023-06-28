@@ -1,0 +1,47 @@
+.alert-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: 500px;
+  min-width: 250px;
+  padding: 1.5em;
+  margin: 30px auto 0;
+  border-radius: 5px;
+  box-shadow: 0 0 15px 5px #CCC;
+
+  p {
+    margin: 0;
+  }
+}
+
+@media (max-width: 550px) {
+  .alert-box {
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+  }
+}
+
+.simple-alert {
+  background-color: #EBEBEB;
+  border-left: 5px solid #6C6C6C;
+}
+
+.success-alert {
+  background-color: #A8F0C6;
+  border-left: 5px solid #178344;
+}
+
+.danger-alert {
+  background-color: #F7A7A3;
+  border-left: 5px solid #8F130C;
+}
+
+.warning-alert {
+  background-color: #FFD48A;
+  border-left: 5px solid #8A5700;
+}
+
+.alert-fade-out {
+  animation: fadeOut;
+  animation-duration: 300ms;
+}

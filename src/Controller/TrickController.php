@@ -151,6 +151,7 @@ class TrickController extends AbstractController
             if ($folderDeleted) {
                 $this->manager->remove($trickToDelete);
                 $this->manager->flush();
+                $this->addFlash('success', 'The trick has been successfully deleted !');
             }
         }
 
