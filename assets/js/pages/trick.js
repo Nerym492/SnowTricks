@@ -1,4 +1,4 @@
-import JustValidate from "../modules/just-validate";
+import JustValidate from "just-validate";
 
 const headerImage = document.getElementById('image-header-details');
 const trickForm = document.getElementById('trick_form');
