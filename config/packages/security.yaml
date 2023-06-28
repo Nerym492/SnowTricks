@@ -34,6 +34,7 @@ security:
         - { route: 'create_trick', roles: ROLE_USER }
         - { route: 'trick_modification', roles: ROLE_USER }
         - { route: 'delete_trick', roles: ROLE_USER }
+        - { route: 'submit_comment_form', roles: ROLE_USER }
         # - { path: ^/profile, roles: ROLE_USER }
 
 when@test:

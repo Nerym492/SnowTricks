@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Comment;
 use App\Entity\GroupTrick;
 use App\Entity\Trick;
+use App\Entity\User;
+use App\Form\CommentFormType;
 use App\Form\TrickFormType;
 use App\Service\MediaService;
 use App\Utils\PathUtils;
@@ -26,15 +28,30 @@ class TrickController extends AbstractController
     }
 
     #[Route('/tricks/details/{trickId}', name: 'trick_details')]
-    public function getTrickDetails(int $trickId): Response
+    public function getTrickDetails(Request $request, Security $security, int $trickId): Response
     {
         $trick = $this->manager->getRepository(Trick::class)->findOneBy(['id' => $trickId]);
         $groupeTrick = $this->manager->getRepository(GroupTrick::class)->findOneBy([
             'id' => $trick->getGroupTrick()->getId(),
         ]);
         $trickMedias = $this->mediaService->getAllTrickMedias($trickId);
-
         $comments = $this->manager->getRepository(Comment::class)->findAllOrdered(['creation_date' => 'DESC']);
+        $connectedUser = $security->getUser();
+
+        if (null !== $connectedUser) {
+            $user = $this->manager->getRepository(User::class)->findOneBy([
+                'mail' => $connectedUser->getUserIdentifier(),
+            ]);
+            $newComment = new Comment();
+            $newComment->setUser($user);
+
+            $commentForm = $this->createForm(CommentFormType::class, $newComment);
+            $commentForm->handleRequest($request);
+
+            $commentForm = $commentForm->createView();
+        } else {
+            $commentForm = null;
+        }
 
         return $this->render('partials/trick.html.twig', [
             'trick' => $trick,
@@ -44,6 +61,7 @@ class TrickController extends AbstractController
             'trickImages' => $trickMedias['images'],
             'trickVideos' => $trickMedias['videos'],
             'comments' => $comments,
+            'commentForm' => $commentForm,
         ]);
     }
 
