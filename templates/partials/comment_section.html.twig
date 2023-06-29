@@ -3,8 +3,7 @@
     {% if commentForm is not empty %}
         {{ form_start(commentForm, {
             'attr': {
-                'class': 'comment-form form-colors-custom', 'id': 'comment-form',
-                'action': path('submit_comment_form')
+                'class': 'comment-form form-colors-custom', 'id': 'comment-form'
             }
         }) }}
         {{ form_row(commentForm.content) }}
@@ -18,37 +17,5 @@
                                        class="link">Create one here.</a>
         </p>
     {% endif %}
-    <div class="comment-list">
-        {% include 'partials/alert_box.html.twig' %}
-        {% for comment in comments %}
-            <div class="comment">
-                <i class="fa-solid fa-circle-user icon-user"></i>
-                <div>
-                    <p class="comment-user-info">
-                        {{ comment.userPseudo }}
-                        <span class="small">
-                            - {{ comment.data.creationDate|date("d/m/Y \\à H:i") }}
-                        </span>
-                    </p>
-                    <p class="comment-text">
-                        {{ comment.data.content }}
-                    </p>
-                </div>
-            </div>
-        {% endfor %}
-        <div class="comment">
-            <i class="fa-solid fa-circle-user icon-user"></i>
-            <div class="comment-text-group">
-                <p class="comment-user-info">
-                    Pseudo 1
-                    <span class="small">
-                            - 7 juin 2023 à 14:36
-                        </span>
-                </p>
-                <p class="comment-text">
-                    Un autre commentaire
-                </p>
-            </div>
-        </div>
-    </div>
+    {% include 'partials/comments_list.html.twig' %}
 </section>

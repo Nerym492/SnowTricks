@@ -45,4 +45,27 @@ class CommentController extends AbstractController
             'commentForm' => $commentForm->createView(),
         ]);
     }
+
+    #[Route('/comments/loaded/{commentsLoaded}/loadMore/', name: 'load_more_comments')]
+    public function loadMoreComments(Request $request, int $commentsLoaded): Response
+    {
+        $hiddeLoadButton = false;
+
+        $commentRepository = $this->manager->getRepository(Comment::class);
+        $comments = $commentRepository->findAllOrdered(
+            ['creation_date' => 'DESC'],
+            $commentsLoaded
+        );
+
+        $nbTotalComments = $commentRepository->count([]);
+
+        if ($nbTotalComments === count($comments)) {
+            $hiddeLoadButton = true;
+        }
+
+        return $this->render('partials/comments_list.html.twig', [
+            'comments' => $comments,
+            'hiddeLoadButton' => $hiddeLoadButton,
+        ]);
+    }
 }

@@ -105,7 +105,7 @@ let imageHeaderObserver = new MutationObserver(function (mutations) {
   let lastMutation = mutations[mutations.length - 1];
 
   if (lastMutation.type === 'attributes' && lastMutation.attributeName === 'src') {
-    // Traiter la dernière mutation
+    // Processing the last mutation
     animateElement(headerImage, 'header-img-zoom-in', () => {
     });
   }
