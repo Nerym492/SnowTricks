@@ -5,7 +5,19 @@ function addSubmitListener(){
   let commentSection = document.getElementById('comment-section');
   let commentForm = document.getElementById('comment-form');
 
-  commentForm.addEventListener('submit', (event) => {
+  const commentValidator = new JustValidate('#comment-form', {
+    validateBeforeSubmitting: true,
+    errorLabelCssClass: ['invalid-field-text'],
+  });
+
+  commentValidator.addField('#comment_form_content', [
+    {
+      rule: 'required',
+      errorMessage: 'The comment cannot be empty.'
+    }
+  ])
+
+  commentValidator.onSuccess(function (event) {
     event.preventDefault();
     let formData = new FormData(commentForm);
     addXmlhttpRequest('POST','/comment/submitForm', formData, commentSection, () => {

@@ -37,6 +37,18 @@
   }
 }
 
+.comment-form {
+  display: grid;
+  grid-template-columns: 500px;
+  justify-content: center;
+  row-gap: 10px;
+
+  textarea {
+    width: 100%;
+  }
+}
+
+
 .image-file-actions {
   margin-top: 8px;
   display: flex;
@@ -130,6 +142,11 @@
   animation-duration: 200ms;
 }
 
+.form-error {
+  color: rgb(184, 17, 17);
+  animation: fadeIn;
+  animation-duration: 200ms;
+}
 
 
 

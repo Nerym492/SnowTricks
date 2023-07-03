@@ -81,24 +81,12 @@
   }
 }
 
-.comment-form {
-  display: grid;
-  grid-template-columns: 500px;
-  justify-content: center;
-  row-gap: 15px;
-}
-
 .comment-section {
   margin-top: 40px;
 
   h2 {
     text-align: center;
     margin-bottom: 30px;
-  }
-
-  textarea {
-    height: 100%;
-    width: 100%;
   }
 }
 

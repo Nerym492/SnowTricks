@@ -1,5 +1,6 @@
 <section id="comment-section" class="comment-section">
     <h2>Comments</h2>
+    {% form_theme commentForm 'form/form_errors.html.twig' %}
     {% if commentForm is not empty %}
         {{ form_start(commentForm, {
             'attr': {
@@ -7,6 +8,7 @@
             }
         }) }}
         {{ form_row(commentForm.content) }}
+        {{ form_errors(commentForm.content) }}
         <button type="submit" class="btn-arrow--white btn-comment">Valider</button>
         {{ form_end(commentForm) }}
     {% else %}
