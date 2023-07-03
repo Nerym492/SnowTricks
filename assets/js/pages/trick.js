@@ -1,4 +1,4 @@
-import JustValidate from "../modules/just-validate";
+import JustValidate from "just-validate";
 
 const headerImage = document.getElementById('image-header-details');
 const trickForm = document.getElementById('trick_form');
@@ -105,7 +105,7 @@ let imageHeaderObserver = new MutationObserver(function (mutations) {
   let lastMutation = mutations[mutations.length - 1];
 
   if (lastMutation.type === 'attributes' && lastMutation.attributeName === 'src') {
-    // Traiter la dernière mutation
+    // Processing the last mutation
     animateElement(headerImage, 'header-img-zoom-in', () => {
     });
   }

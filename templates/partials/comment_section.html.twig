@@ -1,0 +1,23 @@
+<section id="comment-section" class="comment-section">
+    <h2>Comments</h2>
+    {% form_theme commentForm 'form/form_errors.html.twig' %}
+    {% if commentForm is not empty %}
+        {{ form_start(commentForm, {
+            'attr': {
+                'class': 'comment-form form-colors-custom', 'id': 'comment-form'
+            }
+        }) }}
+        {{ form_row(commentForm.content) }}
+        {{ form_errors(commentForm.content) }}
+        <button type="submit" class="btn-arrow--white btn-comment">Valider</button>
+        {{ form_end(commentForm) }}
+    {% else %}
+        <p class="text-center">Please <a href="/login"
+                                         class="link">login</a> to leave a comment.
+            <br>
+            Don't have an account ? <a href="/register"
+                                       class="link">Create one here.</a>
+        </p>
+    {% endif %}
+    {% include 'partials/comments_list.html.twig' %}
+</section>

@@ -1,3 +1,5 @@
+import {addXmlhttpRequest, addAlertListener} from "../modules/functions";
+
 window.addEventListener("load", function () {
   let textElement = document.getElementById("header-title");
   textElement.classList.add("animated-text");
@@ -8,9 +10,12 @@ function reloadTricks() {
     // Current number of loaded Tricks
     const nbLoadedTricks = document.getElementById("trick-section-home").childElementCount;
     let trickList = document.getElementById("trick-list");
-    addXmlhttpRequest("tricks/loadMore/" + nbLoadedTricks, trickList, () => {
+    addXmlhttpRequest('GET',"tricks/loadMore/" + nbLoadedTricks, null, trickList, () => {
       addDeleteListener();
       addAlertListener();
+      if (document.getElementById("btn-load-more-tricks")) {
+        reloadTricks();
+      }
     })
   })
 }
@@ -33,47 +38,20 @@ function addDeleteListener() {
   })
 }
 
-function addXmlhttpRequest(url, elementToRefresh, afterRefreshAction) {
-  const xmlHttp = new XMLHttpRequest();
-  xmlHttp.onreadystatechange = function () {
-    if (this.readyState === 4 && this.status === 200) {
-      let newContent = this.responseText;
-      let tempElement = document.createElement('div');
-      tempElement.innerHTML = newContent;
-      elementToRefresh.replaceWith(tempElement.firstChild);
-
-      afterRefreshAction();
-      if (document.getElementById("btn-load-more-tricks")) {
-        reloadTricks();
-      }
-    }
-  }
-  xmlHttp.open("GET", url, true);
-  xmlHttp.send();
-}
 
 document.getElementById('delete-trick-btn').addEventListener('click', (event) => {
   const trickName = event.target.firstElementChild.innerHTML
   const nbLoadedTricks = document.getElementById("trick-section-home").childElementCount;
   let trickList = document.getElementById("trick-list");
-  addXmlhttpRequest('tricks/delete/'+trickName+'/loaded/'+nbLoadedTricks, trickList, () => {
+  addXmlhttpRequest('GET','tricks/delete/'+trickName+'/loaded/'+nbLoadedTricks, null, trickList, () => {
     addDeleteListener();
     addAlertListener();
     document.getElementById("trick-list").scrollIntoView();
+    if (document.getElementById("btn-load-more-tricks")) {
+      reloadTricks();
+    }
   })
-})
-
-function addAlertListener() {
-  document.querySelectorAll('.alert-box').forEach(alertBox => {
-    alertBox.addEventListener('click', (event) => {
-      alertBox.classList.add('alert-fade-out');
-      alertBox.addEventListener('animationend', () => {
-        alertBox.remove()
-      })
-    })
-  })
-}
-
+});
 
 reloadTricks();
 addDeleteListener();

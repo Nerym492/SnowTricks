@@ -1,13 +1,4 @@
-.form {
-  display: grid;
-  grid-template-columns: 400px;
-  justify-content: center;
-  grid-row-gap: 16px;
-
-  .trick-description {
-    height: 200px!important;
-  }
-
+.form-colors-custom {
   .form-control:focus {
     box-shadow: 0 0 8px 5px rgba($steel-blue, 0.6);
     border-color: $steel-blue;
@@ -16,6 +7,18 @@
   .form-select:focus {
     box-shadow: 0 0 8px 5px rgba($steel-blue, 0.6);
     border-color: $steel-blue;
+  }
+}
+
+
+.basic-form {
+  display: grid;
+  grid-template-columns: 400px;
+  justify-content: center;
+  grid-row-gap: 16px;
+
+  .trick-description {
+    height: 200px!important;
   }
 }
 
@@ -33,6 +36,18 @@
     @include btn-slide-effect(#FFF, $steel-blue, 170px);
   }
 }
+
+.comment-form {
+  display: grid;
+  grid-template-columns: 500px;
+  justify-content: center;
+  row-gap: 10px;
+
+  textarea {
+    width: 100%;
+  }
+}
+
 
 .image-file-actions {
   margin-top: 8px;
@@ -127,6 +142,11 @@
   animation-duration: 200ms;
 }
 
+.form-error {
+  color: rgb(184, 17, 17);
+  animation: fadeIn;
+  animation-duration: 200ms;
+}
 
 
 

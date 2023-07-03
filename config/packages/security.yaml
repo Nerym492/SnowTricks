@@ -31,7 +31,10 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/tricks/*, roles: ROLE_USER }
+        - { route: 'create_trick', roles: ROLE_USER }
+        - { route: 'trick_modification', roles: ROLE_USER }
+        - { route: 'delete_trick', roles: ROLE_USER }
+        - { route: 'submit_comment_form', roles: ROLE_USER }
         # - { path: ^/profile, roles: ROLE_USER }
 
 when@test:

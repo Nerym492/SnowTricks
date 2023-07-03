@@ -9,7 +9,7 @@
     <div class="trick-container">
         {% include 'partials/header_trick.html.twig' %}
 
-        {{ form_start(trickForm, {'attr': {'class': 'form', 'id': 'trick_form'}}) }}
+        {{ form_start(trickForm, {'attr': {'class': 'basic-form form-color-custom', 'id': 'trick_form'}}) }}
         <h2>Images</h2>
         <div class="medias-container" id="images-list"
              data-prototype="{{ form_widget(trickForm.imagesTricks.vars.prototype)|e('html_attr') }}">

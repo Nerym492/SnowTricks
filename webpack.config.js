@@ -8,12 +8,13 @@ Encore
   .setPublicPath('/build')
   .addEntry('home', './assets/js/pages/home.js')
   .addEntry('trick', './assets/js/pages/trick.js')
+  .addEntry('trick-details', './assets/js/pages/trick-details.js')
   .addEntry('bootstrap', 'bootstrap')
   .addStyleEntry('styles', './assets/sass/app.scss')
+  .splitEntryChunks()
   .enableSassLoader()
   .enablePostCssLoader()
   .cleanupOutputBeforeBuild()
-  .enableSourceMaps(!Encore.isProduction())
   .enableVersioning(Encore.isProduction())
   .addPlugin(new CopyWebpackPlugin({
     patterns: [

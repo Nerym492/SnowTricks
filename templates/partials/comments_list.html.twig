@@ -1,0 +1,24 @@
+<div class="comment-list" id="comment-list">
+    {% include 'partials/alert_box.html.twig' %}
+    {% for comment in comments %}
+        <div class="comment">
+            <i class="fa-solid fa-circle-user icon-user"></i>
+            <div>
+                <p class="comment-user-info">
+                    {{ comment.userPseudo }}
+                    <span class="small">
+                            - {{ comment.data.creationDate|date("d/m/Y \\à H:i") }}
+                        </span>
+                </p>
+                <p class="comment-text">
+                    {{ comment.data.content }}
+                </p>
+            </div>
+        </div>
+    {% endfor %}
+    {% if hiddeLoadButton is empty %}
+    <div class="center">
+        <button class="btn-arrow--white btn-trick-list" id="btn-load-more-comments">Load more</button>
+    </div>
+    {% endif %}
+</div>

@@ -1,10 +1,12 @@
 {% for label, messages in app.flashes(['success', 'warning', 'danger']) %}
     {% for message in messages %}
-        <div class="alert-box {{ label }}-alert" role="alert" id="alert-box">
-            <p><strong>{{ message|nl2br }}</strong></p>
-            <a role="button" class="icon-close-alert">
-                <i class="fa-solid fa-xmark"></i>
-            </a>
+        <div class="alert-box-container">
+            <div class="alert-box {{ label }}-alert alert-fade-in" role="alert" id="alert-box">
+                <p><strong>{{ message|nl2br }}</strong></p>
+                <a role="button" class="icon-close-alert">
+                    <i class="fa-solid fa-xmark"></i>
+                </a>
+            </div>
         </div>
     {% endfor %}
 {% endfor %}

@@ -81,13 +81,6 @@
   }
 }
 
-.comment-form {
-  display: grid;
-  grid-template-columns: 500px;
-  justify-content: center;
-  row-gap: 15px;
-}
-
 .comment-section {
   margin-top: 40px;
 
@@ -101,11 +94,20 @@
   display: grid;
   justify-content: center;
   grid-template-columns: 500px;
+  border-top: 1px solid #bdbdbd;
+}
+
+.alert-box-container + .comment {
+  margin-top: 20px;
 }
 
 .comment {
   display: flex;
   margin-bottom: 20px;
+
+  &:nth-child(1) {
+    margin-top: 20px;
+  }
 
   &:last-child {
     margin-bottom: 0;

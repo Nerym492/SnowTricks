@@ -64,3 +64,13 @@ h2 {
 .hidden {
   display: none;
 }
+
+.text-center {
+  text-align: center;
+}
+
+.link {
+  color: $steel-blue;
+  text-decoration: none;
+  font-weight: bold;
+}

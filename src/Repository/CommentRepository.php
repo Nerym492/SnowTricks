@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Comment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 /**
  * @extends ServiceEntityRepository<Comment>
@@ -16,8 +17,10 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CommentRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
+    public function __construct(
+        ManagerRegistry $registry,
+        private ParameterBagInterface $parameterBag
+    ) {
         parent::__construct($registry, Comment::class);
     }
 
@@ -39,8 +42,34 @@ class CommentRepository extends ServiceEntityRepository
         }
     }
 
-    public function findAllOrdered(array $orderBy): array
+    /**
+     * @param array $orderBy          ORDER BY in the query. Example : ['fieldToOrder' => 'DESC']
+     * @param int   $commentsReloaded Comments already loaded in the page before the query
+     */
+    public function findAllOrdered(array $orderBy, int $commentsReloaded = 0): array
     {
+        $commentListLimit = $this->parameterBag->get('comments_list_limit');
+        // Number of comments loaded by default
+        $nbCommentsToLoad = $commentListLimit;
+        $remainingComments = 0;
+
+        $commentsCountQuery = $this->createQueryBuilder('c');
+        $commentsCountQuery->select('COUNT(c) AS nbComments');
+        $commentsCountResult = $commentsCountQuery->getQuery()->getResult();
+        $commentsCount = $commentsCountResult[0]['nbComments'];
+
+        if ($commentsReloaded > 0) {
+            $remainingComments = $commentsCount - $commentsReloaded;
+        }
+
+        if ($remainingComments > 0 && $remainingComments >= $commentListLimit) {
+            // There will still be comments to load with the load more button
+            $nbCommentsToLoad = $commentsReloaded + $commentListLimit;
+        } elseif ($remainingComments > 0) {
+            // All comments will be loaded
+            $nbCommentsToLoad = $commentsCount;
+        }
+
         $commentQuery = $this->createQueryBuilder('c');
         $commentQuery->select('c AS data', 'u.pseudo AS userPseudo');
         $commentQuery->leftJoin('c.user', 'u');
@@ -49,7 +78,7 @@ class CommentRepository extends ServiceEntityRepository
             $commentQuery->addOrderBy('c.'.$fieldName, $direction);
         }
 
-        return $commentQuery->getQuery()->getResult();
+        return $commentQuery->setMaxResults($nbCommentsToLoad)->getQuery()->getResult();
     }
 
 //    /**
