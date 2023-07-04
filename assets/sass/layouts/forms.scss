@@ -1,11 +1,11 @@
 .form-colors-custom {
   .form-control:focus {
-    box-shadow: 0 0 8px 5px rgba($steel-blue, 0.6);
+    box-shadow: 0 0 0 0.25rem rgba($steel-blue, 0.6);
     border-color: $steel-blue;
   }
 
   .form-select:focus {
-    box-shadow: 0 0 8px 5px rgba($steel-blue, 0.6);
+    box-shadow: 0 0 0 0.25rem rgba($steel-blue, 0.6);
     border-color: $steel-blue;
   }
 }
@@ -15,7 +15,7 @@
   display: grid;
   grid-template-columns: 400px;
   justify-content: center;
-  grid-row-gap: 16px;
+  grid-row-gap: 10px;
 
   .trick-description {
     height: 200px!important;
@@ -92,11 +92,6 @@
 .trick-image-item {
   position: relative;
   transition: all 300ms ease;
-}
-
-.invalid-field-text {
-  animation: fadeIn;
-  animation-duration: 200ms;
 }
 
 .delete-video-btn {

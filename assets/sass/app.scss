@@ -73,4 +73,13 @@ h2 {
   color: $steel-blue;
   text-decoration: none;
   font-weight: bold;
+  transition: all 200ms ease-in-out;
+
+  &.fw-normal{
+    font-weight: unset;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
