@@ -11,6 +11,7 @@ Encore
   .addEntry('trick-details', './assets/js/pages/trick-details.js')
   .addEntry('reset-password', './assets/js/pages/reset-password.js')
   .addEntry('login', './assets/js/pages/login.js')
+  .addEntry('register', './assets/js/pages/register.js')
   .addEntry('bootstrap', 'bootstrap')
   .addStyleEntry('styles', './assets/sass/app.scss')
   .splitEntryChunks()

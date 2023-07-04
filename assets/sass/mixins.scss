@@ -21,3 +21,9 @@
   color: $color;
   box-shadow: inset calc(-1 * ($width / 2)) 0 0 0 $background-color, inset calc($width / 2) 0 0 0 $background-color;
 }
+
+@mixin object-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
