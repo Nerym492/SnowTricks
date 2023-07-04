@@ -5,6 +5,7 @@
 {% block header %}{% endblock %}
 
 {% block content %}
+    {% include 'partials/alert_box.html.twig' %}
     <form method="post" id="login-form" class="basic-form form-colors-custom form-floating">
         {% if error %}
             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
@@ -16,7 +17,7 @@
             </div>
         {% endif %}
 
-        <h1 class="h3 mb-3 font-weight-normal">Please Log in</h1>
+        <h1 class="h3 my-3 font-weight-normal">Please Log in</h1>
         <div class="form-floating">
             <input type="text" value="{{ last_username }}" name="mail" id="inputMail" class="form-control"
                    autocomplete="username" placeholder="Mail" required autofocus>
@@ -46,9 +47,10 @@
         <button class="btn-submit" type="submit">
             Sign in
         </button>
+        <p class="center"><a class="link fw-normal" href="{{ path('forgotten_password') }}">Forgot your password ?</a></p>
     </form>
 {% endblock %}
 
 {% block scripts_end_body %}
-
+    {{ encore_entry_script_tags('login') }}
 {% endblock %}

@@ -1,7 +1,7 @@
 <section id="comment-section" class="comment-section">
     <h2>Comments</h2>
-    {% form_theme commentForm 'form/form_errors.html.twig' %}
     {% if commentForm is not empty %}
+        {% form_theme commentForm 'form/form_errors.html.twig' %}
         {{ form_start(commentForm, {
             'attr': {
                 'class': 'comment-form form-colors-custom', 'id': 'comment-form'

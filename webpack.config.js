@@ -9,6 +9,8 @@ Encore
   .addEntry('home', './assets/js/pages/home.js')
   .addEntry('trick', './assets/js/pages/trick.js')
   .addEntry('trick-details', './assets/js/pages/trick-details.js')
+  .addEntry('reset-password', './assets/js/pages/reset-password.js')
+  .addEntry('login', './assets/js/pages/login.js')
   .addEntry('bootstrap', 'bootstrap')
   .addStyleEntry('styles', './assets/sass/app.scss')
   .splitEntryChunks()
