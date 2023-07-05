@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\ImagesTrick;
 use App\Entity\Trick;
+use App\Entity\User;
 use App\Entity\VideosTrick;
 use App\Utils\PathUtils;
 use Doctrine\ORM\EntityManagerInterface;
@@ -77,6 +78,18 @@ class MediaService
 
         if ($trickPathExists) {
             $newFileName = $this->createFile($file, $trickPath, $newFileName);
+        }
+
+        return $newFileName;
+    }
+
+    public function uploadProfilePicture(UploadedFile $file, User $user): string
+    {
+        $userPath = $this->parameterBag->get('user_folder_path');
+        $newFileName = uniqid().'-'.$user->getPseudo().'.'.$file->guessExtension();
+
+        if (file_exists($userPath)) {
+            $newFileName = $this->createFile($file, $userPath, $newFileName);
         }
 
         return $newFileName;

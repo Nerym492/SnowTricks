@@ -198,5 +198,30 @@
   i {
     padding: .2em;
   }
+
+  &-actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &-actions a {
+    text-decoration: none;
+    margin-bottom: 10px;
+  }
+
+  &-actions i {
+    color: #B0413E;
+    transition: all 200ms ease-in-out;
+  }
+
+  &-actions p {
+    font-size: 0.9rem;
+  }
+
+  &-actions i:hover {
+    color: #d04e4a;
+  }
 }
 

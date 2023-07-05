@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Range;
 
 class RegistrationFormType extends AbstractType
 {
@@ -36,13 +37,6 @@ class RegistrationFormType extends AbstractType
                         ],
                         'mimeTypesMessage' => 'Please upload a WEBP, JPEG or PNG file.',
                     ]),
-                ],
-            ])
-            ->add('profilePhoto', HiddenType::class, [
-                'label' => false,
-                'constraints' => [
-                    new NotBlank(message: 'Profile picture cannot be empty'),
-                    new Length(max: 255, maxMessage: 'Profile photo link cannot exceed 255 characters'),
                 ],
             ])
             ->add('pseudo', null, [
