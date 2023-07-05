@@ -76,15 +76,7 @@ class MediaService
         }
 
         if ($trickPathExists) {
-            try {
-                $file->move($trickPath, $newFileName);
-            } catch (FileException) {
-                // Clear last flash message
-                $flashBag = $this->requestStack->getSession()->getFlashBag()->clear();
-                // Add new flash message
-                $flashBag->add('error', 'Unable to add file '.$file->getClientOriginalName());
-                $newFileName = '';
-            }
+            $newFileName = $this->createFile($file, $trickPath, $newFileName);
         }
 
         return $newFileName;
@@ -102,6 +94,21 @@ class MediaService
         $folderPath = PathUtils::buildTrickPath($this->parameterBag, $trick);
 
         return $this->deleteFile($folderPath);
+    }
+
+    private function createFile(UploadedFile $file, string $path, string $fileName): string
+    {
+        try {
+            $file->move($path, $fileName);
+        } catch (FileException) {
+            // Clear last flash message
+            $flashBag = $this->requestStack->getSession()->getFlashBag()->clear();
+            // Add new flash message
+            $flashBag->add('error', 'Unable to add file '.$file->getClientOriginalName());
+            $fileName = '';
+        }
+
+        return $fileName;
     }
 
     private function deleteFile(string $filePath, string $fileName = ''): bool
