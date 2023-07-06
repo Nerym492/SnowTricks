@@ -23,9 +23,24 @@ export function addAlertListener() {
         alertBox.remove()
       })
     }
-    alertBox.addEventListener('click', (event) => {
+    alertBox.addEventListener('click', () => {
       removeAlertBox();
     })
-    setTimeout(removeAlertBox, 2000);
+    setTimeout(removeAlertBox, 3000);
   })
+}
+
+export function addFileValidationRules() {
+  return {
+    rule: 'files',
+    value: {
+      files: {
+        types: ['image/png', 'image/webp', 'image/jpeg'],
+        extensions: ['png', 'jpeg', 'jpg', 'webp'],
+        maxSize: 600000,
+        minSize: 5000,
+      },
+    },
+    errorMessage: 'The file must be an image (png, jpeg, jpg, webp). Maximum size 600kb'
+  }
 }

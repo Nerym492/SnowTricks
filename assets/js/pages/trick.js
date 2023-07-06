@@ -496,7 +496,6 @@ trickValidator
 trickValidator.onSuccess(function (event) {
   event.preventDefault();
   trickForm.submit();
-  console.log('hello !!!')
 });
 
 imageHeaderObserver.observe(headerImage, {attributes: true, attributeFilter: ['src']})

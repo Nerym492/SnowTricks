@@ -1,4 +1,4 @@
-import {addXmlhttpRequest, addAlertListener} from "../modules/functions";
+import {addXmlhttpRequest, addAlertListener} from "../modules/functions.js";
 
 window.addEventListener("load", function () {
   let textElement = document.getElementById("header-title");

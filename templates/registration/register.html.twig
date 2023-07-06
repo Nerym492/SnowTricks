@@ -12,14 +12,13 @@
     <h1 class="m-title">Register</h1>
     {% form_theme registrationForm 'form/form_errors.html.twig' %}
 
-    {{ form_start(registrationForm, {'attr': {'class': 'basic-form form-colors-custom'}}) }}
+    {{ form_start(registrationForm, {'attr': {'class': 'basic-form form-colors-custom', 'id': 'registration-form'}}) }}
     <div class="profile-picture" id="profile-picture-group">
         <label class="label-img" for="{{ registrationForm.profilePictureFile.vars.id }}">
             <i class="fa-solid fa-camera"></i>
             <span>Change Image</span>
         </label>
         {{ form_widget(registrationForm.profilePictureFile) }}
-        {{ form_errors(registrationForm.profilePictureFile) }}
         <img id="profile-picture" src="{{ asset('/build/images/user-avatar-filled.jpg') }}" alt="">
     </div>
     <div class="profile-picture-actions">
@@ -27,11 +26,12 @@
             <i class="fa-solid fa-trash-can fa-lg"></i>
         </a>
         <p>Click on the image to change your profile picture.</p>
+        {{ form_errors(registrationForm.profilePictureFile) }}
     </div>
 
     {% for registrationFormField in registrationForm %}
         {% if registrationFormField.vars.name not in ['_token','agreeTerms','profilePictureFile'] %}
-            <div class="form-floating">
+            <div class="form-floating required-field">
                 {{ form_widget(registrationFormField) }}
                 {{ form_label(registrationFormField) }}
                 {{ form_errors(registrationFormField) }}

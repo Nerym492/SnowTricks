@@ -1,3 +1,3 @@
-import {addAlertListener} from "../modules/functions";
+import {addAlertListener} from "../modules/functions.js";
 
 addAlertListener();
