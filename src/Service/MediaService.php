@@ -115,9 +115,10 @@ class MediaService
             $file->move($path, $fileName);
         } catch (FileException) {
             // Clear last flash message
-            $flashBag = $this->requestStack->getSession()->getFlashBag()->clear();
+            $flashBag = $this->requestStack->getSession()->getFlashBag();
+            $flashBag->clear();
             // Add new flash message
-            $flashBag->add('error', 'Unable to add file '.$file->getClientOriginalName());
+            $flashBag->add('danger', 'Unable to add file '.$file->getClientOriginalName());
             $fileName = '';
         }
 
@@ -131,7 +132,8 @@ class MediaService
             try {
                 $fileSystem->remove($filePath);
             } catch (IOException) {
-                $flashBag = $this->requestStack->getSession()->getFlashBag()->clear();
+                $flashBag = $this->requestStack->getSession()->getFlashBag();
+                $flashBag->clear();
                 if ('' !== $fileName) {
                     $flashBag->add('error', 'Unable to remove file '.$fileName);
                 } else {
