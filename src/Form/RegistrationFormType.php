@@ -54,7 +54,7 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('mail', null, [
                 'row_attr' => ['class' => 'form-floating'],
-                'attr' => ['class' => 'form-control required-field', 'placeholder' => 'Mail'],
+                'attr' => ['class' => 'form-control', 'placeholder' => 'Mail'],
                 'constraints' => [
                     new NotBlank(message: 'Please enter an email.'),
                     new Email(message: 'This email is not valid'),
