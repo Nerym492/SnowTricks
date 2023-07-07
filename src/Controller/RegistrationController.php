@@ -65,6 +65,7 @@ class RegistrationController extends AbstractController
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );
             // do anything else you need here, like send an email
+
             $this->addFlash('success', "Your account have been created with success !\n".
                 'please check your e-mail address by clicking on the link sent to you.');
 
@@ -77,13 +78,21 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/verify/email', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response
+    public function verifyUserEmail(Request $request, EntityManagerInterface $entityManager, TranslatorInterface $translator): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $entityManager->getRepository(User::class)->findOneBy([
+            'mailConfirmToken' => $request->query->get('token'),
+        ]);
+
+        if (!$user) {
+            $this->addFlash('danger', 'The token is invalid or has expired');
+
+            return $this->redirectToRoute('app_login');
+        }
 
         // validate email confirmation link, sets User::isVerified=true and persists
         try {
-            $this->emailVerifier->handleEmailConfirmation($request, $this->getUser());
+            $this->emailVerifier->handleEmailConfirmation($request, $user);
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('danger', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
 
