@@ -13,7 +13,10 @@
     </head>
     <body>
         <div id="page-container">
-            {% include 'partials/navbar.html.twig' %}
+            {% block navbar %}
+                {% include 'partials/navbar.html.twig' with {showDivider: true} %}
+            {% endblock %}
+
             {% block header %}
                 {% include 'partials/header.html.twig' %}
             {% endblock %}

@@ -1,5 +1,5 @@
 <nav class="head-nav">
-    <img src="{{ asset('build/images/Snowtricks-logo.png') }}" alt="Snowtricks logo">
+    <img src="{{ asset('build/images/white-Snowtricks-logo.png') }}" alt="Snowtricks logo">
     <ul class="head-list">
         <li><a href="/home">Home</a></li>
         <li>Tricks</li>
@@ -11,4 +11,8 @@
             <li><a href="/register">Register</a></li>
         {% endif %}
     </ul>
+    {% if showDivider %}
+        <img src="{{ asset('/build/images/bot-section-divider.png') }}" alt="section divider bottom"
+             class="section-divider divider-bot">
+    {% endif %}
 </nav>

@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% block navbar %}
+    {% include 'partials/navbar.html.twig' with {showDivider: false} %}
+{% endblock %}
+
 {% block header %}
 {% endblock %}
 
