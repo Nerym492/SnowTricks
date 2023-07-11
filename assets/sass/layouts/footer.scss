@@ -1,0 +1,40 @@
+$divider-height: 50px;
+
+footer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #323639;
+  color: #FFF;
+  padding: 60px 0;
+  margin-top: 40px + $divider-height;
+
+  .social-networks {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  i {
+    font-size: 30px;
+    margin-right: 20px;
+  }
+
+  i:last-child {
+    margin-right: 0;
+  }
+
+  p {
+    margin-bottom: 0;
+  }
+}
+
+.footer-divider {
+  position: absolute;
+  top: (-1 * $divider-height) + 1;
+  left: 0;
+  width: 100%;
+  height: $divider-height;
+}
