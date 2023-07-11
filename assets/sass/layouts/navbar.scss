@@ -80,4 +80,22 @@
   }
 }
 
+.profile-picture-nav {
+  margin-left: 100px;
+  object-fit: cover;
+  height: 70px;
+  width: 70px;
+  border-radius: 50%;
+  border: solid 2px #FFF;
+}
 
+.menu-navbar {
+  display: flex;
+  align-items: center;
+}
+
+.user-information {
+  font-size: 0.9rem;
+  text-align: center;
+  margin: 0 100px 0 20px;
+}

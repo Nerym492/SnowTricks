@@ -1,16 +1,24 @@
 <nav class="head-nav">
     <img src="{{ asset('build/images/white-Snowtricks-logo.png') }}" alt="Snowtricks logo">
-    <ul class="head-list">
-        <li><a href="/home">Home</a></li>
-        <li>Tricks</li>
-
-        {% if app.user %}
-            <li><a href="/logout">Log out</a></li>
-        {% else %}
-            <li><a href="/login">Log in</a></li>
-            <li><a href="/register">Register</a></li>
+    {% if app.user %}
+    <div class="menu-navbar">
         {% endif %}
-    </ul>
+        <ul class="head-list">
+            <li><a href="/home">Home</a></li>
+            <li>Tricks</li>
+
+            {% if app.user %}
+                <li><a href="/logout">Log out</a></li>
+            {% else %}
+                <li><a href="/login">Log in</a></li>
+                <li><a href="/register">Register</a></li>
+            {% endif %}
+        </ul>
+        {% if app.user %}
+        <img src="{{ path('get_profile_picture') }}" alt="profile picture" class="profile-picture-nav">
+        <p class="user-information">Welcome<br> {{ app.user.pseudo }}</p>
+    </div>
+    {% endif %}
     {% if showDivider %}
         <img src="{{ asset('/build/images/bot-section-divider.png') }}" alt="section divider bottom"
              class="section-divider divider-bot">
