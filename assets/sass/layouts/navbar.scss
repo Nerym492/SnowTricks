@@ -92,6 +92,10 @@
 .menu-navbar {
   display: flex;
   align-items: center;
+
+  ul:first-child {
+    height: 100%;
+  }
 }
 
 .user-information {
