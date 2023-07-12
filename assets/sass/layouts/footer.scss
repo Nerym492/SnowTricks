@@ -1,4 +1,5 @@
 $divider-height: 50px;
+$mobile-divider-height: 20px;
 
 footer {
   position: relative;
@@ -15,6 +16,10 @@ footer {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
+  }
+
+  .social-networks a {
+    color: #FFF;
   }
 
   i {
@@ -37,4 +42,15 @@ footer {
   left: 0;
   width: 100%;
   height: $divider-height;
+}
+
+@media (max-width: 736px) {
+  footer {
+    margin-top: 40px + $mobile-divider-height;
+  }
+
+  .footer-divider {
+    top: (-1 * $mobile-divider-height) + 1;
+    height: $mobile-divider-height;
+  }
 }
