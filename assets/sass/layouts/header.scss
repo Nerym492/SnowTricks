@@ -41,3 +41,19 @@
 .animated-text {
   animation: fade-in 1.5s ease-in-out;
 }
+
+.header-divider {
+  $height: 40px;
+  position: absolute;
+  width: 100%;
+  height: $height;
+  bottom: -1 * ($height - 2px);
+  left: 0;
+  transform: rotate(180deg);
+
+  @media (max-width: 736px) {
+    $mobile-height: 20px;
+    height: $mobile-height;
+    bottom: -1 * ($mobile-height - 2px);
+  }
+}
