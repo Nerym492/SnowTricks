@@ -5,13 +5,9 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\ResetPasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
-use App\Service\MediaService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
@@ -141,32 +137,5 @@ class SecurityController extends AbstractController
         $this->addFlash('danger', 'Invalid token');
 
         return $this->redirectToRoute('app_login');
-    }
-
-    #[Route('/profilePicture', name: 'get_profile_picture')]
-    public function getProfilePicture(
-        Security $security,
-        ParameterBagInterface $parameterBag,
-        MediaService $mediaService
-    ): Response {
-        $userMail = $security->getUser()->getUserIdentifier();
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['mail' => $userMail]);
-
-        if ($user->getProfilePhoto()) {
-            $profilePicturePath = $parameterBag->get('user_folder_path').'/'.$user->getProfilePhoto();
-
-            return $mediaService->serveProtectedImage($profilePicturePath);
-        }
-
-        // Default profile photo
-        $defaultImagePath = $this->getParameter('kernel.project_dir').
-            '/public/build/images/default-user-avatar.png';
-        $defaultImageFile = new File($defaultImagePath);
-
-        return new Response(
-            file_get_contents($defaultImageFile),
-            Response::HTTP_OK,
-            ['Content-Type' => 'image/jpeg']
-        );
     }
 }
