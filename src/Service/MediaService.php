@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\ImagesTrick;
 use App\Entity\Trick;
+use App\Entity\User;
 use App\Entity\VideosTrick;
 use App\Utils\PathUtils;
 use Doctrine\ORM\EntityManagerInterface;
@@ -76,15 +77,19 @@ class MediaService
         }
 
         if ($trickPathExists) {
-            try {
-                $file->move($trickPath, $newFileName);
-            } catch (FileException) {
-                // Clear last flash message
-                $flashBag = $this->requestStack->getSession()->getFlashBag()->clear();
-                // Add new flash message
-                $flashBag->add('error', 'Unable to add file '.$file->getClientOriginalName());
-                $newFileName = '';
-            }
+            $newFileName = $this->createFile($file, $trickPath, $newFileName);
+        }
+
+        return $newFileName;
+    }
+
+    public function uploadProfilePicture(UploadedFile $file, User $user): string
+    {
+        $userPath = $this->parameterBag->get('user_folder_path');
+        $newFileName = uniqid().'-'.$user->getPseudo().'.'.$file->guessExtension();
+
+        if (file_exists($userPath)) {
+            $newFileName = $this->createFile($file, $userPath, $newFileName);
         }
 
         return $newFileName;
@@ -104,6 +109,22 @@ class MediaService
         return $this->deleteFile($folderPath);
     }
 
+    private function createFile(UploadedFile $file, string $path, string $fileName): string
+    {
+        try {
+            $file->move($path, $fileName);
+        } catch (FileException) {
+            // Clear last flash message
+            $flashBag = $this->requestStack->getSession()->getFlashBag();
+            $flashBag->clear();
+            // Add new flash message
+            $flashBag->add('danger', 'Unable to add file '.$file->getClientOriginalName());
+            $fileName = '';
+        }
+
+        return $fileName;
+    }
+
     private function deleteFile(string $filePath, string $fileName = ''): bool
     {
         $fileSystem = new Filesystem();
@@ -111,7 +132,8 @@ class MediaService
             try {
                 $fileSystem->remove($filePath);
             } catch (IOException) {
-                $flashBag = $this->requestStack->getSession()->getFlashBag()->clear();
+                $flashBag = $this->requestStack->getSession()->getFlashBag();
+                $flashBag->clear();
                 if ('' !== $fileName) {
                     $flashBag->add('error', 'Unable to remove file '.$fileName);
                 } else {

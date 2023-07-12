@@ -15,7 +15,7 @@ class EmailVerifier
     public function __construct(
         private VerifyEmailHelperInterface $verifyEmailHelper,
         private MailerInterface $mailer,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -32,6 +32,20 @@ class EmailVerifier
         $context['expiresAtMessageKey'] = $signatureComponents->getExpirationMessageKey();
         $context['expiresAtMessageData'] = $signatureComponents->getExpirationMessageData();
 
+        // $this->tokenGenerator->generateToken();
+        $parsedUrl = parse_url($context['signedUrl']);
+
+        // Store generated token in the user
+        if (isset($parsedUrl['query'])) {
+            parse_str($parsedUrl['query'], $urlParameters);
+            if (isset($urlParameters['token'])) {
+                $urlToken = $urlParameters['token'];
+                $user->setMailConfirmToken($urlToken);
+                $this->entityManager->persist($user);
+                $this->entityManager->flush();
+            }
+        }
+
         $email->context($context);
 
         $this->mailer->send($email);
@@ -45,6 +59,7 @@ class EmailVerifier
         $this->verifyEmailHelper->validateEmailConfirmation($request->getUri(), $user->getId(), $user->getMail());
 
         $user->setIsVerified(true);
+        $user->setMailConfirmToken(null);
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();

@@ -1,3 +1,4 @@
+
 .form-colors-custom {
   .form-control:focus {
     box-shadow: 0 0 0 0.25rem rgba($steel-blue, 0.6);
@@ -10,6 +11,20 @@
   }
 }
 
+.required-field::after {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  content: '*';
+  font-size: 20px;
+  color: #B0413E;
+}
+
+.required-checkbox {
+  font-size: 20px;
+  color: #B0413E;
+}
+
 
 .basic-form {
   display: grid;
@@ -18,7 +33,7 @@
   grid-row-gap: 10px;
 
   .trick-description {
-    height: 200px!important;
+    height: 200px !important;
   }
 }
 
@@ -144,4 +159,88 @@
 }
 
 
+.profile-picture {
+  $circle-size: 165px;
+  $radius: 100px;
+  $shadow: 0 0 10px 0 rgba(255, 255, 255, .35);
+  $font-color: rgb(250, 250, 250);
+
+  color: transparent;
+  transition: all 300ms ease;
+  @include object-center;
+  position: relative;
+
+  input {
+    display: none;
+  }
+
+  img {
+    position: absolute;
+    object-fit: cover;
+    width: $circle-size;
+    height: $circle-size;
+    box-shadow: $shadow;
+    border-radius: $radius;
+    z-index: 0;
+  }
+
+  .label-img {
+    @include object-center;
+    cursor: pointer;
+    height: $circle-size;
+    width: $circle-size;
+    border-radius: $radius;
+    opacity: 0;
+    margin-bottom: 0;
+    background-color: rgba(0, 0, 0, .6);
+    z-index: 10000;
+    color: $font-color;
+    transition: opacity 300ms ease-in-out;
+  }
+
+
+  &:hover .label-img {
+    opacity: 1;
+  }
+
+  span{
+    display: inline-flex;
+    padding: .2em;
+    height: 2em;
+  }
+
+  i {
+    padding: .2em;
+  }
+
+  &-actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &-actions a {
+    text-decoration: none;
+    margin-bottom: 10px;
+  }
+
+  &-actions i {
+    color: #B0413E;
+    transition: all 200ms ease-in-out;
+  }
+
+  &-actions p {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+  }
+
+  &-actions .form-error {
+    text-align: center;
+  }
+
+  &-actions i:hover {
+    color: #d04e4a;
+  }
+}
 

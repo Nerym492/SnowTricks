@@ -2,6 +2,10 @@
 
 {% block title %}Register{% endblock %}
 
+{% block navbar %}
+    {% include 'partials/navbar.html.twig' with {showDivider: false, navMargin: 'navbar-margin'} %}
+{% endblock %}
+
 {% block header %}{% endblock %}
 
 {% block content %}
@@ -9,24 +13,45 @@
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
 
-    <h1>Register</h1>
+    <h1 class="m-title">Register</h1>
+    {% form_theme registrationForm 'form/form_errors.html.twig' %}
 
-    {{ form_errors(registrationForm) }}
+    {{ form_start(registrationForm, {'attr': {'class': 'basic-form form-colors-custom', 'id': 'registration-form'}}) }}
+    <div class="profile-picture" id="profile-picture-group">
+        <label class="label-img" for="{{ registrationForm.profilePictureFile.vars.id }}">
+            <i class="fa-solid fa-camera"></i>
+            <span>Change Image</span>
+        </label>
+        {{ form_widget(registrationForm.profilePictureFile) }}
+        <img id="profile-picture" src="{{ asset('/build/images/default-user-avatar.png') }}" alt="">
+    </div>
+    <div class="profile-picture-actions">
+        <a role="button" id="delete-profile-picture">
+            <i class="fa-solid fa-trash-can fa-lg"></i>
+        </a>
+        <p>Click on the image to change your profile picture.</p>
+        {{ form_errors(registrationForm.profilePictureFile) }}
+    </div>
 
-    {{ form_start(registrationForm, {'attr': {'class': 'basic-form form-colors-custom'}}) }}
-    <div class="form-floating">
-        {{ form_widget(registrationForm.pseudo) }}
-        {{ form_label(registrationForm.pseudo) }}
+    {% for registrationFormField in registrationForm %}
+        {% if registrationFormField.vars.name not in ['_token','agreeTerms','profilePictureFile'] %}
+            <div class="form-floating required-field">
+                {{ form_widget(registrationFormField) }}
+                {{ form_label(registrationFormField) }}
+                {{ form_errors(registrationFormField) }}
+            </div>
+        {% endif %}
+    {% endfor %}
+    <div class="form-check">
+        {{ form_widget(registrationForm.agreeTerms) }}
+        {{ form_label(registrationForm.agreeTerms) }}
+        {{ form_errors(registrationForm.agreeTerms) }}
     </div>
-    <div class="form-floating">
-        {{ form_widget(registrationForm.mail) }}
-        {{ form_label(registrationForm.mail) }}
-    </div>
-    <div class="form-floating">
-        {{ form_widget(registrationForm.plainPassword) }}
-        {{ form_label(registrationForm.plainPassword) }}
-    </div>
-    {{ form_row(registrationForm.agreeTerms) }}
+
     <button type="submit" class="btn-submit">Register</button>
     {{ form_end(registrationForm) }}
+{% endblock %}
+
+{% block scripts_end_body %}
+    {{ encore_entry_script_tags('register') }}
 {% endblock %}

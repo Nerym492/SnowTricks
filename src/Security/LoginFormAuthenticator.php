@@ -2,9 +2,12 @@
 
 namespace App\Security;
 
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -21,8 +24,30 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
     public const LOGIN_ROUTE = 'app_login';
 
-    public function __construct(private UrlGeneratorInterface $urlGenerator)
+    public function __construct(
+        private UrlGeneratorInterface $urlGenerator,
+        private EntityManagerInterface $entityManager,
+        private RequestStack $requestStack,
+    ) {
+    }
+
+    public function supports(Request $request): bool
     {
+        $mail = $request->request->get('mail');
+        $mailVerified = false;
+
+        if ($mail) {
+            $user = $this->entityManager->getRepository(User::class)->findOneBy(['mail' => $mail]);
+            $mailVerified = $user->isVerified();
+        }
+
+        if (!$mailVerified && $mail) {
+            $flashBag = $this->requestStack->getSession()->getFlashBag();
+            $flashBag->clear();
+            $flashBag->add('warning', 'Please validate your email address before logging in.');
+        }
+
+        return parent::supports($request) && $mailVerified;
     }
 
     public function authenticate(Request $request): Passport

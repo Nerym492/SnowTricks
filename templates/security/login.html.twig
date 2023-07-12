@@ -2,6 +2,10 @@
 
 {% block title %}Log in!{% endblock %}
 
+{% block navbar %}
+    {% include 'partials/navbar.html.twig' with {showDivider: false, navMargin: 'navbar-margin'} %}
+{% endblock %}
+
 {% block header %}{% endblock %}
 
 {% block content %}
@@ -13,7 +17,7 @@
             </div>
         {% endif %}
 
-        <h1 class="h3 my-3 font-weight-normal">Please Log in</h1>
+        <h1 class="m-title">Log in</h1>
         <div class="form-floating">
             <input type="text" value="{{ last_username }}" name="mail" id="inputMail" class="form-control"
                    autocomplete="username" placeholder="Mail" required autofocus>

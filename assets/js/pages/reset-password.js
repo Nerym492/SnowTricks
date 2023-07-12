@@ -33,6 +33,7 @@ resetPassValidator.onSuccess(function (event) {
   document.getElementById('reset_password_form').submit();
 })
 
+
 resetPassValidator.onFail(() => {
   let validationErrors = document.querySelectorAll('.form-error')
   validationErrors.forEach(error => {
