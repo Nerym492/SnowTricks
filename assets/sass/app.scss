@@ -7,11 +7,16 @@
 @import "layouts/tricks-list";
 @import "layouts/trick-details";
 @import "layouts/forms";
+@import "layouts/footer";
 @import "components/alert-box";
 @import "components/buttons";
 @import "components/icons";
 @import "boostrap-custom";
 
+
+html, body {
+  height: 100%;
+}
 
 html {
   scroll-behavior: smooth;
@@ -82,6 +87,12 @@ h2 {
   &:hover {
     text-decoration: underline;
   }
+}
+
+.page-container {
+  display: grid;
+  grid-template-rows: max-content 1fr max-content;
+  height: 100%;
 }
 
 .m-title {
