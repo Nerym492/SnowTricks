@@ -53,7 +53,7 @@ class TrickController extends AbstractController
             $commentForm = null;
         }
 
-        return $this->render('partials/trick.html.twig', [
+        return $this->render('trick/trick.html.twig', [
             'trick' => $trick,
             'groupTrickName' => $groupeTrick->getName(),
             'headerImageExist' => true,
@@ -118,7 +118,7 @@ class TrickController extends AbstractController
             return $this->redirectToRoute('trick_modification', ['trickId' => $trickId]);
         }
 
-        return $this->render('partials/trick_form.html.twig', [
+        return $this->render('trick/trick_form.html.twig', [
             'trick' => $trick,
             'groupTrickName' => $groupeTrick->getName(),
             'headerImageExist' => $headerImageExist,
@@ -150,7 +150,7 @@ class TrickController extends AbstractController
             $hiddeLoadButton = true;
         }
 
-        return $this->render('partials/tricks_list.html.twig', [
+        return $this->render('trick/tricks_list.html.twig', [
             'tricks' => $tricks,
             'hiddeLoadButton' => $hiddeLoadButton,
         ]);
@@ -180,7 +180,7 @@ class TrickController extends AbstractController
             $hiddeLoadButton = true;
         }
 
-        return $this->render('partials/tricks_list.html.twig', [
+        return $this->render('trick/tricks_list.html.twig', [
             'tricks' => $tricks,
             'hiddeLoadButton' => $hiddeLoadButton,
         ]);
@@ -208,7 +208,7 @@ class TrickController extends AbstractController
             return $this->redirectToRoute('app_home', ['_fragment' => 'trick-list']);
         }
 
-        return $this->render('partials/trick_form.html.twig', [
+        return $this->render('trick/trick_form.html.twig', [
             'trick' => $trick,
             'headerImageExist' => false,
             'headerImage' => null,
