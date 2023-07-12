@@ -40,5 +40,7 @@ function loadMoreComments() {
 }
 
 addAlertListener();
-addSubmitListener();
+if (document.getElementById('comment_form_content')) {
+  addSubmitListener();
+}
 loadMoreComments();
