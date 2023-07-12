@@ -42,7 +42,7 @@ class CommentController extends AbstractController
 
         $comments = $commentRepository->findAllOrdered(['creation_date' => 'DESC']);
 
-        return $this->render('partials/comment_section.html.twig', [
+        return $this->render('comment/comment_section.html.twig', [
             'comments' => $comments,
             'commentForm' => $commentForm->createView(),
             'hiddeLoadButton' => false,
@@ -66,7 +66,7 @@ class CommentController extends AbstractController
             $hiddeLoadButton = true;
         }
 
-        return $this->render('partials/comments_list.html.twig', [
+        return $this->render('comment/comments_list.html.twig', [
             'comments' => $comments,
             'hiddeLoadButton' => $hiddeLoadButton,
         ]);
