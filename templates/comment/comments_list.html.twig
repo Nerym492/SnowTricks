@@ -2,7 +2,7 @@
     {% include 'partials/alert_box.html.twig' %}
     {% for comment in comments %}
         <div class="comment">
-            <i class="fa-solid fa-circle-user icon-user"></i>
+            <img src="{{ path('get_profile_picture', {'userPseudo': comment.userPseudo}) }}" alt="profile picture {{ comment.userPseudo }}">
             <div>
                 <p class="comment-user-info">
                     {{ comment.userPseudo }}
