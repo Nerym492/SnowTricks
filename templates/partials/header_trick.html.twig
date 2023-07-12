@@ -1,3 +1,4 @@
+<h1>{{ trick.name }}</h1>
 <header class="head-trick-details">
     {% if headerImage is not empty %}
         <img src="{{ path(
@@ -7,5 +8,4 @@
     {% else %}
         <img src="/build/images/image-placeholder.webp" alt="Image placeholder" id="image-header-details">
     {% endif %}
-    <h1>{{ trick.name }}</h1>
 </header>
