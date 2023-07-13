@@ -476,6 +476,11 @@ document.querySelectorAll('.delete-video-btn').forEach(btn => {
 trickValidator
   .addField('#trick_form_name', [
     {
+      rule: 'maxLength',
+      value: 50,
+      errorMessage: 'The trick name must not exceed 50 characters.',
+    },
+    {
       rule: 'required',
       errorMessage: 'Please enter a trick name',
     }
