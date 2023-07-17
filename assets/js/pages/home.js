@@ -1,4 +1,4 @@
-import {addXmlhttpRequest, addAlertListener} from "../modules/functions.js";
+import {addXmlhttpRequest, addAlertListener, addMobileMenuEvent} from "../modules/functions.js";
 
 window.addEventListener("load", function () {
   let textElement = document.getElementById("header-title");
@@ -18,15 +18,6 @@ function reloadTricks() {
       }
     })
   })
-}
-
-function scrollToTricksEnd () {
-  let newTrickList = document.getElementById("trick-list");
-
-  // Scroll to the end of the section
-  let position = newTrickList.offsetTop + newTrickList.offsetHeight;
-  window.scrollTo(0, position);
-  addDeleteListener();
 }
 
 function addDeleteListener() {
@@ -53,6 +44,8 @@ document.getElementById('delete-trick-btn').addEventListener('click', (event) =>
   })
 });
 
+
 reloadTricks();
+addMobileMenuEvent();
 addDeleteListener();
 addAlertListener();

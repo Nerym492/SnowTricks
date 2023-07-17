@@ -1,12 +1,34 @@
 .head-nav {
   position: relative;
   height: 10vh;
+  min-height: 130px;
   display: flex;
   justify-content: space-between;
   padding: 0 30px;
   font-family: Montserrat, serif;
   background-color: #323639;
   color: #FFF;
+
+  .logo-container {
+    position: relative;
+    height: 100%;
+  }
+
+  .logo-container img {
+    height: 100%;
+  }
+
+  @media (max-width: 770px) {
+    justify-content: center;
+    flex-wrap: wrap;
+    height: max-content;
+    min-height: 100px;
+
+    .logo-container {
+      width: 100%;
+      height: 100px;
+    }
+  }
 }
 
 .head-list {
@@ -14,6 +36,7 @@
   align-items: center;
   padding: 0;
   margin-bottom: 0;
+  transition: all 300ms ease-in-out;
 
   li {
     height: 40%;
@@ -71,12 +94,43 @@
   }
 
   a {
+    color: #FFF;
     text-decoration: none;
     z-index: 1;
   }
 
   a:visited {
     color: #FFF
+  }
+
+  @media (max-width: 770px) {
+    flex-direction: column;
+    height: 0;
+    opacity: 0;
+
+    li {
+      height: 52px;
+      margin-right: 0;
+    }
+
+    li a {
+      pointer-events: none;
+      cursor: none;
+    }
+
+    li:last-child {
+      margin-bottom: 30px;
+    }
+
+    &.show-list {
+      opacity: 1;
+      height: 200px;
+    }
+
+    &.show-list a {
+      pointer-events: auto;
+      cursor: pointer;
+    }
   }
 }
 
@@ -106,4 +160,73 @@
 
 .navbar-margin {
   margin-bottom: 100px;
+}
+
+.menu-toggle {
+  position: absolute;
+  display: none;
+  top: 50%;
+  right: 40px;
+  transform: translateY(-50%);
+  color: #FFF;
+  font-size: 25px;
+
+  input {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    cursor: pointer;
+    opacity: 0;
+    z-index: 2;
+  }
+
+  span {
+    display: flex;
+    width: 29px;
+    height: 3px;
+    margin-bottom: 5px;
+    position: relative;
+    background: #FFF;
+    border-radius: 5px;
+    z-index: 1;
+    transform-origin: 5px 0;
+    transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+    background 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+    opacity 0.55s ease;
+  }
+
+  span:first-child {
+    transform-origin: 0 0;
+  }
+
+  span:nth-last-child(2) {
+    transform-origin: 0 100%;
+  }
+
+  input:checked ~ span {
+    opacity: 1;
+    transform: rotate(-45deg);
+    background: #FFF;
+  }
+
+  input:checked ~ span:nth-last-child(3) {
+    opacity: 1;
+    transform: rotate(45deg) translate(3px, 0);
+    background: #FFF;
+  }
+
+  input:checked ~ span:nth-last-child(2) {
+    opacity: 0;
+    transform: rotate(0deg) scale(0.2, 0.2);
+  }
+
+  @media (max-width: 770px) {
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media (max-width: 480px) {
+    right: 0;
+  }
 }

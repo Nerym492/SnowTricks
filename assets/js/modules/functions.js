@@ -1,3 +1,11 @@
+export function addMobileMenuEvent() {
+  let toggleMenu = document.querySelector('.menu-toggle');
+  toggleMenu.addEventListener('click', () => {
+    let headList = document.querySelector('.head-list')
+    headList.classList.toggle('show-list');
+  })
+}
+
 export function addXmlhttpRequest(method, url, formData, elementToRefresh, afterRefreshAction) {
   const xmlHttp = new XMLHttpRequest();
   xmlHttp.onreadystatechange = function () {
