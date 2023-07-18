@@ -1,4 +1,4 @@
-import {addXmlhttpRequest, addAlertListener} from "../modules/functions.js";
+import {addXmlhttpRequest, addAlertListener, addMobileMenuEvent} from "../modules/functions.js";
 import JustValidate from "just-validate";
 
 function addSubmitListener(){
@@ -44,3 +44,4 @@ if (document.getElementById('comment_form_content')) {
   addSubmitListener();
 }
 loadMoreComments();
+addMobileMenuEvent();

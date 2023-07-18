@@ -2,7 +2,21 @@ export function addMobileMenuEvent() {
   let toggleMenu = document.querySelector('.menu-toggle');
   toggleMenu.addEventListener('click', () => {
     let headList = document.querySelector('.head-list')
+    let profilePictureGroup = document.querySelector('.profile-picture-group')
+    let menuNavbar = document.querySelector('.menu-navbar')
+
     headList.classList.toggle('show-list');
+
+
+    menuNavbar.addEventListener('transitionstart', () => {
+      if (headList.classList.contains('show-list') && profilePictureGroup) {
+        profilePictureGroup.style.display = 'flex';
+        // profilePictureGroup.classList.remove('profile-picture-fade-out');
+        // profilePictureGroup.classList.add('profile-picture-fade-in')
+      } else if (!headList.classList.contains('show-list') && profilePictureGroup) {
+        profilePictureGroup.style.display = '';
+      }
+    }, {once: true})
   })
 }
 

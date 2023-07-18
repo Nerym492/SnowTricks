@@ -1,4 +1,6 @@
 import JustValidate from "just-validate";
+import {addMobileMenuEvent} from "../modules/functions";
+
 
 const headerImage = document.getElementById('image-header-details');
 const trickForm = document.getElementById('trick_form');
@@ -504,5 +506,5 @@ trickValidator.onSuccess(function (event) {
 });
 
 imageHeaderObserver.observe(headerImage, {attributes: true, attributeFilter: ['src']})
-
+addMobileMenuEvent();
 

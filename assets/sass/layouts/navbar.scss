@@ -1,3 +1,5 @@
+$profile-picture-height: 70px;
+
 .head-nav {
   position: relative;
   height: 10vh;
@@ -18,7 +20,7 @@
     height: 100%;
   }
 
-  @media (max-width: 770px) {
+  @media (max-width: $medium-screens) {
     justify-content: center;
     flex-wrap: wrap;
     height: max-content;
@@ -36,10 +38,10 @@
   align-items: center;
   padding: 0;
   margin-bottom: 0;
-  transition: all 300ms ease-in-out;
+  transition: all 500ms ease-in-out;
 
   li {
-    height: 40%;
+    height: 52px;
     font-size: 17px;
     position: relative;
     display: flex;
@@ -103,13 +105,12 @@
     color: #FFF
   }
 
-  @media (max-width: 770px) {
+  @media (max-width: $medium-screens) {
     flex-direction: column;
     height: 0;
     opacity: 0;
 
     li {
-      height: 52px;
       margin-right: 0;
     }
 
@@ -118,13 +119,10 @@
       cursor: none;
     }
 
-    li:last-child {
-      margin-bottom: 30px;
-    }
-
     &.show-list {
       opacity: 1;
-      height: 200px;
+      height: 160px;
+      margin-bottom: 20px;
     }
 
     &.show-list a {
@@ -134,28 +132,45 @@
   }
 }
 
-.profile-picture-nav {
-  margin-left: 100px;
-  object-fit: cover;
-  height: 70px;
-  width: 70px;
-  border-radius: 50%;
-  border: solid 2px #FFF;
+.profile-picture-group {
+  display: flex;
+  align-items: center;
+  margin-left: 30px;
+
+  .profile-picture {
+    object-fit: cover;
+    height: $profile-picture-height;
+    width: 70px;
+    border-radius: 50%;
+    border: solid 2px #FFF;
+    margin-right: 20px;
+  }
+
+  p {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: $medium-screens) {
+    display: none;
+    margin-left: 0;
+    margin-bottom: 20px;
+  }
 }
+
+
 
 .menu-navbar {
   display: flex;
   align-items: center;
 
-  ul:first-child {
-    height: 100%;
+  @media (max-width: $medium-screens) {
+    flex-direction: column;
   }
 }
 
 .user-information {
   font-size: 0.9rem;
   text-align: center;
-  margin: 0 100px 0 20px;
 }
 
 .navbar-margin {
@@ -221,12 +236,22 @@
     transform: rotate(0deg) scale(0.2, 0.2);
   }
 
-  @media (max-width: 770px) {
+  @media (max-width: $medium-screens) {
     display: flex;
     flex-direction: column;
   }
 
-  @media (max-width: 480px) {
+  @media (max-width: $small-screens) {
     right: 0;
   }
+}
+
+.profile-picture-fade-in {
+  animation: fadeIn;
+  animation-duration: 300ms;
+}
+
+.profile-picture-fade-out {
+  animation: fadeOut;
+  animation-duration: 300ms;
 }

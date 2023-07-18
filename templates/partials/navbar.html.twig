@@ -14,7 +14,7 @@
         {% endif %}
         <ul class="head-list">
             <li><a href="/home">Home</a></li>
-            <li><a href="#trick-list">Tricks</a></li>
+            <li><a href="/home/#trick-list">Tricks</a></li>
             {% if app.user %}
                 <li><a href="/logout">Log out</a></li>
             {% else %}
@@ -23,8 +23,10 @@
             {% endif %}
         </ul>
         {% if app.user %}
-        <img src="{{ path('get_profile_picture') }}" alt="profile picture" class="profile-picture-nav">
-        <p class="user-information">Welcome<br> {{ app.user.pseudo }}</p>
+        <div class="profile-picture-group">
+            <img src="{{ path('get_profile_picture') }}" alt="profile picture" class="profile-picture">
+            <p class="user-information">Welcome<br> {{ app.user.pseudo }}</p>
+        </div>
     </div>
     {% endif %}
     {% if showDivider %}

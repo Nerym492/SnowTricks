@@ -1,4 +1,5 @@
 import JustValidate from "just-validate";
+import {addMobileMenuEvent} from "../modules/functions";
 
 const formValidatorConfig = {
   validateBeforeSubmitting: true,
@@ -42,6 +43,7 @@ resetPassValidator.onFail(() => {
   })
 })
 
+addMobileMenuEvent();
 
 
 
