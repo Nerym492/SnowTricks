@@ -90,7 +90,7 @@
   }
 
   @media (max-width: $small-screens-width - 1) {
-    @include set-border-properties(250px, 8.78px, 13px, -13px, 43px ,5.89px, 130px, -10px, 10px);
+    @include set-border-properties(250px, 8.78px, 13px, -13px, 71px ,5.89px, 130px, -10px, 10px);
   }
 }
 
