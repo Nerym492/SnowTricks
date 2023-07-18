@@ -1,3 +1,8 @@
+export function resizeHeaderHeight() {
+  let newHeaderHight = window.visualViewport.height - document.querySelector('.head-nav').offsetHeight;
+  document.querySelector('.masthead').style.height = newHeaderHight + 'px';
+}
+
 export function addMobileMenuEvent() {
   let toggleMenu = document.querySelector('.menu-toggle');
   toggleMenu.addEventListener('click', () => {

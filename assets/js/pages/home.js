@@ -1,4 +1,9 @@
-import {addXmlhttpRequest, addAlertListener, addMobileMenuEvent} from "../modules/functions.js";
+import {
+  addXmlhttpRequest,
+  addAlertListener,
+  addMobileMenuEvent,
+  resizeHeaderHeight
+} from "../modules/functions.js";
 
 window.addEventListener("load", function () {
   let textElement = document.getElementById("header-title");
@@ -47,5 +52,6 @@ document.getElementById('delete-trick-btn').addEventListener('click', (event) =>
 
 reloadTricks();
 addMobileMenuEvent();
+resizeHeaderHeight();
 addDeleteListener();
 addAlertListener();
