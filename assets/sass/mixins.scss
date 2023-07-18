@@ -27,3 +27,43 @@
   justify-content: center;
   align-items: center;
 }
+
+@mixin set-border-properties (
+  $horizontal-border-width,
+  $horizontal-border-height,
+  $horizontal-border-x-axis,
+  $horizontal-border-top,
+  $horizontal-border-bottom,
+  $vertical-border-width,
+  $vertical-border-height,
+  $vertical-border-x-axis,
+  $vertical-border-y-axis,
+) {
+  &.isheader-top {
+    top: $horizontal-border-top;
+    right: $horizontal-border-x-axis;
+    width: $horizontal-border-width;
+    height: $horizontal-border-height;
+  }
+
+  &.isheader-right {
+    right: $vertical-border-x-axis;
+    top: $vertical-border-y-axis;
+    width: $vertical-border-width;
+    height: $vertical-border-height;
+  }
+
+  &.isheader-bot {
+    bottom: $horizontal-border-bottom;
+    left: $horizontal-border-x-axis;
+    width: $horizontal-border-width;
+    height: $horizontal-border-height;
+  }
+
+  &.isheader-left {
+    left: $vertical-border-x-axis;
+    top: $vertical-border-y-axis;
+    width: $vertical-border-width;
+    height: $vertical-border-height;
+  }
+}

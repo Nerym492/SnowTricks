@@ -8,7 +8,7 @@
     margin: 0 20px;
   }
 
-  @media (max-width: $small-screens) {
+  @media (max-width: $small-screens-width) {
     padding: 0;
     margin: 0 10px;
   }
@@ -17,11 +17,29 @@
 .medias-container {
   display: grid;
   justify-content: center;
-  grid-template-columns: repeat(3, 352px);
   grid-column-gap: 20px;
   grid-row-gap: 20px;
   padding: 0 20px;
   transition: width 300ms, height 300ms;
+
+  @media (min-width: $large-screens-min-width) {
+    grid-template-columns: repeat(3, 340px);
+  }
+
+  // Between medium and large screens
+  @media (min-width: $medium-screens-width) and (max-width: $large-screens-min-width - 1) {
+    grid-template-columns: repeat(2, 370px);
+  }
+
+  @media (min-width: $small-screens-width) and (max-width: $medium-screens-width - 1) {
+    grid-template-columns: 400px;
+  }
+
+  // Small screens
+  @media (max-width: $small-screens-width - 1) {
+    grid-template-columns: 275px;
+    padding: 0;
+  }
 }
 
 
@@ -49,10 +67,6 @@
   width: 100%;
   aspect-ratio: 16/9;
   border: 0;
-
-  &-preview {
-    height: 198px;
-  }
 }
 
 .image-trick-details {
@@ -73,7 +87,7 @@
     margin-bottom: 40px;
   }
 
-  @media (max-width: $small-screens) {
+  @media (max-width: $small-screens-width) {
     padding: 0;
 
   }
@@ -96,7 +110,7 @@
     margin-right: 0;
   }
 
-  @media (max-width: $small-screens) {
+  @media (max-width: $small-screens-width) {
     flex-direction: column;
     margin-right: 0;
     margin-top: 0;

@@ -114,7 +114,7 @@ h2 {
    left: 0;
  }
 
-  @media (max-width: $small-screens) {
+  @media (max-width: $small-screens-width) {
     height: 10px;
   }
 }

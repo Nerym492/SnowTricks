@@ -20,7 +20,7 @@ $profile-picture-height: 70px;
     height: 100%;
   }
 
-  @media (max-width: $medium-screens) {
+  @media (max-width: $medium-screens-width) {
     justify-content: center;
     flex-wrap: wrap;
     height: max-content;
@@ -105,7 +105,7 @@ $profile-picture-height: 70px;
     color: #FFF
   }
 
-  @media (max-width: $medium-screens) {
+  @media (max-width: $medium-screens-width) {
     flex-direction: column;
     height: 0;
     opacity: 0;
@@ -150,7 +150,7 @@ $profile-picture-height: 70px;
     margin-bottom: 0;
   }
 
-  @media (max-width: $medium-screens) {
+  @media (max-width: $medium-screens-width) {
     display: none;
     margin-left: 0;
     margin-bottom: 20px;
@@ -163,7 +163,7 @@ $profile-picture-height: 70px;
   display: flex;
   align-items: center;
 
-  @media (max-width: $medium-screens) {
+  @media (max-width: $medium-screens-width) {
     flex-direction: column;
   }
 }
@@ -236,12 +236,12 @@ $profile-picture-height: 70px;
     transform: rotate(0deg) scale(0.2, 0.2);
   }
 
-  @media (max-width: $medium-screens) {
+  @media (max-width: $medium-screens-width) {
     display: flex;
     flex-direction: column;
   }
 
-  @media (max-width: $small-screens) {
+  @media (max-width: $small-screens-width) {
     right: 0;
   }
 }

@@ -48,7 +48,7 @@ footer {
   height: $divider-height;
 }
 
-@media (max-width: $medium-screens) {
+@media (max-width: $medium-screens-width) {
   footer {
     margin-top: 40px + $medium-divider-height;
   }
@@ -59,7 +59,7 @@ footer {
   }
 }
 
-@media (max-width: $small-screens) {
+@media (max-width: $small-screens-width) {
   footer {
     margin-top: 40px + $small-divider-height;
   }
