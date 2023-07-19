@@ -181,6 +181,7 @@ function addDeleteImageListener(deleteButton) {
 
 
     animateElement(trickImgItem, 'img-item-zoom-out', () => {
+      trickValidator.removeField('#'+trickImgItem.querySelector('.image-file-actions input').id);
       trickImgItem.remove();
       // Rearrange the following elements to fill the empty space
       remainingItems.forEach((item, index) => {
@@ -433,6 +434,7 @@ function addDeleteVideoListener(button) {
   button.addEventListener('click', () => {
     let trickVideoItem = button.closest('.trick-video-item');
     animateElement(trickVideoItem, 'img-item-zoom-out', () => {
+      trickValidator.removeField('#'+trickVideoItem.querySelector('input').id)
       trickVideoItem.remove()
     })
   })
@@ -505,6 +507,9 @@ trickValidator.onSuccess(function (event) {
   trickForm.submit();
 });
 
+trickValidator.onFail( function (fields) {
+  console.log(fields);
+})
 imageHeaderObserver.observe(headerImage, {attributes: true, attributeFilter: ['src']})
 addMobileMenuEvent();
 
