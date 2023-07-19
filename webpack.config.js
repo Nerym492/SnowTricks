@@ -12,6 +12,7 @@ Encore
   .addEntry('reset-password', './assets/js/pages/reset-password.js')
   .addEntry('login', './assets/js/pages/login.js')
   .addEntry('register', './assets/js/pages/register.js')
+  .addEntry('page404', './assets/js/pages/page404.js')
   .addEntry('bootstrap', 'bootstrap')
   .addStyleEntry('styles', './assets/sass/app.scss')
   .splitEntryChunks()
@@ -28,6 +29,10 @@ Encore
           ignore: ['**/header/**'] // Ignorer les fichiers dans le sous-dossier "header"
         }
       },
+      {
+        from: './assets/animations',
+        to: 'animations/[path][name][ext]',
+      }
     ]
   }))
 

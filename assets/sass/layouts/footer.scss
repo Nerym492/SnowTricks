@@ -42,7 +42,7 @@ footer {
 
 .footer-divider {
   position: absolute;
-  top: (-1 * $divider-height) + 1;
+  top: (-1 * $divider-height) + 2;
   left: 0;
   width: 100%;
   height: $divider-height;
@@ -54,7 +54,7 @@ footer {
   }
 
   .footer-divider {
-    top: (-1 * $medium-divider-height) + 1;
+    top: (-1 * $medium-divider-height) + 2;
     height: $medium-divider-height;
   }
 }
@@ -65,7 +65,7 @@ footer {
   }
 
   .footer-divider {
-    top: (-1 * $small-divider-height) + 1;
+    top: (-1 * $small-divider-height) + 2;
     height: $small-divider-height;
   }
 }
