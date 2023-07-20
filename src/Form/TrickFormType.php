@@ -61,6 +61,9 @@ class TrickFormType extends AbstractType
                     'class' => 'form-select',
                 ],
                 'required' => true,
+                'constraints' => [
+                    new NotBlank(message: 'Please select a trick group'),
+                ],
             ])
         ;
     }
