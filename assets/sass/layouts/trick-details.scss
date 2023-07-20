@@ -1,18 +1,45 @@
 .trick-container {
-  width: 1136px;
-  margin: 0 auto;
+  max-width: 1136px;
+  margin: 40px auto 0;
   border-radius: 10px;
   overflow: hidden;
+
+  @media (max-width: 1193px) {
+    margin: 0 20px;
+  }
+
+  @media (max-width: $small-screens-width) {
+    padding: 0;
+    margin: 0 10px;
+  }
 }
 
 .medias-container {
   display: grid;
   justify-content: center;
-  grid-template-columns: repeat(3, 352px);
   grid-column-gap: 20px;
   grid-row-gap: 20px;
   padding: 0 20px;
   transition: width 300ms, height 300ms;
+
+  @media (min-width: $large-screens-min-width) {
+    grid-template-columns: repeat(3, 340px);
+  }
+
+  // Between medium and large screens
+  @media (min-width: $medium-screens-width) and (max-width: $large-screens-min-width - 1) {
+    grid-template-columns: repeat(2, 370px);
+  }
+
+  @media (min-width: $small-screens-width) and (max-width: $medium-screens-width - 1) {
+    grid-template-columns: 400px;
+  }
+
+  // Small screens
+  @media (max-width: $small-screens-width - 1) {
+    grid-template-columns: 275px;
+    padding: 0;
+  }
 }
 
 
@@ -40,10 +67,6 @@
   width: 100%;
   aspect-ratio: 16/9;
   border: 0;
-
-  &-preview {
-    height: 198px;
-  }
 }
 
 .image-trick-details {
@@ -63,6 +86,11 @@
     text-align: center;
     margin-bottom: 40px;
   }
+
+  @media (max-width: $small-screens-width) {
+    padding: 0;
+
+  }
 }
 
 .trick-informations {
@@ -75,10 +103,23 @@
     background: #AAA;
     padding: 5px;
     border-radius: 5px;
+    width: fit-content;
   }
 
   &-item:last-child {
     margin-right: 0;
+  }
+
+  @media (max-width: $small-screens-width) {
+    flex-direction: column;
+    margin-right: 0;
+    margin-top: 0;
+    align-items: center;
+
+    .trick-informations-item {
+      margin-top: 20px;
+      margin-right: 0;
+    }
   }
 }
 
@@ -94,7 +135,7 @@
 .comment-list {
   display: grid;
   justify-content: center;
-  grid-template-columns: 500px;
+  grid-template-columns: minmax(300px, 600px);
   border-top: 1px solid #bdbdbd;
 }
 

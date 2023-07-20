@@ -30,13 +30,22 @@ class TrickController extends AbstractController
     #[Route('/tricks/details/{trickId}', name: 'trick_details')]
     public function getTrickDetails(Request $request, Security $security, int $trickId): Response
     {
+        $hiddeLoadButton = false;
+
         $trick = $this->manager->getRepository(Trick::class)->findOneBy(['id' => $trickId]);
         $groupeTrick = $this->manager->getRepository(GroupTrick::class)->findOneBy([
             'id' => $trick->getGroupTrick()->getId(),
         ]);
         $trickMedias = $this->mediaService->getAllTrickMedias($trickId);
-        $comments = $this->manager->getRepository(Comment::class)->findAllOrdered(['creation_date' => 'DESC']);
+
+        $commentRepository = $this->manager->getRepository(Comment::class);
+        $nbTotalComments = $commentRepository->count([]);
+        $comments = $commentRepository->findAllOrdered(['creation_date' => 'DESC']);
         $connectedUser = $security->getUser();
+
+        if ($nbTotalComments === count($comments)) {
+            $hiddeLoadButton = true;
+        }
 
         if (null !== $connectedUser) {
             $user = $this->manager->getRepository(User::class)->findOneBy([
@@ -62,6 +71,7 @@ class TrickController extends AbstractController
             'trickVideos' => $trickMedias['videos'],
             'comments' => $comments,
             'commentForm' => $commentForm,
+            'hiddeLoadButton' => $hiddeLoadButton,
         ]);
     }
 
@@ -70,6 +80,7 @@ class TrickController extends AbstractController
     {
         $headerImageExist = false;
         $trick = $this->manager->getRepository(Trick::class)->findOneBy(['id' => $trickId]);
+        $trickName = $trick->getName();
         $groupeTrick = $this->manager->getRepository(GroupTrick::class)->findOneBy([
             'id' => $trick->getGroupTrick()->getId(),
         ]);
@@ -120,6 +131,7 @@ class TrickController extends AbstractController
 
         return $this->render('trick/trick_form.html.twig', [
             'trick' => $trick,
+            'trickName' => $trickName,
             'groupTrickName' => $groupeTrick->getName(),
             'headerImageExist' => $headerImageExist,
             'headerImage' => $trickMedias['headerImage'],
@@ -210,6 +222,7 @@ class TrickController extends AbstractController
 
         return $this->render('trick/trick_form.html.twig', [
             'trick' => $trick,
+            'trickName' => $trick->getName(),
             'headerImageExist' => false,
             'headerImage' => null,
             'trickForm' => $form->createView(),

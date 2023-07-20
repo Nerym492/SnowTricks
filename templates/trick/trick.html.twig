@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block navbar %}
-    {% include 'partials/navbar.html.twig' with {showDivider: false, navMargin: 'navbar-margin'} %}
+    {% include 'partials/navbar.html.twig' with {showDivider: false, navMargin: ' navbar-margin'} %}
 {% endblock %}
 
 {% block header %}
@@ -13,7 +13,7 @@
 
 {% block content %}
     <div class="trick-container">
-        {% include 'trick/header_trick.html.twig' %}
+        {% include 'trick/header_trick.html.twig' with {'trickName': trick.name} %}
         {% if trickImages is not empty %}
             <h2>Images</h2>
             <div class="medias-container">
@@ -47,7 +47,7 @@
                 {% endif %}
             </div>
         </div>
-        {% include 'comment/comment_section.html.twig' with {'hiddeLoadButton': false} %}
+        {% include 'comment/comment_section.html.twig' %}
     </div>
 {% endblock %}
 

@@ -32,7 +32,6 @@ class EmailVerifier
         $context['expiresAtMessageKey'] = $signatureComponents->getExpirationMessageKey();
         $context['expiresAtMessageData'] = $signatureComponents->getExpirationMessageData();
 
-        // $this->tokenGenerator->generateToken();
         $parsedUrl = parse_url($context['signedUrl']);
 
         // Store generated token in the user

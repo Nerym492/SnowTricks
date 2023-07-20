@@ -1,5 +1,6 @@
 $divider-height: 50px;
-$mobile-divider-height: 20px;
+$medium-divider-height: 20px;
+$small-divider-height: 15px;
 
 footer {
   position: relative;
@@ -41,19 +42,30 @@ footer {
 
 .footer-divider {
   position: absolute;
-  top: (-1 * $divider-height) + 1;
+  top: (-1 * $divider-height) + 2;
   left: 0;
   width: 100%;
   height: $divider-height;
 }
 
-@media (max-width: 736px) {
+@media (max-width: $medium-screens-width) {
   footer {
-    margin-top: 40px + $mobile-divider-height;
+    margin-top: 40px + $medium-divider-height;
   }
 
   .footer-divider {
-    top: (-1 * $mobile-divider-height) + 1;
-    height: $mobile-divider-height;
+    top: (-1 * $medium-divider-height) + 2;
+    height: $medium-divider-height;
+  }
+}
+
+@media (max-width: $small-screens-width) {
+  footer {
+    margin-top: 40px + $small-divider-height;
+  }
+
+  .footer-divider {
+    top: (-1 * $small-divider-height) + 2;
+    height: $small-divider-height;
   }
 }

@@ -4,12 +4,13 @@ namespace App\Form;
 
 use App\Entity\GroupTrick;
 use App\Entity\Trick;
-use App\Entity\VideosTrick;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class TrickFormType extends AbstractType
 {
@@ -20,6 +21,13 @@ class TrickFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Name',
                     'class' => 'form-control',
+                ],
+                'constraints' => [
+                    new NotBlank(message: 'Please enter a trick name'),
+                    new Length(
+                        max: 50,
+                        maxMessage: 'The trick name must not exceed 50 characters.',
+                    ),
                 ],
             ])
             ->add('imagesTricks', CollectionType::class, [
@@ -41,6 +49,9 @@ class TrickFormType extends AbstractType
                     'placeholder' => 'Description',
                     'class' => 'form-control trick-description',
                 ],
+                'constraints' => [
+                    new NotBlank(message: 'Please enter a description'),
+                ],
             ])
             ->add('group_trick', EntityType::class, [
                 'class' => GroupTrick::class,
@@ -50,6 +61,9 @@ class TrickFormType extends AbstractType
                     'class' => 'form-select',
                 ],
                 'required' => true,
+                'constraints' => [
+                    new NotBlank(message: 'Please select a trick group'),
+                ],
             ])
         ;
     }

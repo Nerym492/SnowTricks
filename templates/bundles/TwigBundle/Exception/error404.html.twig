@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page not found{% endblock %}
+
+{% block scripts_head %}
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+{% endblock %}
+
+{% block navbar %}
+    {% include 'partials/navbar.html.twig' with {showDivider: false, navMargin: ' navbar-margin'} %}
+{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+    <div class="animation-404">
+        <lottie-player src="{{ asset('/build/animations/error-404.json') }}"
+                       speed="1" loop autoplay></lottie-player>
+        <p class="error-message">The page you're looking for doesn't exist.</p>
+    </div>
+{% endblock %}
+
+{% block scripts_end_body %}
+    {{ encore_entry_script_tags('page404') }}
+{% endblock %}

@@ -41,6 +41,14 @@ h2 {
   align-items: center;
 }
 
+.flex-column {
+  flex-direction: column;
+}
+
+.error-message {
+  font-size: 1.3em;
+}
+
 .background-page {
   opacity: 0.2;
   z-index: 0;
@@ -113,4 +121,27 @@ h2 {
    bottom: 0;
    left: 0;
  }
+
+  @media (max-width: $small-screens-width) {
+    height: 10px;
+  }
+}
+
+.animation-404 {
+  display: grid;
+  grid-template-columns: minmax(300px, 600px);
+  justify-content: center;
+  justify-items: center;
+
+  lottie-player {
+    margin: 0 auto;
+  }
+
+  @media (max-width: $small-screens-width) {
+    p {
+      font-size: 1.2rem;
+      text-align: center;
+      padding: 0 5px;
+    }
+  }
 }

@@ -1,2 +1,13 @@
+// Colors
 $steel-blue: #367a93;
 $azurin-blue: #65B5CD;
+
+// Breakpoints
+$breakpoints: (
+        "large-screens": ("width": null, "min-width": 1136px),
+        "medium-screens": ("width": 840px, "min-width": 481px),
+        "small-screens": ("width": 480px, "min-width": 321px),
+);
+$large-screens-min-width: map_get(map_get($breakpoints, "large-screens"), "min-width");
+$medium-screens-width: map_get(map_get($breakpoints, "medium-screens"), "width");
+$small-screens-width: map_get(map_get($breakpoints, "small-screens"), "width");

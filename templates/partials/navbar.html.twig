@@ -1,12 +1,20 @@
-<nav class="head-nav {{ navMargin }}">
-    <img src="{{ asset('build/images/white-Snowtricks-logo.png') }}" alt="Snowtricks logo">
+<nav class="head-nav{{ navMargin }}">
+    <div class="logo-container">
+        <img src="{{ asset('build/images/white-Snowtricks-logo.png') }}" alt="Snowtricks logo">
+        <div class="menu-toggle">
+            <input type="checkbox" aria-label="toggle button" id="toggle-button">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
     {% if app.user %}
     <div class="menu-navbar">
         {% endif %}
         <ul class="head-list">
             <li><a href="/home">Home</a></li>
-            <li>Tricks</li>
-
+            <li><a href="/home/#trick-list">Tricks</a></li>
             {% if app.user %}
                 <li><a href="/logout">Log out</a></li>
             {% else %}
@@ -15,8 +23,10 @@
             {% endif %}
         </ul>
         {% if app.user %}
-        <img src="{{ path('get_profile_picture') }}" alt="profile picture" class="profile-picture-nav">
-        <p class="user-information">Welcome<br> {{ app.user.pseudo }}</p>
+        <div class="profile-picture-group">
+            <img src="{{ path('get_profile_picture') }}" alt="profile picture" class="profile-picture">
+            <p class="user-information">Welcome<br> {{ app.user.pseudo }}</p>
+        </div>
     </div>
     {% endif %}
     {% if showDivider %}

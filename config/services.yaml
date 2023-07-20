@@ -6,7 +6,7 @@
 parameters:
     timezone: '%env(TIMEZONE)%'
     tricks_list_load_limit: 5
-    comments_list_limit: 5
+    comments_list_limit: 10
     trick_folder_path: '../assets/uploads/Trick'
     user_folder_path: '../assets/uploads/User'
 

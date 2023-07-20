@@ -11,6 +11,10 @@
   }
 }
 
+.alert-box-container + .required-field {
+  margin-top: 20px;
+}
+
 .required-field::after {
   position: absolute;
   top: 5px;
@@ -28,9 +32,10 @@
 
 .basic-form {
   display: grid;
-  grid-template-columns: 400px;
+  grid-template-columns: minmax(280px, 600px);
   justify-content: center;
   grid-row-gap: 10px;
+  padding: 0 20px;
 
   .trick-description {
     height: 200px !important;
@@ -54,7 +59,7 @@
 
 .comment-form {
   display: grid;
-  grid-template-columns: 500px;
+  grid-template-columns: minmax(280px, 600px);
   justify-content: center;
   row-gap: 10px;
 
@@ -75,32 +80,21 @@
 .border-isheader {
   position: absolute;
 
-  &.isheader-top {
-    top: -13px;
-    right: 18px;
-    width: 317px;
-    height: 8.78px;
+  @media (min-width: $large-screens-min-width) {
+    @include set-border-properties(317px, 8.78px, 13px, -13px, 71px ,5.89px, 157.5px, -10px, 20px);
   }
 
-  &.isheader-right {
-    right: -10px;
-    top: 20px;
-    width: 5.89px;
-    height: 157.5px;
+  // Between large and medium screens
+  @media (min-width: $medium-screens-width) and (max-width: $large-screens-min-width - 1) {
+    @include set-border-properties(347px, 8.78px, 13px, -13px, 43px ,5.89px, 175px, -10px, 20px);
   }
 
-  &.isheader-bot {
-    top: 202px;
-    left: 18px;
-    width: 317px;
-    height: 8.78px;
+  @media (min-width: $small-screens-width) and (max-width: $medium-screens-width - 1) {
+    @include set-border-properties(360px, 8.78px, 13px, -13px, 43px ,5.89px, 200px, -10px, 10px);
   }
 
-  &.isheader-left {
-    left: -10px;
-    top: 20px;
-    width: 5.89px;
-    height: 157.5px;
+  @media (max-width: $small-screens-width - 1) {
+    @include set-border-properties(250px, 8.78px, 13px, -13px, 71px ,5.89px, 130px, -10px, 10px);
   }
 }
 
@@ -203,7 +197,7 @@
     opacity: 1;
   }
 
-  span{
+  span {
     display: inline-flex;
     padding: .2em;
     height: 2em;

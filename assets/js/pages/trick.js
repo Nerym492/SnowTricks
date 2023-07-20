@@ -1,4 +1,6 @@
 import JustValidate from "just-validate";
+import {addMobileMenuEvent} from "../modules/functions";
+
 
 const headerImage = document.getElementById('image-header-details');
 const trickForm = document.getElementById('trick_form');
@@ -179,6 +181,7 @@ function addDeleteImageListener(deleteButton) {
 
 
     animateElement(trickImgItem, 'img-item-zoom-out', () => {
+      trickValidator.removeField('#'+trickImgItem.querySelector('.image-file-actions input').id);
       trickImgItem.remove();
       // Rearrange the following elements to fill the empty space
       remainingItems.forEach((item, index) => {
@@ -431,6 +434,7 @@ function addDeleteVideoListener(button) {
   button.addEventListener('click', () => {
     let trickVideoItem = button.closest('.trick-video-item');
     animateElement(trickVideoItem, 'img-item-zoom-out', () => {
+      trickValidator.removeField('#'+trickVideoItem.querySelector('input').id)
       trickVideoItem.remove()
     })
   })
@@ -450,18 +454,23 @@ fileInputs.forEach(fileInput => {
   const preview = imageItem.querySelector('.trick-image-preview');
   const linkFavoriteImg = preview.querySelector('.favorite-image');
 
-  linkFavoriteImg.addEventListener('click', () => {
-    moveFavoriteImgBorders(preview);
-  })
+  if (linkFavoriteImg !== null) {
+    linkFavoriteImg.addEventListener('click', () => {
+      moveFavoriteImgBorders(preview);
+    })
 
-  if (fileInput.classList.contains("isFilled") === false) {
-    addInputFileValidation(fileInput);
+    if (fileInput.classList.contains("isFilled") === false) {
+      addInputFileValidation(fileInput);
+    }
+    //Preview image as it changes.
+    addInputChangeListener(fileInput, preview);
+    addDeleteImageListener(imageItem.querySelector('.delete-image-btn'));
+    previewObserver.observe(preview, observerOptions);
+    previewObserver.observe(preview.querySelector('.favorite-image'), observerOptions);
+  } else {
+    // The form was not valid, so we delete the image item
+    imageItem.remove();
   }
-  //Preview image as it changes.
-  addInputChangeListener(fileInput, preview);
-  addDeleteImageListener(imageItem.querySelector('.delete-image-btn'));
-  previewObserver.observe(preview, observerOptions);
-  previewObserver.observe(preview.querySelector('.favorite-image'), observerOptions);
 });
 
 videosLinks.forEach(link => {
@@ -475,6 +484,11 @@ document.querySelectorAll('.delete-video-btn').forEach(btn => {
 
 trickValidator
   .addField('#trick_form_name', [
+    {
+      rule: 'maxLength',
+      value: 50,
+      errorMessage: 'The trick name must not exceed 50 characters.',
+    },
     {
       rule: 'required',
       errorMessage: 'Please enter a trick name',
@@ -499,5 +513,13 @@ trickValidator.onSuccess(function (event) {
 });
 
 imageHeaderObserver.observe(headerImage, {attributes: true, attributeFilter: ['src']})
+addMobileMenuEvent();
 
+// Select the first form error
+let formError = document.querySelector('.form-error');
+if (formError) {
+  // Scroll to this error
+  let formErrorPosition = formError.getBoundingClientRect().top + window.scrollY
+  window.scrollTo(0, formErrorPosition);
+}
 

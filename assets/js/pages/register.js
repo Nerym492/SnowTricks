@@ -1,5 +1,5 @@
 import JustValidate from "just-validate";
-import {addFileValidationRules} from "../modules/functions.js";
+import {addFileValidationRules, addMobileMenuEvent} from "../modules/functions.js";
 
 let profilePictureActions = document.querySelector('.profile-picture-actions');
 let image = document.getElementById('profile-picture');
@@ -125,3 +125,5 @@ document.querySelectorAll('.form-floating, .form-check').forEach(group => {
     })
   }
 })
+
+addMobileMenuEvent();

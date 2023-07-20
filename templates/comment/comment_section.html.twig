@@ -7,8 +7,11 @@
                 'class': 'comment-form form-colors-custom', 'id': 'comment-form'
             }
         }) }}
-        {{ form_row(commentForm.content) }}
-        {{ form_errors(commentForm.content) }}
+        <div id="comment-content">
+            {{ form_widget(commentForm.content) }}
+            {{ form_errors(commentForm.content) }}
+        </div>
+
         <button type="submit" class="btn-arrow--white btn-comment">Valider</button>
         {{ form_end(commentForm) }}
     {% else %}

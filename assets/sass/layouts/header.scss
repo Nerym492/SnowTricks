@@ -24,6 +24,19 @@
     text-align: center;
     text-transform: uppercase;
   }
+
+  @media (max-width: $medium-screens-width) {
+    h1 {
+      left: 50%;
+      translate: -50% -50%;
+    }
+  }
+
+  @media (max-width: $small-screens-width) {
+    h1 {
+      font-size: 2.2em;
+    }
+  }
 }
 
 @keyframes fade-in {
@@ -51,9 +64,15 @@
   left: 0;
   transform: rotate(180deg);
 
-  @media (max-width: 736px) {
-    $mobile-height: 20px;
-    height: $mobile-height;
-    bottom: -1 * ($mobile-height - 2px);
+  @media (max-width: $medium-screens-width) {
+    $medium-height: 20px;
+    height: $medium-height;
+    bottom: -1 * ($medium-height - 2px);
+  }
+
+  @media (max-width: $small-screens-width) {
+    $small-height: 10px;
+    height: $small-height;
+    bottom: -1 * ($small-height - 2px);
   }
 }
