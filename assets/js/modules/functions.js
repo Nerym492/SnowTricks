@@ -43,7 +43,9 @@ export function addXmlhttpRequest(method, url, formData, elementToRefresh, after
 
 export function addAlertListener() {
   let firstAlerbox = document.querySelector('.alert-box-container')
-  window.scrollTo(0, firstAlerbox.getBoundingClientRect().top + window.scrollY)
+  if (firstAlerbox) {
+    window.scrollTo(0, firstAlerbox.getBoundingClientRect().top + window.scrollY)
+  }
   document.querySelectorAll('.alert-box').forEach(alertBox => {
     let removeAlertBox = () => {
       alertBox.classList.remove('alert-fade-in');

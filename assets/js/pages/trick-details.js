@@ -33,7 +33,9 @@ function loadMoreComments() {
     let commentsLoaded = document.querySelectorAll('.comment').length;
     let commentList = document.getElementById('comment-list');
     addXmlhttpRequest('GET', '/comments/loaded/'+commentsLoaded+'/loadMore/', null, commentList, () => {
-      loadMoreComments();
+      if (document.getElementById('btn-load-more-comments')) {
+        loadMoreComments();
+      }
       addAlertListener();
     })
   })
