@@ -11,7 +11,8 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity(fields: ['mail'], message: 'There is already an account with this mail')]
+#[UniqueEntity(fields: ['mail'], message: 'This mail is already used.')]
+#[UniqueEntity(fields: ['pseudo'], message: 'This pseudo is already used.')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]

@@ -13,6 +13,7 @@
     <div class="trick-container">
         {% include 'trick/header_trick.html.twig' %}
 
+        {% form_theme trickForm 'form/form_errors.html.twig' %}
         {{ form_start(trickForm, {'attr': {'class': 'basic-form form-color-custom', 'id': 'trick_form'}}) }}
         <h2>Images</h2>
         <div class="medias-container" id="images-list"
@@ -89,18 +90,22 @@
                 </div>
             </div>
         </div>
-        <h2 class="mt-20">Informations</h2>
+        <h2 class="trick-form-informations" id="trick-form-informations">Informations</h2>
+        {% include 'partials/alert_box.html.twig' %}
         <div class="form-floating required-field">
             {{ form_widget(trickForm.name) }}
             {{ form_label(trickForm.name) }}
+            {{ form_errors(trickForm.name) }}
         </div>
         <div class="form-floating required-field">
             {{ form_widget(trickForm.description) }}
             {{ form_label(trickForm.description) }}
+            {{ form_errors(trickForm.description) }}
         </div>
         <div class="form-floating required-field">
             {{ form_widget(trickForm.group_trick) }}
             {{ form_label(trickForm.group_trick) }}
+            {{ form_errors(trickForm.group_trick) }}
         </div>
         <button type="submit" class="btn-submit" data-just-validate-fallback-disabled="false">Save</button>
         {{ form_end(trickForm) }}

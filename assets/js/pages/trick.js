@@ -454,18 +454,23 @@ fileInputs.forEach(fileInput => {
   const preview = imageItem.querySelector('.trick-image-preview');
   const linkFavoriteImg = preview.querySelector('.favorite-image');
 
-  linkFavoriteImg.addEventListener('click', () => {
-    moveFavoriteImgBorders(preview);
-  })
+  if (linkFavoriteImg !== null) {
+    linkFavoriteImg.addEventListener('click', () => {
+      moveFavoriteImgBorders(preview);
+    })
 
-  if (fileInput.classList.contains("isFilled") === false) {
-    addInputFileValidation(fileInput);
+    if (fileInput.classList.contains("isFilled") === false) {
+      addInputFileValidation(fileInput);
+    }
+    //Preview image as it changes.
+    addInputChangeListener(fileInput, preview);
+    addDeleteImageListener(imageItem.querySelector('.delete-image-btn'));
+    previewObserver.observe(preview, observerOptions);
+    previewObserver.observe(preview.querySelector('.favorite-image'), observerOptions);
+  } else {
+    // The form was not valid, so we delete the image item
+    imageItem.remove();
   }
-  //Preview image as it changes.
-  addInputChangeListener(fileInput, preview);
-  addDeleteImageListener(imageItem.querySelector('.delete-image-btn'));
-  previewObserver.observe(preview, observerOptions);
-  previewObserver.observe(preview.querySelector('.favorite-image'), observerOptions);
 });
 
 videosLinks.forEach(link => {
@@ -507,9 +512,14 @@ trickValidator.onSuccess(function (event) {
   trickForm.submit();
 });
 
-trickValidator.onFail( function (fields) {
-  console.log(fields);
-})
 imageHeaderObserver.observe(headerImage, {attributes: true, attributeFilter: ['src']})
 addMobileMenuEvent();
+
+// Select the first form error
+let formError = document.querySelector('.form-error');
+if (formError) {
+  // Scroll to this error
+  let formErrorPosition = formError.getBoundingClientRect().top + window.scrollY
+  window.scrollTo(0, formErrorPosition);
+}
 

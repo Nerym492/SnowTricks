@@ -20,6 +20,12 @@
   }
 }
 
+.trick-form-informations + .alert-box-container {
+  .alert-box {
+    margin-top: 0;
+  }
+}
+
 @media (max-width: 550px) {
   .alert-box {
     margin-right: 0.5rem;

@@ -11,6 +11,10 @@
   }
 }
 
+.alert-box-container + .required-field {
+  margin-top: 20px;
+}
+
 .required-field::after {
   position: absolute;
   top: 5px;
