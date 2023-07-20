@@ -11,7 +11,7 @@
 
 {% block content %}
     <div class="trick-container">
-        {% include 'trick/header_trick.html.twig' %}
+        {% include 'trick/header_trick.html.twig' with {'trickName': trickName} %}
 
         {% form_theme trickForm 'form/form_errors.html.twig' %}
         {{ form_start(trickForm, {'attr': {'class': 'basic-form form-color-custom', 'id': 'trick_form'}}) }}
@@ -37,7 +37,7 @@
                             <a role="button" class="favorite-image">
                                 <img class="image-trick-details img-form" src="{{ path(
                                     'get_trick_image',
-                                    {'trickName': trick.name,'imageName': image.vars.value.fileName}
+                                    {'trickName': trickName,'imageName': image.vars.value.fileName}
                                 ) }}" alt="Image {{ loop.index }}">
                             </a>
                         {% endif %}

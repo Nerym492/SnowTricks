@@ -70,9 +70,11 @@ class TrickController extends AbstractController
     {
         $headerImageExist = false;
         $trick = $this->manager->getRepository(Trick::class)->findOneBy(['id' => $trickId]);
+        $trickName = $trick->getName();
         $groupeTrick = $this->manager->getRepository(GroupTrick::class)->findOneBy([
             'id' => $trick->getGroupTrick()->getId(),
         ]);
+
 
         $trickMedias = $this->mediaService->getAllTrickMedias($trickId);
         // All images except the header
@@ -120,6 +122,7 @@ class TrickController extends AbstractController
 
         return $this->render('trick/trick_form.html.twig', [
             'trick' => $trick,
+            'trickName' => $trickName,
             'groupTrickName' => $groupeTrick->getName(),
             'headerImageExist' => $headerImageExist,
             'headerImage' => $trickMedias['headerImage'],
@@ -210,6 +213,7 @@ class TrickController extends AbstractController
 
         return $this->render('trick/trick_form.html.twig', [
             'trick' => $trick,
+            'trickName' => $trick->getName(),
             'headerImageExist' => false,
             'headerImage' => null,
             'trickForm' => $form->createView(),
