@@ -7,6 +7,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * GroupTrick entity
+ */
 #[ORM\Entity(repositoryClass: GroupTrickRepository::class)]
 class GroupTrick
 {
@@ -21,21 +24,34 @@ class GroupTrick
     #[ORM\OneToMany(mappedBy: 'group_trick', targetEntity: Trick::class, orphanRemoval: true)]
     private Collection $tricks;
 
+    /**
+     *
+     */
     public function __construct()
     {
         $this->tricks = new ArrayCollection();
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return string|null
+     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    /**
+     * @param string $name
+     * @return $this
+     */
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -51,6 +67,10 @@ class GroupTrick
         return $this->tricks;
     }
 
+    /**
+     * @param Trick $trick
+     * @return $this
+     */
     public function addTrick(Trick $trick): self
     {
         if (!$this->tricks->contains($trick)) {
@@ -61,6 +81,10 @@ class GroupTrick
         return $this;
     }
 
+    /**
+     * @param Trick $trick
+     * @return $this
+     */
     public function removeTrick(Trick $trick): self
     {
         if ($this->tricks->removeElement($trick)) {
