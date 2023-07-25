@@ -16,11 +16,19 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class VideosTrickRepository extends ServiceEntityRepository
 {
+    /**
+     * @param ManagerRegistry $registry
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, VideosTrick::class);
     }
 
+    /**
+     * @param VideosTrick $entity
+     * @param bool $flush
+     * @return void
+     */
     public function save(VideosTrick $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
@@ -30,6 +38,11 @@ class VideosTrickRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @param VideosTrick $entity
+     * @param bool $flush
+     * @return void
+     */
     public function remove(VideosTrick $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);

@@ -16,11 +16,19 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class GroupTrickRepository extends ServiceEntityRepository
 {
+    /**
+     * @param ManagerRegistry $registry
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, GroupTrick::class);
     }
 
+    /**
+     * @param GroupTrick $entity
+     * @param bool $flush
+     * @return void
+     */
     public function save(GroupTrick $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
@@ -30,6 +38,11 @@ class GroupTrickRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @param GroupTrick $entity
+     * @param bool $flush
+     * @return void
+     */
     public function remove(GroupTrick $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
