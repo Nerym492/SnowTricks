@@ -17,8 +17,16 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * Image management
+ */
 class MediaService
 {
+    /**
+     * @param EntityManagerInterface $entityManager
+     * @param ParameterBagInterface $parameterBag
+     * @param RequestStack $requestStack
+     */
     public function __construct(
         private EntityManagerInterface $entityManager,
         private ParameterBagInterface $parameterBag,
@@ -26,6 +34,12 @@ class MediaService
     ) {
     }
 
+    /**
+     * Retrieve all ImagesTricks and VideosTricks objects of a Trick
+     *
+     * @param int $trickId
+     * @return array
+     */
     public function getAllTrickMedias(int $trickId): array
     {
         $imagesTrickRepo = $this->entityManager->getRepository(ImagesTrick::class);
@@ -42,6 +56,12 @@ class MediaService
         ];
     }
 
+    /**
+     * Returns an image according to a given path
+     *
+     * @param string $imagePath
+     * @return Response
+     */
     public function serveProtectedImage(string $imagePath): Response
     {
         $allowedTypes = ['jpg', 'jpeg', 'webp', 'png'];
@@ -66,6 +86,13 @@ class MediaService
         throw new NotFoundHttpException('Image not found');
     }
 
+    /**
+     * Upload a new Trick image
+     *
+     * @param UploadedFile $file
+     * @param Trick $trick
+     * @return string
+     */
     public function uploadTrickImage(UploadedFile $file, Trick $trick): string
     {
         $trickPath = PathUtils::buildTrickPath($this->parameterBag, $trick);
@@ -83,6 +110,13 @@ class MediaService
         return $newFileName;
     }
 
+    /**
+     * Upload a user profile picture
+     *
+     * @param UploadedFile $file
+     * @param User $user
+     * @return string
+     */
     public function uploadProfilePicture(UploadedFile $file, User $user): string
     {
         $userPath = $this->parameterBag->get('user_folder_path');
@@ -95,6 +129,13 @@ class MediaService
         return $newFileName;
     }
 
+    /**
+     * Delete a trick image
+     *
+     * @param Trick $trick
+     * @param string $fileName
+     * @return bool
+     */
     public function deleteTrickImage(Trick $trick, string $fileName): bool
     {
         $filePath = PathUtils::buildTrickPath($this->parameterBag, $trick).'/'.$fileName;
@@ -102,6 +143,12 @@ class MediaService
         return $this->deleteFile($filePath, $fileName);
     }
 
+    /**
+     * Delete a trick folder
+     *
+     * @param Trick $trick
+     * @return bool
+     */
     public function deleteTrickFolder(Trick $trick): bool
     {
         $folderPath = PathUtils::buildTrickPath($this->parameterBag, $trick);
@@ -109,6 +156,14 @@ class MediaService
         return $this->deleteFile($folderPath);
     }
 
+    /**
+     * Create an image file on the server
+     *
+     * @param UploadedFile $file
+     * @param string $path
+     * @param string $fileName
+     * @return string
+     */
     private function createFile(UploadedFile $file, string $path, string $fileName): string
     {
         try {
@@ -125,6 +180,13 @@ class MediaService
         return $fileName;
     }
 
+    /**
+     * Delete an image file from the server
+     *
+     * @param string $filePath
+     * @param string $fileName
+     * @return bool
+     */
     private function deleteFile(string $filePath, string $fileName = ''): bool
     {
         $fileSystem = new Filesystem();
