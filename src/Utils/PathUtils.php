@@ -6,8 +6,18 @@ use App\Entity\Trick;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
+/**
+ * Path generation
+ */
 class PathUtils
 {
+    /**
+     * Generate a path for a given Trick
+     *
+     * @param ParameterBagInterface $parameterBag
+     * @param Trick $trick
+     * @return string
+     */
     public static function buildTrickPath(
         ParameterBagInterface $parameterBag,
         Trick $trick,
