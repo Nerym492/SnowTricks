@@ -6,6 +6,7 @@ use App\Entity\Comment;
 use App\Entity\User;
 use App\Form\CommentFormType;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -13,13 +14,25 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Comments management
+ */
 class CommentController extends AbstractController
 {
-    public function __construct(
-        private EntityManagerInterface $manager,
-    ) {
-    }
+    /**
+     * @param EntityManagerInterface $manager
+     */
+    public function __construct(private EntityManagerInterface $manager)
+    {
+    }// end __construct()
 
+    /**
+     * Comment form management.
+     *
+     * @return Response Comment section
+     *
+     * @throws Exception
+     */
     #[Route('/comment/submitForm', name: 'submit_comment_form')]
     public function processCommentForm(Request $request, Security $security, ParameterBagInterface $parameterBag): Response
     {
@@ -42,13 +55,22 @@ class CommentController extends AbstractController
 
         $comments = $commentRepository->findAllOrdered(['creation_date' => 'DESC']);
 
-        return $this->render('comment/comment_section.html.twig', [
-            'comments' => $comments,
-            'commentForm' => $commentForm->createView(),
-            'hiddeLoadButton' => false,
-        ]);
-    }
+        return $this->render(
+            'comment/comment_section.html.twig',
+            [
+                'comments' => $comments,
+                'commentForm' => $commentForm->createView(),
+                'hiddeLoadButton' => false,
+            ]
+        );
+    }// end processCommentForm()
 
+    /**
+     * Load more comment base on the current number of displayed comments.
+     *
+     * @param int $commentsLoaded Number of comments currently loaded
+     * @return Response Comment list
+     */
     #[Route('/comments/loaded/{commentsLoaded}/loadMore/', name: 'load_more_comments')]
     public function loadMoreComments(int $commentsLoaded): Response
     {
@@ -62,13 +84,16 @@ class CommentController extends AbstractController
 
         $nbTotalComments = $commentRepository->count([]);
 
-        if ($nbTotalComments === count($comments)) {
+        if (count($comments) === $nbTotalComments) {
             $hiddeLoadButton = true;
         }
 
-        return $this->render('comment/comments_list.html.twig', [
-            'comments' => $comments,
-            'hiddeLoadButton' => $hiddeLoadButton,
-        ]);
-    }
-}
+        return $this->render(
+            'comment/comments_list.html.twig',
+            [
+                'comments' => $comments,
+                'hiddeLoadButton' => $hiddeLoadButton,
+            ]
+        );
+    }// end loadMoreComments()
+}// end class

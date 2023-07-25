@@ -12,13 +12,31 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * User profile picture route
+ */
 class UserController extends AbstractController
 {
+
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     */
     public function __construct(
         private EntityManagerInterface $entityManager
     ) {
-    }
+    }//end __construct()
 
+
+    /**
+     * Retrieve a user's profile photo
+     *
+     * @param Security $security
+     * @param ParameterBagInterface $parameterBag
+     * @param MediaService $mediaService
+     * @param string $userPseudo
+     * @return Response
+     */
     #[Route('/profilePicture/{userPseudo}', name: 'get_profile_picture', defaults: ['userPseudo' => ''])]
     public function getProfilePicture(
         Security $security,
@@ -26,9 +44,9 @@ class UserController extends AbstractController
         MediaService $mediaService,
         string $userPseudo,
     ): Response {
-        // The default is to retrieve the logged-in user
+        // The default is to retrieve the logged-in user.
         if ($security->getUser()) {
-            $userMail = $security->getUser()->getUserIdentifier();
+            $userMail     = $security->getUser()->getUserIdentifier();
             $userCriteria = ['mail' => $userMail];
         }
 
@@ -49,8 +67,7 @@ class UserController extends AbstractController
         }
 
         // Default profile photo
-        $defaultImagePath = $this->getParameter('kernel.project_dir').
-            '/public/build/images/default-user-avatar.png';
+        $defaultImagePath = $this->getParameter('kernel.project_dir').'/public/build/images/default-user-avatar.png';
         $defaultImageFile = new File($defaultImagePath);
 
         return new Response(
@@ -58,5 +75,5 @@ class UserController extends AbstractController
             Response::HTTP_OK,
             ['Content-Type' => 'image/jpeg']
         );
-    }
-}
+    }//end getProfilePicture()
+}//end class

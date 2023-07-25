@@ -17,15 +17,30 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
+/**
+ * User registration management
+ */
 class RegistrationController extends AbstractController
 {
     private EmailVerifier $emailVerifier;
 
+    /**
+     * @param EmailVerifier $emailVerifier
+     */
     public function __construct(EmailVerifier $emailVerifier)
     {
         $this->emailVerifier = $emailVerifier;
     }
 
+    /**
+     * Displays the registration page and, when the form is valid, redirects to the login page.
+     *
+     * @param Request $request
+     * @param UserPasswordHasherInterface $userPasswordHasher
+     * @param EntityManagerInterface $entityManager
+     * @param MediaService $mediaService
+     * @return Response
+     */
     #[Route('/register', name: 'app_register')]
     public function register(
         Request $request,
@@ -57,7 +72,9 @@ class RegistrationController extends AbstractController
             $entityManager->flush();
 
             // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+            $this->emailVerifier->sendEmailConfirmation(
+                'app_verify_email',
+                $user,
                 (new TemplatedEmail())
                     ->from(new Address('florianpohu49@gmail.com', 'Snowtricks'))
                     ->to($user->getMail())
@@ -67,7 +84,7 @@ class RegistrationController extends AbstractController
             // do anything else you need here, like send an email
 
             $this->addFlash('success', "Your account have been created with success !\n".
-                'please check your e-mail address by clicking on the link sent to you.');
+            'please check your e-mail address by clicking on the link sent to you.');
 
             return $this->redirectToRoute('app_login');
         }
@@ -77,6 +94,14 @@ class RegistrationController extends AbstractController
         ]);
     }
 
+    /**
+     * Validates e-mail address if link is valid
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param TranslatorInterface $translator
+     * @return Response
+     */
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request, EntityManagerInterface $entityManager, TranslatorInterface $translator): Response
     {
