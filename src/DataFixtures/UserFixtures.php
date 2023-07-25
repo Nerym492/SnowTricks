@@ -6,8 +6,17 @@ use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
+/**
+ * User dataset
+ */
 class UserFixtures extends Fixture
 {
+    /**
+     * Create the User dataset
+     *
+     * @param ObjectManager $manager
+     * @return void
+     */
     public function load(ObjectManager $manager): void
     {
         $user = new User();

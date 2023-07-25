@@ -9,15 +9,24 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 
+/**
+ * ImagesTrick dataset
+ */
 class ImagesTrickFixtures extends Fixture implements DependentFixtureInterface
 {
     private EntityManagerInterface $manager;
 
+    /**
+     * @param EntityManagerInterface $manager
+     */
     public function __construct(EntityManagerInterface $manager)
     {
         $this->manager = $manager;
     }
 
+    /**
+     * @return string[]
+     */
     public function getDependencies(): array
     {
         return [
@@ -25,6 +34,12 @@ class ImagesTrickFixtures extends Fixture implements DependentFixtureInterface
         ];
     }
 
+    /**
+     * Create ImagesTrick dataset
+     *
+     * @param ObjectManager $manager
+     * @return void
+     */
     public function load(ObjectManager $manager)
     {
         $tricks = [
@@ -64,6 +79,14 @@ class ImagesTrickFixtures extends Fixture implements DependentFixtureInterface
         $manager->flush();
     }
 
+    /**
+     * Add one TrickImage to the dataset
+     *
+     * @param Trick $trick
+     * @param string $fileName
+     * @param bool $isInTheheader
+     * @return void
+     */
     private function addTrickImage(Trick $trick, string $fileName, bool $isInTheheader): void
     {
         $trickImg = new ImagesTrick();
