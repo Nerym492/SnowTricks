@@ -9,15 +9,24 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 
+/**
+ * VideosTrick dataset
+ */
 class VideosTrickFixtures extends Fixture implements DependentFixtureInterface
 {
     private EntityManagerInterface $manager;
 
+    /**
+     * @param EntityManagerInterface $manager
+     */
     public function __construct(EntityManagerInterface $manager)
     {
         $this->manager = $manager;
     }
 
+    /**
+     * @return string[]
+     */
     public function getDependencies(): array
     {
         return [
@@ -25,6 +34,12 @@ class VideosTrickFixtures extends Fixture implements DependentFixtureInterface
         ];
     }
 
+    /**
+     * Create the VideosTrick dataset
+     *
+     * @param ObjectManager $manager
+     * @return void
+     */
     public function load(ObjectManager $manager)
     {
         $trickIndyGrab = $manager->getRepository(Trick::class)->findOneBy(['name' => 'Indy']);
@@ -42,6 +57,13 @@ class VideosTrickFixtures extends Fixture implements DependentFixtureInterface
         $manager->flush();
     }
 
+    /**
+     * Add one TrickVideo to the dataset
+     *
+     * @param Trick $trick
+     * @param string $link
+     * @return void
+     */
     private function addTrickVideo(Trick $trick, string $link): void
     {
         $trickVideo = new VideosTrick();

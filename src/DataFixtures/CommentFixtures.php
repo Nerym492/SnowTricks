@@ -8,8 +8,14 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
+/**
+ * Comments dataset
+ */
 class CommentFixtures extends Fixture implements DependentFixtureInterface
 {
+    /**
+     * @return string[]
+     */
     public function getDependencies(): array
     {
         return [
@@ -17,6 +23,12 @@ class CommentFixtures extends Fixture implements DependentFixtureInterface
         ];
     }
 
+    /**
+     * Create comments dataset
+     *
+     * @param ObjectManager $manager
+     * @return void
+     */
     public function load(ObjectManager $manager)
     {
         $user = $manager->getRepository(User::class)->findOneBy(['pseudo' => 'Testuser1234']);

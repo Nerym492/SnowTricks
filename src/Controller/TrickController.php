@@ -15,18 +15,33 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Trick routes
+ */
 class TrickController extends AbstractController
 {
-    public function __construct(
-        private EntityManagerInterface $manager,
-        private MediaService $mediaService,
-    ) {
+    /**
+     * @param EntityManagerInterface $manager
+     * @param MediaService           $mediaService
+     */
+    public function __construct(private EntityManagerInterface $manager, private MediaService $mediaService)
+    {
     }
 
+    /**
+     * Displays the details of a trick according to the id passed in parameter.
+     *
+     * @param Request  $request
+     * @param Security $security
+     * @param int      $trickId
+     *
+     * @return Response Trick details page
+     */
     #[Route('/tricks/details/{trickId}', name: 'trick_details')]
     public function getTrickDetails(Request $request, Security $security, int $trickId): Response
     {
@@ -43,7 +58,7 @@ class TrickController extends AbstractController
         $comments = $commentRepository->findAllOrdered(['creation_date' => 'DESC']);
         $connectedUser = $security->getUser();
 
-        if ($nbTotalComments === count($comments)) {
+        if (count($comments) === $nbTotalComments) {
             $hiddeLoadButton = true;
         }
 
@@ -75,6 +90,14 @@ class TrickController extends AbstractController
         ]);
     }
 
+    /**
+     * Displays the trick form.
+     *
+     * @param Request $request
+     * @param int     $trickId
+     *
+     * @return Response Trick form
+     */
     #[Route('/trick/modify/{trickId}', name: 'trick_modification')]
     public function showTrickForm(Request $request, int $trickId): Response
     {
@@ -141,6 +164,15 @@ class TrickController extends AbstractController
         ]);
     }
 
+    /**
+     * Retrieves the image of a trick based on its name and the name of the image.
+     *
+     * @param ParameterBagInterface $parameterBag
+     * @param $trickName
+     * @param $imageName
+     *
+     * @return Response Trick image
+     */
     #[Route('/trickImage/{trickName}/{imageName}', name: 'get_trick_image')]
     public function getTrickImage(ParameterBagInterface $parameterBag, $trickName, $imageName): Response
     {
@@ -150,6 +182,13 @@ class TrickController extends AbstractController
         return $this->mediaService->serveProtectedImage($imagePath);
     }
 
+    /**
+     * Load more tricks base on the current number of displayed tricks.
+     *
+     * @param int $tricksReloaded
+     *
+     * @return Response
+     */
     #[Route('/tricks/loadMore/{tricksReloaded}', name: 'load_more_tricks')]
     public function loadMoreTricks(int $tricksReloaded): Response
     {
@@ -158,7 +197,7 @@ class TrickController extends AbstractController
         $tricks = $trickRepository->findAllTricksBy(['name' => 'ASC'], $tricksReloaded);
         $nbTricks = $trickRepository->countTricks();
 
-        if ($nbTricks === count($tricks)) {
+        if (count($tricks) === $nbTricks) {
             $hiddeLoadButton = true;
         }
 
@@ -168,6 +207,14 @@ class TrickController extends AbstractController
         ]);
     }
 
+    /**
+     * Delete a trick using the trick name passed in parameters and reloads the list of tricks afterwards.
+     *
+     * @param string $trickName    Name of the trick to delete
+     * @param int    $tricksLoaded Number of tricks currently loaded
+     *
+     * @return Response Trick list
+     */
     #[Route('/tricks/delete/{trickName}/loaded/{tricksLoaded}', name: 'delete_trick')]
     public function deleteTrick(string $trickName, int $tricksLoaded): Response
     {
@@ -188,7 +235,7 @@ class TrickController extends AbstractController
         $tricks = $trickRepository->findAllTricksBy(['name' => 'ASC'], $tricksLoaded, false);
         $nbTricks = $trickRepository->countTricks();
 
-        if ($nbTricks === count($tricks)) {
+        if (count($tricks) === $nbTricks) {
             $hiddeLoadButton = true;
         }
 
@@ -198,6 +245,14 @@ class TrickController extends AbstractController
         ]);
     }
 
+    /**
+     * Displays and manages the trick creation form.
+     *
+     * @param Security $security
+     * @param Request  $request
+     *
+     * @return Response Trick form
+     */
     #[Route('/tricks/create', name: 'create_trick')]
     public function createTrick(Security $security, Request $request): Response
     {
@@ -229,7 +284,16 @@ class TrickController extends AbstractController
         ]);
     }
 
-    private function processFormImages(Request $request, Trick $trick, $form)
+    /**
+     * Add new images if there are any.
+     *
+     * @param Request       $request
+     * @param Trick         $trick
+     * @param FormInterface $form
+     *
+     * @return void
+     */
+    private function processFormImages(Request $request, Trick $trick, FormInterface $form): void
     {
         $imagesData = $form->get('imagesTricks')->getData();
         $fileBag = $request->files;

@@ -10,6 +10,7 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,14 +18,27 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
+/**
+ * User login management
+ */
 class SecurityController extends AbstractController
 {
+    /**
+     * @param EntityManagerInterface $entityManager
+     * @param TokenGeneratorInterface $tokenGenerator
+     */
     public function __construct(
         private EntityManagerInterface $entityManager,
         private TokenGeneratorInterface $tokenGenerator
     ) {
     }
 
+    /**
+     * Check user credentials.
+     *
+     * @param AuthenticationUtils $authenticationUtils
+     * @return Response
+     */
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -44,12 +58,25 @@ class SecurityController extends AbstractController
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
+    /**
+     * Disconnect the logged user
+     *
+     * @return void
+     */
     #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
+    /**
+     * Displays a password reset form with an email and redirects the user to the login page after validation.
+     *
+     * @param Request $request
+     * @param MailerInterface $mailer
+     * @return Response
+     * @throws TransportExceptionInterface
+     */
     #[Route(path: '/forgottenPassword', name: 'forgotten_password')]
     public function forgottenPassword(Request $request, MailerInterface $mailer): Response
     {
@@ -68,8 +95,11 @@ class SecurityController extends AbstractController
                 $this->entityManager->flush();
 
                 // Generate a password reset link
-                $url = $this->generateUrl('reset_password', ['token' => $token],
-                    UrlGeneratorInterface::ABSOLUTE_URL);
+                $url = $this->generateUrl(
+                    'reset_password',
+                    ['token' => $token],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
 
                 // Send the email with the reset link
                 $email = (new TemplatedEmail())
@@ -99,6 +129,14 @@ class SecurityController extends AbstractController
         ]);
     }
 
+    /**
+     * Password reset link. User can enter a new password.
+     *
+     * @param Request $request
+     * @param UserPasswordHasherInterface $passwordHasher
+     * @param string $token
+     * @return Response
+     */
     #[Route('resetPassword/{token}', name: 'reset_password')]
     public function resetPassword(
         Request $request,

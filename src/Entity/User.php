@@ -10,6 +10,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+/**
+ * User entity
+ */
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['mail'], message: 'This mail is already used.')]
 #[UniqueEntity(fields: ['pseudo'], message: 'This pseudo is already used.')]
@@ -27,7 +30,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private array $roles = [];
 
     /**
-     * @var string The hashed password
+     * @var ?string The hashed password
      */
     #[ORM\Column]
     private ?string $password = null;
@@ -45,7 +48,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $tricks;
 
     #[ORM\Column(type: 'boolean')]
-    private $isVerified = false;
+    private bool $isVerified = false;
 
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $resetToken = null;
@@ -53,22 +56,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $mailConfirmToken = null;
 
+    /**
+     *
+     */
     public function __construct()
     {
         $this->comments = new ArrayCollection();
         $this->tricks = new ArrayCollection();
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return string|null
+     */
     public function getMail(): ?string
     {
         return $this->mail;
     }
 
+    /**
+     * @param string $mail
+     * @return $this
+     */
     public function setMail(string $mail): static
     {
         $this->mail = $mail;
@@ -80,6 +96,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * A visual identifier that represents this user.
      *
      * @see UserInterface
+     * @return string
      */
     public function getUserIdentifier(): string
     {
@@ -88,6 +105,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @see UserInterface
+     * @return array
      */
     public function getRoles(): array
     {
@@ -98,6 +116,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
+    /**
+     * @param array $roles
+     * @return $this
+     */
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
@@ -107,12 +129,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @see PasswordAuthenticatedUserInterface
+     * @return string
      */
     public function getPassword(): string
     {
         return $this->password;
     }
 
+    /**
+     * @param string $password
+     * @return $this
+     */
     public function setPassword(string $password): static
     {
         $this->password = $password;
@@ -129,11 +156,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
+    /**
+     * @return string|null
+     */
     public function getProfilePhoto(): ?string
     {
         return $this->profilePhoto;
     }
 
+    /**
+     * @param string|null $profilePhoto
+     * @return $this
+     */
     public function setProfilePhoto(?string $profilePhoto): static
     {
         $this->profilePhoto = $profilePhoto;
@@ -141,11 +175,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getPseudo(): ?string
     {
         return $this->pseudo;
     }
 
+    /**
+     * @param string $pseudo
+     * @return $this
+     */
     public function setPseudo(string $pseudo): static
     {
         $this->pseudo = $pseudo;
@@ -161,6 +202,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->comments;
     }
 
+    /**
+     * @param Comment $comment
+     * @return $this
+     */
     public function addComment(Comment $comment): static
     {
         if (!$this->comments->contains($comment)) {
@@ -171,6 +216,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @param Comment $comment
+     * @return $this
+     */
     public function removeComment(Comment $comment): static
     {
         if ($this->comments->removeElement($comment)) {
@@ -191,6 +240,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->tricks;
     }
 
+    /**
+     * @param Trick $trick
+     * @return $this
+     */
     public function addTrick(Trick $trick): static
     {
         if (!$this->tricks->contains($trick)) {
@@ -201,6 +254,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @param Trick $trick
+     * @return $this
+     */
     public function removeTrick(Trick $trick): static
     {
         if ($this->tricks->removeElement($trick)) {
@@ -213,11 +270,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @return bool
+     */
     public function isVerified(): bool
     {
         return $this->isVerified;
     }
 
+    /**
+     * @param bool $isVerified
+     * @return $this
+     */
     public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
@@ -225,11 +289,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getResetToken(): ?string
     {
         return $this->resetToken;
     }
 
+    /**
+     * @param string|null $resetToken
+     * @return $this
+     */
     public function setResetToken(?string $resetToken): static
     {
         $this->resetToken = $resetToken;
@@ -237,11 +308,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getMailConfirmToken(): ?string
     {
         return $this->mailConfirmToken;
     }
 
+    /**
+     * @param string|null $mailConfirmToken
+     * @return $this
+     */
     public function setMailConfirmToken(?string $mailConfirmToken): static
     {
         $this->mailConfirmToken = $mailConfirmToken;

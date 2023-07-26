@@ -1,3 +1,3 @@
-import {addMobileMenuEvent} from "../modules/functions";
+import { addMobileMenuEvent } from "../modules/functions";
 
 addMobileMenuEvent();

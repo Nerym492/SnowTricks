@@ -19,12 +19,21 @@ class TrickRepository extends ServiceEntityRepository
 {
     private ParameterBagInterface $parameterBag;
 
+    /**
+     * @param ManagerRegistry $registry
+     * @param ParameterBagInterface $parameterBag
+     */
     public function __construct(ManagerRegistry $registry, ParameterBagInterface $parameterBag)
     {
         parent::__construct($registry, Trick::class);
         $this->parameterBag = $parameterBag;
     }
 
+    /**
+     * @param Trick $entity
+     * @param bool $flush
+     * @return void
+     */
     public function save(Trick $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
@@ -34,6 +43,11 @@ class TrickRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @param Trick $entity
+     * @param bool $flush
+     * @return void
+     */
     public function remove(Trick $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
@@ -43,6 +57,14 @@ class TrickRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * Retrieves all Tricks or a limited number if the tricksReloaded and loadMore parameters are set
+     *
+     * @param array $orderBy ORDER BY in the query. Example : ['fieldToOrder' => 'DESC']
+     * @param int $tricksReloaded Tricks already loaded in the page before the query
+     * @param bool $loadMore True if more Tricks need to be loaded
+     * @return array
+     */
     public function findAllTricksBy(array $orderBy, int $tricksReloaded = 0, bool $loadMore = true): array
     {
         $tricksListLoadLimit = $this->parameterBag->get('tricks_list_load_limit');
@@ -77,6 +99,9 @@ class TrickRepository extends ServiceEntityRepository
         return $tricksQuery->getQuery()->getResult();
     }
 
+    /**
+     * @return int
+     */
     public function countTricks(): int
     {
         $tricksCount = $this->createQueryBuilder('t');

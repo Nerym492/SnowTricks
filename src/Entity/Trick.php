@@ -9,6 +9,9 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
+/**
+ * Trick entity
+ */
 #[ORM\Entity(repositoryClass: TrickRepository::class)]
 #[UniqueEntity(fields: ['name'], message: 'This trick already exists.')]
 class Trick
@@ -26,7 +29,7 @@ class Trick
 
     #[ORM\ManyToOne(inversedBy: 'tricks')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?GroupTrick $group_trick = null;
+    private ?GroupTrick $groupTrick = null;
 
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: ImagesTrick::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $imagesTricks;
@@ -35,31 +38,44 @@ class Trick
     private Collection $videosTricks;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $creation_date = null;
+    private ?\DateTimeInterface $creationDate = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $modification_date = null;
+    private ?\DateTimeInterface $modificationDate = null;
 
     #[ORM\ManyToOne(inversedBy: 'tricks')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+    /**
+     *
+     */
     public function __construct()
     {
         $this->imagesTricks = new ArrayCollection();
         $this->videosTricks = new ArrayCollection();
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return string|null
+     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    /**
+     * @param string $name
+     * @return $this
+     */
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -67,11 +83,18 @@ class Trick
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getDescription(): ?string
     {
         return $this->description;
     }
 
+    /**
+     * @param string $description
+     * @return $this
+     */
     public function setDescription(string $description): self
     {
         $this->description = $description;
@@ -79,14 +102,21 @@ class Trick
         return $this;
     }
 
+    /**
+     * @return GroupTrick|null
+     */
     public function getGroupTrick(): ?GroupTrick
     {
-        return $this->group_trick;
+        return $this->groupTrick;
     }
 
-    public function setGroupTrick(?GroupTrick $group_trick): self
+    /**
+     * @param GroupTrick|null $groupTrick
+     * @return $this
+     */
+    public function setGroupTrick(?GroupTrick $groupTrick): self
     {
-        $this->group_trick = $group_trick;
+        $this->groupTrick = $groupTrick;
 
         return $this;
     }
@@ -99,6 +129,10 @@ class Trick
         return $this->imagesTricks;
     }
 
+    /**
+     * @param ImagesTrick $imagesTrick
+     * @return $this
+     */
     public function addImagesTrick(ImagesTrick $imagesTrick): self
     {
         if (!$this->imagesTricks->contains($imagesTrick)) {
@@ -109,6 +143,10 @@ class Trick
         return $this;
     }
 
+    /**
+     * @param ImagesTrick $imagesTrick
+     * @return $this
+     */
     public function removeImagesTrick(ImagesTrick $imagesTrick): self
     {
         if ($this->imagesTricks->removeElement($imagesTrick)) {
@@ -129,6 +167,10 @@ class Trick
         return $this->videosTricks;
     }
 
+    /**
+     * @param VideosTrick $videosTrick
+     * @return $this
+     */
     public function addVideosTrick(VideosTrick $videosTrick): self
     {
         if (!$this->videosTricks->contains($videosTrick)) {
@@ -139,6 +181,10 @@ class Trick
         return $this;
     }
 
+    /**
+     * @param VideosTrick $videosTrick
+     * @return $this
+     */
     public function removeVideosTrick(VideosTrick $videosTrick): self
     {
         if ($this->videosTricks->removeElement($videosTrick)) {
@@ -151,35 +197,56 @@ class Trick
         return $this;
     }
 
+    /**
+     * @return \DateTimeInterface|null
+     */
     public function getCreationDate(): ?\DateTimeInterface
     {
-        return $this->creation_date;
+        return $this->creationDate;
     }
 
-    public function setCreationDate(\DateTimeInterface $creation_date): self
+    /**
+     * @param \DateTimeInterface $creationDate
+     * @return $this
+     */
+    public function setCreationDate(\DateTimeInterface $creationDate): self
     {
-        $this->creation_date = $creation_date;
+        $this->creationDate = $creationDate;
 
         return $this;
     }
 
+    /**
+     * @return \DateTimeInterface|null
+     */
     public function getModificationDate(): ?\DateTimeInterface
     {
-        return $this->modification_date;
+        return $this->modificationDate;
     }
 
-    public function setModificationDate(?\DateTimeInterface $modification_date): self
+    /**
+     * @param \DateTimeInterface|null $modificationDate
+     * @return $this
+     */
+    public function setModificationDate(?\DateTimeInterface $modificationDate): self
     {
-        $this->modification_date = $modification_date;
+        $this->modificationDate = $modificationDate;
 
         return $this;
     }
 
+    /**
+     * @return User|null
+     */
     public function getUser(): ?User
     {
         return $this->user;
     }
 
+    /**
+     * @param User|null $user
+     * @return $this
+     */
     public function setUser(?User $user): static
     {
         $this->user = $user;

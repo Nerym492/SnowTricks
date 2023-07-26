@@ -17,6 +17,10 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
  */
 class CommentRepository extends ServiceEntityRepository
 {
+    /**
+     * @param ManagerRegistry $registry
+     * @param ParameterBagInterface $parameterBag
+     */
     public function __construct(
         ManagerRegistry $registry,
         private ParameterBagInterface $parameterBag
@@ -24,6 +28,11 @@ class CommentRepository extends ServiceEntityRepository
         parent::__construct($registry, Comment::class);
     }
 
+    /**
+     * @param Comment $entity
+     * @param bool $flush
+     * @return void
+     */
     public function save(Comment $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
@@ -33,6 +42,11 @@ class CommentRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @param Comment $entity
+     * @param bool $flush
+     * @return void
+     */
     public function remove(Comment $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
@@ -43,8 +57,11 @@ class CommentRepository extends ServiceEntityRepository
     }
 
     /**
+     * Retrieves all comments or a limited number if commentsReloaded parameter is set
+     *
      * @param array $orderBy          ORDER BY in the query. Example : ['fieldToOrder' => 'DESC']
      * @param int   $commentsReloaded Comments already loaded in the page before the query
+     * @return array
      */
     public function findAllOrdered(array $orderBy, int $commentsReloaded = 0): array
     {
