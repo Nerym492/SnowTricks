@@ -14,6 +14,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class HomeController extends AbstractController
 {
     /**
+     * Displays the homepage
+     *
      * @param EntityManagerInterface $manager entity Manager
      *
      * @return Response Homepage
