@@ -33,7 +33,7 @@ Creation of a website presenting snowboard tricks using the symfony framework.
     ```sh
     npx encore prod
     ```
-8.  Launch wamp, mamp or xamp depending on your operating system.
+8.  Launch wamp, mamp or lamp depending on your operating system.
 9.  Create the database :
     ```sh
     php bin/console doctrine:database:create
