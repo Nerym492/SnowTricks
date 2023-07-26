@@ -1,5 +1,7 @@
 # Snowtricks
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/4f3aab542fbc472782c54a5208eca4e9)](https://app.codacy.com/gh/Nerym492/SnowTricks/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+
 Project 6 of my application developer course - PHP/Symfony on [Openclassrooms](https://openclassrooms.com/).\
 Creation of a website presenting snowboard tricks using the symfony framework.
 
