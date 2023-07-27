@@ -88,7 +88,7 @@ class TrickRepository extends ServiceEntityRepository
         $tricksQuery = $this->createQueryBuilder('t');
 
         $tricksQuery->select('t AS data', 'g.name AS group_name', 'it.fileName')
-            ->leftJoin('t.group_trick', 'g')
+            ->leftJoin('t.groupTrick', 'g')
             ->leftJoin('t.imagesTricks', 'it', 'WITH', 'it.isInTheHeader = 1')
             ->setMaxResults($nbTricksToLoad);
 
