@@ -55,7 +55,7 @@ class TrickController extends AbstractController
 
         $commentRepository = $this->manager->getRepository(Comment::class);
         $nbTotalComments = $commentRepository->count([]);
-        $comments = $commentRepository->findAllOrdered(['creation_date' => 'DESC']);
+        $comments = $commentRepository->findAllOrdered(['creationDate' => 'DESC']);
         $connectedUser = $security->getUser();
 
         if (count($comments) === $nbTotalComments) {

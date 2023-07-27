@@ -53,7 +53,7 @@ class CommentController extends AbstractController
             $this->addFlash('success', 'Your comment has been successfully added !');
         }
 
-        $comments = $commentRepository->findAllOrdered(['creation_date' => 'DESC']);
+        $comments = $commentRepository->findAllOrdered(['creationDate' => 'DESC']);
 
         return $this->render(
             'comment/comment_section.html.twig',
@@ -78,7 +78,7 @@ class CommentController extends AbstractController
 
         $commentRepository = $this->manager->getRepository(Comment::class);
         $comments = $commentRepository->findAllOrdered(
-            ['creation_date' => 'DESC'],
+            ['creationDate' => 'DESC'],
             $commentsLoaded
         );
 
