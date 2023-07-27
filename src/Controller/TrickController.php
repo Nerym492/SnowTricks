@@ -136,7 +136,8 @@ class TrickController extends AbstractController
             foreach ($imagesCollection as $image) {
                 $imageDeleted = false;
                 if (null === $image->getTrick()) {
-                    $imageDeleted = $this->mediaService->deleteTrickImage($trick->getName(), $image->getFileName());
+                    dump($trick);
+                    $imageDeleted = $this->mediaService->deleteTrickImage($trick, $image->getFileName());
                 }
                 // Image file suppression failed
                 if (false === $imageDeleted && null === $image->getTrick()) {
