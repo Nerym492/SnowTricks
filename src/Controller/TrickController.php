@@ -104,9 +104,7 @@ class TrickController extends AbstractController
         $headerImageExist = false;
         $trick = $this->manager->getRepository(Trick::class)->findOneBy(['id' => $trickId]);
         $trickName = $trick->getName();
-        $groupeTrick = $this->manager->getRepository(GroupTrick::class)->findOneBy([
-            'id' => $trick->getGroupTrick()->getId(),
-        ]);
+        $groupeTrick = $trick->getGroupTrick();
 
         $trickMedias = $this->mediaService->getAllTrickMedias($trickId);
         // All images except the header
