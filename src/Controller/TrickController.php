@@ -150,7 +150,9 @@ class TrickController extends AbstractController
             $this->manager->persist($form->getData());
             $this->manager->flush();
 
-            return $this->redirectToRoute('trick_modification', ['trickId' => $trickId]);
+            $this->addFlash('success', 'The trick has been successfully modified !');
+
+            return $this->redirectToRoute('app_home', ['trickId' => $trickId, '_fragment' => 'trick-list']);
         }
 
         return $this->render('trick/trick_form.html.twig', [
