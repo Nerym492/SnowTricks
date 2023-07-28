@@ -19,10 +19,13 @@ Creation of a website presenting snowboard tricks using the symfony framework.
     ```
 3.  Install Symfony CLI (https://symfony.com/download), composer (https://getcomposer.org/download/) and
     nodeJs (https://nodejs.org/en)
-4.  Create an .env.local file from the .env file at the root of the project.\
-    Change the following lines and complete them according to your database / mailer :\
-    \# MAILER\_DSN\
-    \# DATABASE\_URL
+4.  Create an .env.local file at the root of your project.  
+    Copy the following lines and complete them according to your database / mailer :\
+    MAILER_DSN=sendinblue+api://**yourKey**@default  
+    DATABASE\_URL="mysql://**databaseUser**:**password**@127.0.0.1:3306/**databaseName**?serverVersion=8&charset=utf8mb4"
+    <br>  
+    If you are not using [sendinblue](https://app.brevo.com/) to send mails : https://symfony.com/doc/current/mailer.html#using-built-in-transports
+
 5.  Install the project's back-end dependencies with Composer :
     ```sh
     composer install
