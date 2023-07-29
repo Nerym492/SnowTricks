@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Comment;
+use App\Entity\Trick;
 use App\Entity\User;
 use App\Form\CommentFormType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,28 +25,40 @@ class CommentController extends AbstractController
      */
     public function __construct(private EntityManagerInterface $manager)
     {
-    }// end __construct()
+    }
 
     /**
      * Comment form management.
      *
+     * @param Request $request
+     * @param Security $security
+     * @param ParameterBagInterface $parameterBag
+     * @param string $trickName
      * @return Response Comment section
      *
      * @throws Exception
      */
-    #[Route('/comment/submitForm', name: 'submit_comment_form')]
-    public function processCommentForm(Request $request, Security $security, ParameterBagInterface $parameterBag): Response
-    {
+    #[Route('/comment/submitForm/{trickName}', name: 'submit_comment_form')]
+    public function processCommentForm(
+        Request $request,
+        Security $security,
+        ParameterBagInterface $parameterBag,
+        string $trickName
+    ): Response {
         $commentRepository = $this->manager->getRepository(Comment::class);
         $commentForm = $this->createForm(CommentFormType::class);
         $commentForm->handleRequest($request);
+        $hiddeLoadButton = false;
 
         if ($commentForm->isSubmitted() && $commentForm->isValid()) {
             $userMail = $security->getUser()->getUserIdentifier();
             $user = $this->manager->getRepository(User::class)->findOneBy(['mail' => $userMail]);
+            $trick = $this->manager->getRepository(Trick::class)->findOneBy(['name' => $trickName]);
+
             $newComment = $commentForm->getData();
             $newComment->setUser($user);
             $newComment->setCreationDate(new \DateTime('now', new \DateTimeZone($parameterBag->get('timezone'))));
+            $newComment->setTrick($trick);
 
             $this->manager->persist($newComment);
             $this->manager->flush();
@@ -53,36 +66,44 @@ class CommentController extends AbstractController
             $this->addFlash('success', 'Your comment has been successfully added !');
         }
 
-        $comments = $commentRepository->findAllOrdered(['creationDate' => 'DESC']);
+        $trick = $this->manager->getRepository(Trick::class)->findOneBy(['name' => $trickName]);
+        $comments = $commentRepository->findAllByTrick($trick, ['creationDate' => 'DESC']);
+
+        if (count($comments) <= $parameterBag->get('comments_list_limit')) {
+            $hiddeLoadButton = true;
+        }
 
         return $this->render(
             'comment/comment_section.html.twig',
             [
                 'comments' => $comments,
                 'commentForm' => $commentForm->createView(),
-                'hiddeLoadButton' => false,
+                'hiddeLoadButton' => $hiddeLoadButton,
             ]
         );
-    }// end processCommentForm()
+    }
 
     /**
      * Load more comment base on the current number of displayed comments.
      *
      * @param int $commentsLoaded Number of comments currently loaded
+     * @param string $trickName
      * @return Response Comment list
      */
-    #[Route('/comments/loaded/{commentsLoaded}/loadMore/', name: 'load_more_comments')]
-    public function loadMoreComments(int $commentsLoaded): Response
+    #[Route('/comments/loaded/{commentsLoaded}/loadMore/{trickName}', name: 'load_more_comments')]
+    public function loadMoreComments(int $commentsLoaded, string $trickName): Response
     {
         $hiddeLoadButton = false;
 
         $commentRepository = $this->manager->getRepository(Comment::class);
-        $comments = $commentRepository->findAllOrdered(
+        $trick = $this->manager->getRepository(Trick::class)->findOneBy(['name' => $trickName]);
+        $comments = $commentRepository->findAllByTrick(
+            $trick,
             ['creationDate' => 'DESC'],
             $commentsLoaded
         );
 
-        $nbTotalComments = $commentRepository->count([]);
+        $nbTotalComments = $commentRepository->count(['trick' => $trick->getId()]);
 
         if (count($comments) === $nbTotalComments) {
             $hiddeLoadButton = true;

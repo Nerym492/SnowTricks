@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Comment;
+use App\Entity\Trick;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -59,11 +60,12 @@ class CommentRepository extends ServiceEntityRepository
     /**
      * Retrieves all comments or a limited number if commentsReloaded parameter is set
      *
-     * @param array $orderBy          ORDER BY in the query. Example : ['fieldToOrder' => 'DESC']
-     * @param int   $commentsReloaded Comments already loaded in the page before the query
+     * @param Trick $trick
+     * @param array $orderBy ORDER BY in the query. Example : ['fieldToOrder' => 'DESC']
+     * @param int $commentsReloaded Comments already loaded in the page before the query
      * @return array
      */
-    public function findAllOrdered(array $orderBy, int $commentsReloaded = 0): array
+    public function findAllByTrick(Trick $trick, array $orderBy, int $commentsReloaded = 0): array
     {
         $commentListLimit = $this->parameterBag->get('comments_list_limit');
         // Number of comments loaded by default
@@ -71,7 +73,10 @@ class CommentRepository extends ServiceEntityRepository
         $remainingComments = 0;
 
         $commentsCountQuery = $this->createQueryBuilder('c');
-        $commentsCountQuery->select('COUNT(c) AS nbComments');
+        $commentsCountQuery
+            ->select('COUNT(c) AS nbComments')
+            ->where('c.trick = :trickId')
+            ->setParameter('trickId', $trick->getId());
         $commentsCountResult = $commentsCountQuery->getQuery()->getResult();
         $commentsCount = $commentsCountResult[0]['nbComments'];
 
@@ -88,8 +93,11 @@ class CommentRepository extends ServiceEntityRepository
         }
 
         $commentQuery = $this->createQueryBuilder('c');
-        $commentQuery->select('c AS data', 'u.pseudo AS userPseudo');
-        $commentQuery->leftJoin('c.user', 'u');
+        $commentQuery
+            ->select('c AS data', 'u.pseudo AS userPseudo')
+            ->leftJoin('c.user', 'u')
+            ->where('c.trick = :trickId')
+            ->setParameter('trickId', $trick->getId());
 
         foreach ($orderBy as $fieldName => $direction) {
             $commentQuery->addOrderBy('c.'.$fieldName, $direction);
