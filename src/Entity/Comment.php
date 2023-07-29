@@ -28,6 +28,10 @@ class Comment
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+    #[ORM\ManyToOne(inversedBy: 'comments')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Trick $trick = null;
+
     /**
      * @return int|null
      */
@@ -89,6 +93,25 @@ class Comment
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Trick|null
+     */
+    public function getTrick(): ?Trick
+    {
+        return $this->trick;
+    }
+
+    /**
+     * @param Trick|null $trick
+     * @return $this
+     */
+    public function setTrick(?Trick $trick): static
+    {
+        $this->trick = $trick;
 
         return $this;
     }
