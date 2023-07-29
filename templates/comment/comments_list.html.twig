@@ -16,6 +16,11 @@
             </div>
         </div>
     {% endfor %}
+    {% if comments is empty %}
+        <div class="center no-comments">
+            <p>No comments found for this trick. Be the first to leave one!</p>
+        </div>
+    {% endif %}
     {% if hiddeLoadButton is empty %}
     <div class="center">
         <button class="btn-arrow--white btn-trick-list" id="btn-load-more-comments">Load more</button>
