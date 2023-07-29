@@ -38,24 +38,24 @@ class TrickController extends AbstractController
      *
      * @param Request  $request
      * @param Security $security
-     * @param int      $trickId
+     * @param string   $trickName
      *
      * @return Response Trick details page
      */
-    #[Route('/tricks/details/{trickId}', name: 'trick_details')]
-    public function getTrickDetails(Request $request, Security $security, int $trickId): Response
+    #[Route('/tricks/details/{trickName}', name: 'trick_details')]
+    public function getTrickDetails(Request $request, Security $security, string $trickName): Response
     {
         $hiddeLoadButton = false;
 
-        $trick = $this->manager->getRepository(Trick::class)->findOneBy(['id' => $trickId]);
+        $trick = $this->manager->getRepository(Trick::class)->findOneBy(['name' => $trickName]);
         $groupeTrick = $this->manager->getRepository(GroupTrick::class)->findOneBy([
             'id' => $trick->getGroupTrick()->getId(),
         ]);
-        $trickMedias = $this->mediaService->getAllTrickMedias($trickId);
+        $trickMedias = $this->mediaService->getAllTrickMedias($trick->getId());
 
         $commentRepository = $this->manager->getRepository(Comment::class);
-        $nbTotalComments = $commentRepository->count([]);
-        $comments = $commentRepository->findAllOrdered(['creationDate' => 'DESC']);
+        $nbTotalComments = $commentRepository->count(['trick' => $trick->getId()]);
+        $comments = $commentRepository->findAllByTrick($trick, ['creationDate' => 'DESC']);
         $connectedUser = $security->getUser();
 
         if (count($comments) === $nbTotalComments) {
@@ -94,19 +94,19 @@ class TrickController extends AbstractController
      * Displays the trick form.
      *
      * @param Request $request
-     * @param int     $trickId
+     * @param string $trickName
      *
      * @return Response Trick form
      */
-    #[Route('/trick/modify/{trickId}', name: 'trick_modification')]
-    public function showTrickForm(Request $request, int $trickId): Response
+    #[Route('/trick/modify/{trickName}', name: 'trick_modification')]
+    public function showTrickForm(Request $request, string $trickName): Response
     {
         $headerImageExist = false;
-        $trick = $this->manager->getRepository(Trick::class)->findOneBy(['id' => $trickId]);
+        $trick = $this->manager->getRepository(Trick::class)->findOneBy(['name' => $trickName]);
         $trickName = $trick->getName();
         $groupeTrick = $trick->getGroupTrick();
 
-        $trickMedias = $this->mediaService->getAllTrickMedias($trickId);
+        $trickMedias = $this->mediaService->getAllTrickMedias($trick->getId());
         // All images except the header
         $trickImages = $trickMedias['images'];
 
@@ -150,7 +150,7 @@ class TrickController extends AbstractController
 
             $this->addFlash('success', 'The trick has been successfully modified !');
 
-            return $this->redirectToRoute('app_home', ['trickId' => $trickId, '_fragment' => 'trick-list']);
+            return $this->redirectToRoute('app_home', ['_fragment' => 'trick-list']);
         }
 
         return $this->render('trick/trick_form.html.twig', [
