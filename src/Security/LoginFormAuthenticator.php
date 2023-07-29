@@ -48,14 +48,15 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
     public function supports(Request $request): bool
     {
         $mail = $request->request->get('mail');
-        $mailVerified = false;
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['mail' => $mail]);
 
-        if ($mail) {
-            $user = $this->entityManager->getRepository(User::class)->findOneBy(['mail' => $mail]);
-            $mailVerified = $user->isVerified();
+        if (!$user) {
+            return parent::supports($request);
         }
 
-        if (!$mailVerified && $mail) {
+        $mailVerified = $user->isVerified();
+
+        if (!$mailVerified) {
             $flashBag = $this->requestStack->getSession()->getFlashBag();
             $flashBag->clear();
             $flashBag->add('warning', 'Please validate your email address before logging in.');
