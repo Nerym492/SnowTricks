@@ -28,9 +28,10 @@ function addSubmitListener() {
   commentValidator.onSuccess(function (event) {
     event.preventDefault();
     let formData = new FormData(commentForm);
+    let trickName = document.querySelector(".trick-container h1").innerHTML;
     addXmlhttpRequest(
       "POST",
-      "/comment/submitForm",
+      "/comment/submitForm/" + trickName,
       formData,
       commentSection,
       () => {
@@ -50,9 +51,10 @@ function loadMoreComments() {
       .addEventListener("click", () => {
         let commentsLoaded = document.querySelectorAll(".comment").length;
         let commentList = document.getElementById("comment-list");
+        let trickName = document.querySelector(".trick-container h1").innerHTML;
         addXmlhttpRequest(
           "GET",
-          "/comments/loaded/" + commentsLoaded + "/loadMore/",
+          "/comments/loaded/" + commentsLoaded + "/loadMore/" + trickName,
           null,
           commentList,
           () => {

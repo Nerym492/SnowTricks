@@ -10,8 +10,8 @@
     {% endif %}
     <section class="tricks-section" id="trick-section-home">
         {% for trick in tricks %}
-            <div class="trick-preview" id="trick-{{ trick.data.id }}">
-                <a href="/tricks/details/{{ trick.data.id }}">
+            <div class="trick-preview" id="trick-{{ trick.data.name|replace({' ': '-'}) }}">
+                <a href="/tricks/details/{{ trick.data.name }}">
                     <figure class="image-trick-list">
                         {% if trick.fileName is not empty %}
                             <img src="{{ path(
@@ -27,7 +27,7 @@
                     <h2 class="trick-name">{{ trick.data.name }}</h2>
                     {% if app.user %}
                         <div class="trick-preview-actions">
-                            <a href="/trick/modify/{{ trick.data.id }}">
+                            <a href="/trick/modify/{{ trick.data.name }}">
                                 <i class="fa-solid fa-pencil fa-lg"></i>
                             </a>
                             <a role="button" class="trick-delete-button" data-bs-toggle="modal"
