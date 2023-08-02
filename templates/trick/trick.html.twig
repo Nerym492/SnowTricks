@@ -20,7 +20,7 @@
                 {% for trickImage in trickImages %}
                     <img class="image-trick-details" src="{{ path(
                         'get_trick_image',
-                        {'trickName': trick.name,'imageName': trickImage.fileName}
+                        {'slug': trick.slug,'imageName': trickImage.fileName}
                     ) }}" alt="image {{ trick.name }}">
                 {% endfor %}
             </div>

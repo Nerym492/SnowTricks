@@ -37,7 +37,7 @@
                             <a role="button" class="favorite-image">
                                 <img class="image-trick-details img-form" src="{{ path(
                                     'get_trick_image',
-                                    {'trickName': trickName,'imageName': image.vars.value.fileName}
+                                    {'slug': trick.slug,'imageName': image.vars.value.fileName}
                                 ) }}" alt="Image {{ loop.index }}">
                             </a>
                         {% endif %}

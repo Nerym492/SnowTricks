@@ -3,7 +3,7 @@
     {% if headerImage is not empty %}
         <img src="{{ path(
             'get_trick_image',
-            {'trickName': trickName,'imageName': headerImage.fileName}
+            {'slug': trick.slug,'imageName': headerImage.fileName}
         ) }}" alt="image {{ trickName }}" id="image-header-details">
     {% else %}
         <img src="/build/images/image-placeholder.webp" alt="Image placeholder" id="image-header-details">

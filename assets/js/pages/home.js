@@ -37,10 +37,10 @@ function reloadTricks() {
 function addDeleteListener() {
   document.querySelectorAll(".trick-delete-button").forEach((btn) => {
     btn.addEventListener("click", () => {
-      let trickName = btn
+      let trickSlug = btn
         .closest(".trick-description")
-        .querySelector(".trick-name").innerHTML;
-      document.getElementById("trick-to-delete").innerHTML = trickName;
+        .querySelector(".hidden.slug").innerHTML;
+      document.getElementById("trick-to-delete").innerHTML = trickSlug;
     });
   });
 }

@@ -10,13 +10,13 @@
     {% endif %}
     <section class="tricks-section" id="trick-section-home">
         {% for trick in tricks %}
-            <div class="trick-preview" id="trick-{{ trick.data.name|replace({' ': '-'}) }}">
-                <a href="/tricks/details/{{ trick.data.name }}">
+            <div class="trick-preview" id="trick-{{ trick.data.slug }}">
+                <a href="/tricks/details/{{ trick.data.slug }}">
                     <figure class="image-trick-list">
                         {% if trick.fileName is not empty %}
                             <img src="{{ path(
                                 'get_trick_image',
-                                {'trickName': trick.data.name,'imageName': trick.fileName}
+                                {'slug': trick.data.slug,'imageName': trick.fileName}
                             ) }}" alt=""/>
                         {% else %}
                             <img class="image-trick-details" src="/build/images/image-placeholder.webp" alt="">
@@ -27,11 +27,12 @@
                     <h2 class="trick-name">{{ trick.data.name }}</h2>
                     {% if app.user %}
                         <div class="trick-preview-actions">
-                            <a href="/trick/modify/{{ trick.data.name }}">
+                            <a href="/trick/modify/{{ trick.data.slug }}">
                                 <i class="fa-solid fa-pencil fa-lg"></i>
                             </a>
                             <a role="button" class="trick-delete-button" data-bs-toggle="modal"
                                data-bs-target="#suppressionConfirm">
+                                <span class="hidden slug">{{ trick.data.slug }}</span>
                                 <i class="fa-regular fa-trash-can fa-lg"></i>
                             </a>
                         </div>

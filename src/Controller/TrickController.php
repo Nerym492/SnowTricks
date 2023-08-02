@@ -8,6 +8,8 @@ use App\Entity\Trick;
 use App\Entity\User;
 use App\Form\CommentFormType;
 use App\Form\TrickFormType;
+use App\Repository\CommentRepository;
+use App\Repository\TrickRepository;
 use App\Service\MediaService;
 use App\Utils\PathUtils;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -15,10 +17,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Trick routes
@@ -29,33 +34,32 @@ class TrickController extends AbstractController
      * @param EntityManagerInterface $manager
      * @param MediaService           $mediaService
      */
-    public function __construct(private EntityManagerInterface $manager, private MediaService $mediaService)
-    {
+    public function __construct(
+        private EntityManagerInterface $manager,
+        private TrickRepository $trickRepository,
+        private CommentRepository $commentRepository,
+        private MediaService $mediaService,
+        private SluggerInterface $slugger,
+        private ValidatorInterface $validator,
+    ) {
     }
 
     /**
-     * Displays the details of a trick according to the id passed in parameter.
+     * Displays the details of a trick
      *
-     * @param Request  $request
+     * @param Trick $trick
+     * @param Request $request
      * @param Security $security
-     * @param string   $trickName
-     *
      * @return Response Trick details page
      */
-    #[Route('/tricks/details/{trickName}', name: 'trick_details')]
-    public function getTrickDetails(Request $request, Security $security, string $trickName): Response
+    #[Route('/tricks/details/{slug}', name: 'trick_details')]
+    public function getTrickDetails(Trick $trick, Request $request, Security $security): Response
     {
         $hiddeLoadButton = false;
-
-        $trick = $this->manager->getRepository(Trick::class)->findOneBy(['name' => $trickName]);
-        $groupeTrick = $this->manager->getRepository(GroupTrick::class)->findOneBy([
-            'id' => $trick->getGroupTrick()->getId(),
-        ]);
         $trickMedias = $this->mediaService->getAllTrickMedias($trick->getId());
 
-        $commentRepository = $this->manager->getRepository(Comment::class);
-        $nbTotalComments = $commentRepository->count(['trick' => $trick->getId()]);
-        $comments = $commentRepository->findAllByTrick($trick, ['creationDate' => 'DESC']);
+        $nbTotalComments = $this->commentRepository->count(['trick' => $trick->getId()]);
+        $comments = $this->commentRepository->findAllByTrick($trick, ['creationDate' => 'DESC']);
         $connectedUser = $security->getUser();
 
         if (count($comments) === $nbTotalComments) {
@@ -79,7 +83,7 @@ class TrickController extends AbstractController
 
         return $this->render('trick/trick.html.twig', [
             'trick' => $trick,
-            'groupTrickName' => $groupeTrick->getName(),
+            'groupTrickName' => $trick->getGroupTrick()->getName(),
             'headerImageExist' => true,
             'headerImage' => $trickMedias['headerImage'],
             'trickImages' => $trickMedias['images'],
@@ -94,17 +98,14 @@ class TrickController extends AbstractController
      * Displays the trick form.
      *
      * @param Request $request
-     * @param string $trickName
+     * @param Trick $trick
      *
      * @return Response Trick form
      */
-    #[Route('/trick/modify/{trickName}', name: 'trick_modification')]
-    public function showTrickForm(Request $request, string $trickName): Response
+    #[Route('/trick/modify/{slug}', name: 'trick_modification')]
+    public function showTrickForm(Request $request, Trick $trick): Response
     {
         $headerImageExist = false;
-        $trick = $this->manager->getRepository(Trick::class)->findOneBy(['name' => $trickName]);
-        $trickName = $trick->getName();
-        $groupeTrick = $trick->getGroupTrick();
 
         $trickMedias = $this->mediaService->getAllTrickMedias($trick->getId());
         // All images except the header
@@ -129,6 +130,10 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if (!$this->slugIsValid($trick, $form)) {
+                return $this->renderTrickForm($trick, $form, $trickMedias, $headerImageExist);
+            }
+
             $this->processFormImages($request, $trick, $form);
             // Deleting images files that no longer exist in the trick
             foreach ($imagesCollection as $image) {
@@ -153,31 +158,21 @@ class TrickController extends AbstractController
             return $this->redirectToRoute('app_home', ['_fragment' => 'trick-list']);
         }
 
-        return $this->render('trick/trick_form.html.twig', [
-            'trick' => $trick,
-            'trickName' => $trickName,
-            'groupTrickName' => $groupeTrick->getName(),
-            'headerImageExist' => $headerImageExist,
-            'headerImage' => $trickMedias['headerImage'],
-            'trickImages' => $trickMedias['images'],
-            'trickVideos' => $trickMedias['videos'],
-            'trickForm' => $form->createView(),
-        ]);
+        return $this->renderTrickForm($trick, $form, $trickMedias, $headerImageExist);
     }
 
     /**
      * Retrieves the image of a trick based on its name and the name of the image.
      *
      * @param ParameterBagInterface $parameterBag
-     * @param $trickName
+     * @param Trick $trick
      * @param $imageName
      *
      * @return Response Trick image
      */
-    #[Route('/trickImage/{trickName}/{imageName}', name: 'get_trick_image')]
-    public function getTrickImage(ParameterBagInterface $parameterBag, $trickName, $imageName): Response
+    #[Route('/trickImage/{slug}/{imageName}', name: 'get_trick_image')]
+    public function getTrickImage(ParameterBagInterface $parameterBag, Trick $trick, $imageName): Response
     {
-        $trick = $this->manager->getRepository(Trick::class)->findOneBy(['name' => $trickName]);
         $imagePath = PathUtils::buildTrickPath($parameterBag, $trick).'/'.$imageName;
 
         return $this->mediaService->serveProtectedImage($imagePath);
@@ -193,10 +188,9 @@ class TrickController extends AbstractController
     #[Route('/tricks/loadMore/{tricksReloaded}', name: 'load_more_tricks')]
     public function loadMoreTricks(int $tricksReloaded): Response
     {
-        $trickRepository = $this->manager->getRepository(Trick::class);
         $hiddeLoadButton = false;
-        $tricks = $trickRepository->findAllTricksBy(['name' => 'ASC'], $tricksReloaded);
-        $nbTricks = $trickRepository->countTricks();
+        $tricks = $this->trickRepository->findAllTricksBy(['name' => 'ASC'], $tricksReloaded);
+        $nbTricks = $this->trickRepository->countTricks();
 
         if (count($tricks) === $nbTricks) {
             $hiddeLoadButton = true;
@@ -211,30 +205,25 @@ class TrickController extends AbstractController
     /**
      * Delete a trick using the trick name passed in parameters and reloads the list of tricks afterwards.
      *
-     * @param string $trickName    Name of the trick to delete
-     * @param int    $tricksLoaded Number of tricks currently loaded
+     * @param Trick $trickToDelete
+     * @param int $tricksLoaded Number of tricks currently loaded
      *
      * @return Response Trick list
      */
-    #[Route('/tricks/delete/{trickName}/loaded/{tricksLoaded}', name: 'delete_trick')]
-    public function deleteTrick(string $trickName, int $tricksLoaded): Response
+    #[Route('/tricks/delete/{slug}/loaded/{tricksLoaded}', name: 'delete_trick')]
+    public function deleteTrick(Trick $trickToDelete, int $tricksLoaded): Response
     {
         $hiddeLoadButton = false;
-        $trickRepository = $this->manager->getRepository(Trick::class);
-        $trickToDelete = $trickRepository->findOneBy(['name' => $trickName]);
+        $folderDeleted = $this->mediaService->deleteTrickFolder($trickToDelete);
 
-        if ($trickToDelete) {
-            $folderDeleted = $this->mediaService->deleteTrickFolder($trickToDelete);
-
-            if ($folderDeleted) {
-                $this->manager->remove($trickToDelete);
-                $this->manager->flush();
-                $this->addFlash('success', 'The trick has been successfully deleted !');
-            }
+        if ($folderDeleted) {
+            $this->manager->remove($trickToDelete);
+            $this->manager->flush();
+            $this->addFlash('success', 'The trick has been successfully deleted !');
         }
 
-        $tricks = $trickRepository->findAllTricksBy(['name' => 'ASC'], $tricksLoaded, false);
-        $nbTricks = $trickRepository->countTricks();
+        $tricks = $this->trickRepository->findAllTricksBy(['name' => 'ASC'], $tricksLoaded, false);
+        $nbTricks = $this->trickRepository->countTricks();
 
         if (count($tricks) === $nbTricks) {
             $hiddeLoadButton = true;
@@ -263,6 +252,10 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if (!$this->slugIsValid($trick, $form)) {
+                return $this->renderTrickForm($trick, $form);
+            }
+
             $this->processFormImages($request, $trick, $form);
             $trick->setCreationDate(new \DateTime());
             $trick->setUser($security->getUser());
@@ -276,13 +269,7 @@ class TrickController extends AbstractController
             return $this->redirectToRoute('app_home', ['_fragment' => 'trick-list']);
         }
 
-        return $this->render('trick/trick_form.html.twig', [
-            'trick' => $trick,
-            'trickName' => $trick->getName(),
-            'headerImageExist' => false,
-            'headerImage' => null,
-            'trickForm' => $form->createView(),
-        ]);
+        return $this->renderTrickForm($trick, $form);
     }
 
     /**
@@ -319,5 +306,72 @@ class TrickController extends AbstractController
                 }
             }
         }
+    }
+
+    /**
+     * Displays the trick form page
+     *
+     * @param Trick $trick
+     * @param FormInterface $form
+     * @param array|null $trickMedias
+     * @param bool $headerImageExist
+     * @return Response
+     */
+    private function renderTrickForm(
+        Trick $trick,
+        FormInterface $form,
+        array $trickMedias = null,
+        bool $headerImageExist = false,
+    ): Response {
+        if (!$trickMedias) {
+            $trickMedias['headerImage'] = null;
+            $trickMedias['images'] = null;
+            $trickMedias['videos'] = null;
+        }
+
+        $groupTrickName = '';
+        if ($trick->getGroupTrick()) {
+            $groupTrickName = $trick->getGroupTrick()->getName();
+        }
+
+        return $this->render('trick/trick_form.html.twig', [
+            'trick' => $trick,
+            'trickName' => $trick->getName(),
+            'groupTrickName' => $groupTrickName,
+            'headerImageExist' => $headerImageExist,
+            'headerImage' => $trickMedias['headerImage'],
+            'trickImages' => $trickMedias['images'],
+            'trickVideos' => $trickMedias['videos'],
+            'trickForm' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * Verify if the slug already exists
+     *
+     * @param Trick $trick
+     * @param FormInterface $form
+     * @return bool
+     */
+    private function slugIsValid(Trick $trick, FormInterface $form): bool
+    {
+        $oldSlug = $trick->getSlug();
+        $trick->setSlug($this->slugger->slug($trick->getName(), '_'));
+        $violations = $this->validator->validate($trick);
+
+        if (count($violations) > 0) {
+            foreach ($violations as $violation) {
+                $formError = new FormError($violation->getMessage());
+                $form->get('name')->addError($formError);
+            }
+            // No existing slug when creating a trick
+            if ($oldSlug) {
+                $trick->setSlug($oldSlug);
+            }
+
+            return false;
+        }
+
+        return true;
     }
 }
