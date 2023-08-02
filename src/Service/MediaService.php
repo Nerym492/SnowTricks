@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * Image management
@@ -30,6 +31,7 @@ class MediaService
     public function __construct(
         private EntityManagerInterface $entityManager,
         private ParameterBagInterface $parameterBag,
+        private SluggerInterface $slugger,
         private RequestStack $requestStack,
     ) {
     }
@@ -97,7 +99,7 @@ class MediaService
     {
         $trickPath = PathUtils::buildTrickPath($this->parameterBag, $trick);
         $trickPathExists = file_exists($trickPath);
-        $newFileName = uniqid().'-'.$trick->getName().'.'.$file->guessExtension();
+        $newFileName = uniqid().'-'.$this->slugger->slug($trick->getName(), '_').'.'.$file->guessExtension();
 
         if (!$trickPathExists) {
             $trickPathExists = mkdir($trickPath, 0777, true);
