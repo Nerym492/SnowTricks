@@ -14,6 +14,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 #[ORM\Entity(repositoryClass: TrickRepository::class)]
 #[UniqueEntity(fields: ['name'], message: 'This trick already exists.')]
+#[UniqueEntity(fields: ['slug'], message: 'This trick already exists.')]
 class Trick
 {
     #[ORM\Id]
