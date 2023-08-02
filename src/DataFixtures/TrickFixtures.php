@@ -9,6 +9,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * Trick dataset
@@ -16,13 +17,15 @@ use Doctrine\Persistence\ObjectManager;
 class TrickFixtures extends Fixture implements DependentFixtureInterface
 {
     private EntityManagerInterface $manager;
+    private SluggerInterface $slugger;
 
     /**
      * @param EntityManagerInterface $manager
      */
-    public function __construct(EntityManagerInterface $manager)
+    public function __construct(EntityManagerInterface $manager, SluggerInterface $slugger)
     {
         $this->manager = $manager;
+        $this->slugger = $slugger;
     }
 
     /**
@@ -116,6 +119,7 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
         $trick->setDescription($description);
         $trick->setUser($user);
         $trick->setCreationDate(new \DateTime());
+        $trick->setSlug($this->slugger->slug($name, '_'));
 
         $this->manager->persist($trick);
     }
